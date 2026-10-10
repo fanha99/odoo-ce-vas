@@ -1,0 +1,404 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fg_account_counterpart
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-10 13:46+0000\n"
+"PO-Revision-Date: 2026-10-10 13:46+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fg_account_counterpart
+#: model:ir.module.module,description:base.module_fg_account_counterpart
+msgid ""
+"\n"
+"Account Counterparts\n"
+"====================\n"
+"\n"
+"Records, for every posted journal entry, which debit journal items are\n"
+"countered by which credit journal items, and for what amount. Each journal\n"
+"item then shows its countered journal items and countered accounts.\n"
+"\n"
+"See readme.md in the module directory for the matching rules.\n"
+msgstr ""
+
+#. module: fg_account_counterpart
+#. odoo-python
+#: code:addons/fg_account_counterpart/wizard/account_counterpart_generate.py:0
+msgid "%(count)s journal entries processed."
+msgstr "Đã xử lý %(count)s bút toán."
+
+#. module: fg_account_counterpart
+#. odoo-python
+#: code:addons/fg_account_counterpart/wizard/account_counterpart_generate.py:0
+msgid ""
+"%(count)s of them are not fully countered: entries with negative amounts are"
+" not supported yet."
+msgstr ""
+"%(count)s bút toán trong số đó chưa được đối ứng hoàn toàn: bút toán có số "
+"tiền âm hiện chưa được hỗ trợ."
+
+#. module: fg_account_counterpart
+#. odoo-python
+#: code:addons/fg_account_counterpart/models/account_move_line_ctp.py:0
+msgid ""
+"A counterpart must link a debit journal item with a credit journal item."
+msgstr ""
+"Một đối ứng phải nối một hạng mục bút toán bên Nợ với một hạng mục bút toán "
+"bên Có."
+
+#. module: fg_account_counterpart
+#: model:ir.model.constraint,message:fg_account_counterpart.constraint_account_move_line_ctp_check_distinct_items
+msgid "A journal item cannot be the counterpart of itself."
+msgstr "Một hạng mục bút toán không thể đối ứng với chính nó."
+
+#. module: fg_account_counterpart
+#: model:ir.module.module,shortdesc:base.module_fg_account_counterpart
+msgid "Account Counterparts"
+msgstr "Đối ứng tài khoản"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,help:fg_account_counterpart.field_account_move_line_ctp__countered_amt
+msgid ""
+"Amount, in company currency, of the debit item that is matched with the "
+"credit item."
+msgstr ""
+"Số tiền, theo tiền tệ của công ty, của hạng mục bên Nợ được ghép với hạng "
+"mục bên Có."
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__company_id
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__company_currency_id
+msgid "Company Currency"
+msgstr "Tiền tệ của công ty"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__countered_account_codes
+msgid "Countered Account Codes"
+msgstr "Mã tài khoản đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__countered_account_ids
+msgid "Countered Accounts"
+msgstr "Tài khoản đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__countered_amt
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__countered_amt
+msgid "Countered Amount"
+msgstr "Số tiền đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__countered_amt_currency
+msgid "Countered Amount in Currency"
+msgstr "Số tiền đối ứng nguyên tệ"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__countered_aml_ids
+msgid "Countered Journal Items"
+msgstr "Hạng mục bút toán đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_bank_statement_line__countered_status
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move__countered_status
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__countered_status
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.view_account_move_line_filter
+msgid "Countered Status"
+msgstr "Trạng thái đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.module.module,summary:base.module_fg_account_counterpart
+msgid "Countered journal items and countered accounts of every journal item"
+msgstr ""
+"Hạng mục bút toán đối ứng và tài khoản đối ứng của từng hạng mục bút toán"
+
+#. module: fg_account_counterpart
+#: model:ir.actions.act_window,name:fg_account_counterpart.account_move_line_ctp_action
+#: model:ir.ui.menu,name:fg_account_counterpart.account_move_line_ctp_menu
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_list
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_search
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.view_move_form
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.view_move_line_form
+msgid "Counterparts"
+msgstr "Đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__ctp_cr_ids
+msgid "Counterparts (as credit item)"
+msgstr "Đối ứng (là hạng mục bên Có)"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__ctp_dr_ids
+msgid "Counterparts (as debit item)"
+msgstr "Đối ứng (là hạng mục bên Nợ)"
+
+#. module: fg_account_counterpart
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_pivot
+msgid "Counterparts Analysis"
+msgstr "Phân tích đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model,name:fg_account_counterpart.model_account_counterpart_generate
+msgid "Counterparts Generator"
+msgstr "Trình tạo đối ứng"
+
+#. module: fg_account_counterpart
+#. odoo-python
+#: code:addons/fg_account_counterpart/wizard/account_counterpart_generate.py:0
+msgid "Counterparts generated"
+msgstr "Đã tạo đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__create_uid
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__create_date
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__cr_account_id
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_search
+msgid "Credit Account"
+msgstr "Tài khoản Có"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__cr_aml_id
+msgid "Credit Journal Item"
+msgstr "Hạng mục bút toán bên Có"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__currency_id
+msgid "Currency"
+msgstr "Tiền tệ"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__date
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_search
+msgid "Date"
+msgstr "Ngày"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__dr_account_id
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_search
+msgid "Debit Account"
+msgstr "Tài khoản Nợ"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__dr_aml_id
+msgid "Debit Journal Item"
+msgstr "Hạng mục bút toán bên Nợ"
+
+#. module: fg_account_counterpart
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_counterpart_generate_view_form
+msgid "Discard"
+msgstr "Huỷ bỏ"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__display_name
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move__display_name
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__date_from
+msgid "From"
+msgstr "Từ ngày"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_move__countered_status__fully
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_move_line__countered_status__fully
+msgid "Fully Countered"
+msgstr "Đối ứng hoàn toàn"
+
+#. module: fg_account_counterpart
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_counterpart_generate_view_form
+msgid "Generate"
+msgstr "Tạo"
+
+#. module: fg_account_counterpart
+#: model:ir.actions.act_window,name:fg_account_counterpart.account_counterpart_generate_action
+#: model:ir.ui.menu,name:fg_account_counterpart.account_counterpart_generate_menu
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_counterpart_generate_view_form
+msgid "Generate Counterparts"
+msgstr "Tạo đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_counterpart_generate__mode__missing
+msgid "Generate missing counterparts"
+msgstr "Tạo các đối ứng còn thiếu"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__id
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move__id
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line__id
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__journal_id
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_search
+msgid "Journal"
+msgstr "Sổ nhật ký"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__move_count
+msgid "Journal Entries to Process"
+msgstr "Số bút toán sẽ xử lý"
+
+#. module: fg_account_counterpart
+#: model:ir.model,name:fg_account_counterpart.model_account_move
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__move_id
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_search
+msgid "Journal Entry"
+msgstr "Bút toán"
+
+#. module: fg_account_counterpart
+#: model:ir.model,name:fg_account_counterpart.model_account_move_line
+msgid "Journal Item"
+msgstr "Hạng mục bút toán"
+
+#. module: fg_account_counterpart
+#: model:ir.model,name:fg_account_counterpart.model_account_move_line_ctp
+msgid "Journal Item Counterpart"
+msgstr "Đối ứng của hạng mục bút toán"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__journal_ids
+msgid "Journals"
+msgstr "Sổ nhật ký"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__write_uid
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__write_date
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_move_line_ctp__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,help:fg_account_counterpart.field_account_counterpart_generate__journal_ids
+msgid "Leave empty to process the entries of every journal."
+msgstr "Để trống để xử lý bút toán của mọi sổ nhật ký."
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_move__countered_status__none
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_move_line__countered_status__none
+msgid "Not Countered"
+msgstr "Chưa đối ứng"
+
+#. module: fg_account_counterpart
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.view_account_move_filter
+msgid "Not Fully Countered"
+msgstr "Chưa đối ứng hoàn toàn"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__mode
+msgid "Operation"
+msgstr "Thao tác"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_move__countered_status__partially
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_move_line__countered_status__partially
+msgid "Partially Countered"
+msgstr "Đối ứng một phần"
+
+#. module: fg_account_counterpart
+#: model:ir.actions.server,name:fg_account_counterpart.account_move_ctp_regenerate_action
+msgid "Regenerate Counterparts"
+msgstr "Tạo lại đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields.selection,name:fg_account_counterpart.selection__account_counterpart_generate__mode__all
+msgid "Regenerate all counterparts"
+msgstr "Tạo lại toàn bộ đối ứng"
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,help:fg_account_counterpart.field_account_move_line__countered_account_ids
+msgid ""
+"The accounts that are counterparts of the account of this journal item."
+msgstr "Các tài khoản đối ứng với tài khoản của hạng mục bút toán này."
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,help:fg_account_counterpart.field_account_move_line__countered_amt
+msgid ""
+"The amount of this journal item that has been matched with counterparts."
+msgstr "Số tiền của hạng mục bút toán này đã được ghép đối ứng."
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,help:fg_account_counterpart.field_account_move_line__countered_account_codes
+msgid "The codes of the countered accounts, e.g. 511, 33311."
+msgstr "Mã của các tài khoản đối ứng, ví dụ 511, 33311."
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,help:fg_account_counterpart.field_account_move_line_ctp__countered_amt_currency
+msgid ""
+"The countered amount expressed in the currency of the debit journal item."
+msgstr "Số tiền đối ứng tính theo tiền tệ của hạng mục bút toán bên Nợ."
+
+#. module: fg_account_counterpart
+#: model:ir.model.constraint,message:fg_account_counterpart.constraint_account_move_line_ctp_check_countered_amt
+msgid "The countered amount of a counterpart cannot be zero."
+msgstr "Số tiền của một đối ứng không thể bằng 0."
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,help:fg_account_counterpart.field_account_move_line__countered_aml_ids
+msgid "The journal items that are counterparts of this journal item."
+msgstr "Các hạng mục bút toán đối ứng với hạng mục bút toán này."
+
+#. module: fg_account_counterpart
+#. odoo-python
+#: code:addons/fg_account_counterpart/models/account_move_line_ctp.py:0
+msgid ""
+"The two journal items of a counterpart must belong to the same journal "
+"entry."
+msgstr "Hai hạng mục bút toán của một đối ứng phải thuộc cùng một bút toán."
+
+#. module: fg_account_counterpart
+#: model:ir.model.fields,field_description:fg_account_counterpart.field_account_counterpart_generate__date_to
+msgid "To"
+msgstr "Đến ngày"
+
+#. module: fg_account_counterpart
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.account_move_line_ctp_view_list
+msgid "Total"
+msgstr "Tổng"
+
+#. module: fg_account_counterpart
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.view_move_line_form
+msgid "Total Credit"
+msgstr "Tổng có"
+
+#. module: fg_account_counterpart
+#: model_terms:ir.ui.view,arch_db:fg_account_counterpart.view_move_line_form
+msgid "Total Debit"
+msgstr "Tổng nợ"
+
+#. module: fg_account_counterpart
+#: model:ir.model.constraint,message:fg_account_counterpart.constraint_account_move_line_ctp_unique_pair
+msgid "Two journal items can only be countered once with each other."
+msgstr "Hai hạng mục bút toán chỉ được đối ứng với nhau một lần."

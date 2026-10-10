@@ -169,10 +169,7 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
 
     def action_view_counterparts(self):
-        """ Open the `account.move.line.ctp` records of the selected items.
-
-        TODO(phase 4)
-        """
+        """ Open the `account.move.line.ctp` records of the selected items. """
         action = self.env['ir.actions.act_window']._for_xml_id(
             'fg_account_counterpart.account_move_line_ctp_action')
         action['domain'] = ['|', ('dr_aml_id', 'in', self.ids), ('cr_aml_id', 'in', self.ids)]

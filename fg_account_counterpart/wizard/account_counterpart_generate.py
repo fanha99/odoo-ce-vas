@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.tools import split_every
+
+COUNTERED_FIELDS = ('countered_aml_ids', 'countered_account_ids', 'countered_amt', 'countered_status')
 
 
 class AccountCounterpartGenerate(models.TransientModel):
@@ -29,18 +32,13 @@ class AccountCounterpartGenerate(models.TransientModel):
 
     @api.depends('company_id', 'mode', 'journal_ids', 'date_from', 'date_to')
     def _compute_move_count(self):
-        """ Number of entries matched by `_get_moves_domain`, as a preview.
-
-        TODO(phase 5)
-        """
+        """ Number of entries matched by `_get_moves_domain`, as a preview. """
         for wizard in self:
             wizard.move_count = self.env['account.move'].search_count(wizard._get_moves_domain())
 
     def _get_moves_domain(self):
         """ Domain of the posted entries to process: company, optional journals
         and dates, and in 'missing' mode only the entries not fully countered.
-
-        TODO(phase 5)
         """
         self.ensure_one()
         domain = [('company_id', '=', self.company_id.id), ('state', '=', 'posted')]
@@ -58,15 +56,49 @@ class AccountCounterpartGenerate(models.TransientModel):
         """ Generate the counterparts of one batch of entries, then flush and
         invalidate the cache to keep memory flat.
 
-        TODO(phase 5)
+        The counterpart fields of the batch are recomputed explicitly: on
+        entries posted before the module was installed they hold the default
+        of their column, which is wrong for the items with nothing to counter
+        (they are 'fully' countered) and is not refreshed by creating
+        counterparts on the other items.
         """
         moves._ctp_generate(regenerate=self.mode == 'all')
+
+        lines = moves.line_ids
+        for field_name in COUNTERED_FIELDS:
+            self.env.add_to_compute(lines._fields[field_name], lines)
+        self.env.add_to_compute(moves._fields['countered_status'], moves)
+        self.env.flush_all()
+        self.env.invalidate_all()
 
     def action_generate(self):
         """ Process the matching entries by batches of `BATCH_SIZE` and notify
         the user with the number of entries processed.
 
-        TODO(phase 5)
+        Everything runs in the transaction of the request: either every entry
+        is processed, or none.
         """
         self.ensure_one()
-        return {'type': 'ir.actions.act_window_close'}
+        Move = self.env['account.move']
+        move_ids = Move.search(self._get_moves_domain(), order='id').ids
+        for batch_ids in split_every(self.BATCH_SIZE, move_ids):
+            self._generate_batch(Move.browse(batch_ids))
+
+        remaining = Move.search_count([('id', 'in', move_ids), ('countered_status', '!=', 'fully')])
+        message = self.env._("%(count)s journal entries processed.", count=len(move_ids))
+        if remaining:
+            message += " " + self.env._(
+                "%(count)s of them are not fully countered: entries with negative amounts are not supported yet.",
+                count=remaining,
+            )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'warning' if remaining else 'success',
+                'title': self.env._("Counterparts generated"),
+                'message': message,
+                'sticky': bool(remaining),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }

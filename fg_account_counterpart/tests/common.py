@@ -40,7 +40,7 @@ class CounterpartCommon(AccountTestInvoicingCommon):
         return cls.accounts[code]
 
     @classmethod
-    def _create_entry(cls, lines, post=True):
+    def _create_entry(cls, lines, post=True, journal=None, date='2026-01-15'):
         """ Create a miscellaneous entry.
 
         :param lines: list of (account number, debit, credit[, partner]); the
@@ -56,8 +56,8 @@ class CounterpartCommon(AccountTestInvoicingCommon):
             }))
         move = cls.env['account.move'].create({
             'move_type': 'entry',
-            'journal_id': cls.journal.id,
-            'date': '2026-01-15',
+            'journal_id': (journal or cls.journal).id,
+            'date': date,
             'line_ids': line_vals,
         })
         if post:
@@ -69,8 +69,8 @@ class CounterpartCommon(AccountTestInvoicingCommon):
         """ Return the journal item of `move` on the given account number. """
         return move.line_ids.filtered(lambda line: line.account_id == cls._account(code))
 
-    def _counterparts(self, move):
-        return self.env['account.move.line.ctp'].search([('move_id', '=', move.id)])
+    def _counterparts(self, moves):
+        return self.env['account.move.line.ctp'].search([('move_id', 'in', moves.ids)])
 
     def assertCounterparts(self, move, expected):
         """ Check the counterparts of `move`.

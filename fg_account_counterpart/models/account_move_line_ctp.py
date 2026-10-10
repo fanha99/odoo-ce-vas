@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import formatLang
 
 
 class AccountMoveLineCtp(models.Model):
@@ -84,8 +85,9 @@ class AccountMoveLineCtp(models.Model):
 
     @api.depends('dr_account_id', 'cr_account_id', 'countered_amt')
     def _compute_display_name(self):
-        """ "<debit account code> / <credit account code>: <amount>".
-
-        TODO(phase 4)
-        """
-        super()._compute_display_name()
+        """ "<debit account code> / <credit account code>: <amount>". """
+        for ctp in self:
+            dr_code = ctp.dr_account_id.with_company(ctp.company_id).code
+            cr_code = ctp.cr_account_id.with_company(ctp.company_id).code
+            amount = formatLang(self.env, ctp.countered_amt, currency_obj=ctp.company_currency_id)
+            ctp.display_name = f"{dr_code} / {cr_code}: {amount}"

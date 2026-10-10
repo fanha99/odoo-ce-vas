@@ -387,6 +387,37 @@ class TestCounterpart(CounterpartCommon):
         self.assertEqual(len(created), 1)
         self.assertFalse(counterparts.exists())
 
+    def test_actions(self):
+        """ Counterparts can be opened from an entry and from an item, and
+        regenerated from an entry. """
+        move = self._create_entry([
+            ('131', 110.0, 0),
+            ('511', 0, 100.0),
+            ('33311', 0, 10.0),
+        ])
+        counterparts = self._counterparts(move)
+        Counterpart = self.env['account.move.line.ctp']
+
+        action = move.action_view_counterparts()
+        self.assertEqual(action['res_model'], 'account.move.line.ctp')
+        self.assertEqual(Counterpart.search(action['domain']), counterparts)
+
+        action = self._line(move, '511').action_view_counterparts()
+        self.assertEqual(
+            Counterpart.search(action['domain']),
+            counterparts.filtered(lambda ctp: ctp.cr_account_id == self._account('511')),
+        )
+
+        draft = self._create_entry([('112', 55.0, 0), ('131', 0, 55.0)], post=False)
+        (move + draft).action_ctp_regenerate()
+        self.assertFalse(counterparts.exists())
+        self.assertEqual(len(self._counterparts(move)), 2)
+        self.assertFalse(self._counterparts(draft))
+
+    def test_display_name(self):
+        move = self._create_entry([('112', 55.0, 0), ('131', 0, 55.0)])
+        self.assertEqual(self._counterparts(move).display_name, "CTP112 / CTP131: $\xa055.00")
+
     def test_invoice(self):
         """ A customer invoice with two product lines and a tax line. """
         invoice = self.init_invoice('out_invoice', products=self.product_a + self.product_b, post=True)

@@ -4,7 +4,7 @@ Viết mới hoàn toàn, dựa trên code Odoo 20.0, không dùng lại code c�
 
 `readme.md` là bản mô tả nghiệp vụ và là nguồn gốc của kế hoạch này: readme nói module phải làm gì, kế hoạch nói làm bằng cách nào. Readme không định nghĩa model, trường hay hàm; tất cả những thứ đó nằm ở đây. Khi hai tài liệu lệch nhau thì sửa kế hoạch theo readme.
 
-Trạng thái: **giai đoạn 0 đến 3 đã xong**, 24 test qua trên Odoo 20.0. Còn lại giai đoạn 4 (action, tên hiển thị), 5 (trình tạo đối ứng) và 6 (bản dịch, trang mô tả).
+Trạng thái: **cả 6 giai đoạn đã xong**, 33 test qua trên Odoo 20.0. Việc còn lại: bút toán âm đang neo (`TODO(storno)`) và các điểm chờ kế toán xác nhận ở mục 6.
 
 ## 1. Quyết định thiết kế
 
@@ -37,14 +37,18 @@ fg_account_counterpart/
 │   ├── account_counterpart_generate.py
 │   └── account_counterpart_generate_views.xml
 ├── security/ir.access.csv
+├── i18n/
+│   ├── fg_account_counterpart.pot    mẫu dịch, xuất bằng `odoo-bin i18n export`
+│   └── vi.po                         bản dịch tiếng Việt
+├── static/description/index.html     trang mô tả module trong Odoo
 ├── views/
 │   ├── account_move_line_ctp_views.xml   list, pivot, search, menu
 │   ├── account_move_line_views.xml       list, form, search của phát sinh
 │   └── account_move_views.xml            form, search của bút toán, action tạo lại
 └── tests/
     ├── common.py
-    ├── test_counterpart.py           24 test
-    └── test_counterpart_generate.py  5 test
+    ├── test_counterpart.py           26 test
+    └── test_counterpart_generate.py  7 test
 ```
 
 Menu:
@@ -63,7 +67,7 @@ Ràng buộc SQL (đã viết): hai phát sinh phải khác nhau, số tiền kh
 |---|---|---|
 | `_check_same_move()` | Hai phát sinh cùng một bút toán, phát sinh thứ nhất bên Nợ, thứ hai bên Có. | 1, xong |
 | `_get_counterpart_values(countered_aml)` | Trả về một cặp đối ứng nhìn từ phát sinh còn lại; dùng bởi `_get_counterparts`. | 2, xong |
-| `_compute_display_name()` | Tên hiển thị dạng "131 / 5111: 100". | 4 |
+| `_compute_display_name()` | Tên hiển thị dạng "131 / 5111: 100". | 4, xong |
 
 ### `account.move.line` (mở rộng)
 
@@ -79,7 +83,7 @@ Trường: `ctp_dr_ids`, `ctp_cr_ids`, `countered_aml_ids`, `countered_account_i
 | `_compute_countered()` | Tính 4 trường đối ứng từ các bản ghi ctp. | 2, xong |
 | `_get_counterparts()` | Hàm công khai cho module khác (mục 4b). | 2, xong |
 | `_compute_countered_account_codes()` | Ghép mã các tài khoản đối ứng thành chuỗi, sắp theo mã. | 2, xong |
-| `action_view_counterparts()` | Mở danh sách đối ứng của phát sinh. Đã có bản đầu. | 4 |
+| `action_view_counterparts()` | Mở danh sách đối ứng của phát sinh. | 4, xong |
 
 ### `account.move` (mở rộng)
 
@@ -96,8 +100,8 @@ Trường: `countered_status`.
 | `_ctp_allocate(dr_items, cr_items, currency)` | Điều phối 3 lượt ghép (mục 4). Hàm thuần, không đụng database. | 3, xong |
 | `_ctp_find_exact_match(dr_item, cr_items, currency)` | Lượt 1: tìm dòng Có bằng tiền, cùng đối tác, kèm ngoại lệ `id` liền kề. | 3, xong |
 | `_ctp_distribute(dr_item, cr_items, currency)` | Lượt 2 và 3: phân bổ theo tỷ lệ trên một nhóm dòng Có, dồn chênh lệch làm tròn vào dòng cuối. | 3, xong |
-| `action_ctp_regenerate()` | Tạo lại đối ứng cho các bút toán đang chọn. Đã có bản đầu. | 4 |
-| `action_view_counterparts()` | Mở danh sách đối ứng của bút toán. Đã có bản đầu. | 4 |
+| `action_ctp_regenerate()` | Tạo lại đối ứng cho các bút toán đã ghi sổ đang chọn (menu Action, chỉ nhóm quản lý kế toán). | 4, xong |
+| `action_view_counterparts()` | Mở danh sách đối ứng của bút toán; có nút "Counterparts" trên form bút toán đã ghi sổ. | 4, xong |
 
 ### `account.counterpart.generate` (wizard)
 
@@ -105,10 +109,10 @@ Trường: `company_id`, `mode` (missing / all), `journal_ids`, `date_from`, `da
 
 | Hàm | Việc cần làm | Giai đoạn |
 |---|---|---|
-| `_get_moves_domain()` | Điều kiện lọc bút toán cần xử lý. Đã có bản đầu. | 5 |
-| `_compute_move_count()` | Số bút toán sẽ xử lý, để xem trước. Đã có bản đầu. | 5 |
-| `_generate_batch(moves)` | Xử lý một lô, flush và xoá cache. | 5 |
-| `action_generate()` | Chia lô 1000 bút toán, chạy và báo kết quả. | 5 |
+| `_get_moves_domain()` | Điều kiện lọc bút toán cần xử lý: công ty, đã ghi sổ, sổ nhật ký, khoảng ngày; chế độ "missing" chỉ lấy bút toán chưa đối ứng hoàn toàn. | 5, xong |
+| `_compute_move_count()` | Số bút toán sẽ xử lý, để xem trước. | 5, xong |
+| `_generate_batch(moves)` | Sinh đối ứng cho một lô, tính lại các trường đối ứng của cả lô (kể cả dòng bằng 0 của dữ liệu cũ), flush và xoá cache. | 5, xong |
+| `action_generate()` | Chia lô 1000 bút toán, chạy, rồi thông báo số bút toán đã xử lý và số bút toán vẫn chưa đối ứng đủ. | 5, xong |
 
 ### `__init__.py`
 
@@ -162,15 +166,24 @@ Báo cáo trên dữ liệu lớn nên truy vấn thẳng bảng `account_move_l
 | 1 | Hàm phụ trợ trên phát sinh và ràng buộc `_check_same_move`. | **Đã xong.** |
 | 2 | Hai hàm compute (phát sinh và bút toán), hàm `_get_counterparts`. | **Đã xong.** |
 | 3 | Bộ máy sinh đối ứng và thuật toán ghép 3 lượt. | **Đã xong:** bảy nghiệp vụ ở readme mục 3, làm tròn, ngoại tệ, về nháp, ghi sổ lại đều qua. |
-| 4 | Hoàn thiện action và tên hiển thị. | Mở được đối ứng từ bút toán và phát sinh. |
-| 5 | Trình tạo đối ứng. | 5 test của wizard qua; thử trên database thật có dữ liệu cũ. |
-| 6 | Bản dịch `i18n/vi.po`, trang mô tả `static/description/index.html`. | Giao diện tiếng Việt đầy đủ. |
+| 4 | Hoàn thiện action và tên hiển thị. | **Đã xong.** |
+| 5 | Trình tạo đối ứng. | **Đã xong:** 7 test qua. Chưa thử trên database thật có dữ liệu cũ. |
+| 6 | Bản dịch `i18n/vi.po`, trang mô tả `static/description/index.html`. | **Đã xong:** 64 chuỗi đã dịch, kiểm tra trên database có tiếng Việt. Thuật ngữ theo bản dịch của Odoo: "Bút toán" (journal entry), "Hạng mục bút toán" (journal item), "Sổ nhật ký" (journal). |
+
+## 5b. Hiệu năng và giới hạn của trình tạo đối ứng
+
+Đo trên máy phát triển với 1000 bút toán 5 dòng (3 cặp đối ứng mỗi bút toán):
+
+- Trình tạo đối ứng: 7,5 giây cho 1000 bút toán, tức khoảng 130 bút toán mỗi giây.
+- Ghi sổ 1000 bút toán: 10,9 giây có sinh đối ứng, so với 3,1 giây khi tắt bộ máy đối ứng (lần đo sau là ghi sổ lại, nên chênh lệch thật nhỏ hơn con số này).
+
+Trình tạo đối ứng chạy toàn bộ trong một transaction của request: hoặc xong hết, hoặc không có gì thay đổi. Với database vài trăm nghìn bút toán trở lên, nên chạy theo từng sổ nhật ký hoặc từng khoảng ngày để mỗi lần không quá lâu.
 
 ## 6. Điểm cần xác nhận
 
-1. **Đã chốt:** thuật toán ghép 3 lượt theo yêu cầu của kế toán; readme đã được viết lại theo hướng nghiệp vụ.
+1. **Đã chốt:** thuật toán ghép 3 lượt theo yêu cầu của kế toán;
 2. **Bút toán âm (storno): đã neo lại**, xem quyết định 12. Các chỗ cần quay lại được đánh dấu `TODO(storno)` trong `models/account_move.py` và `tests/test_counterpart.py`.
 3. **Nguyên tệ của `countered_amt_currency`:** hai dòng Nợ và Có của cùng một bút toán có thể khác tiền tệ. Code lấy tiền tệ của dòng Nợ và xử lý như mô tả ở mục 4; cần kế toán xác nhận.
 4. **Lượt 2 khi nhóm cùng đối tác không đủ:** code chuyển phần dư của dòng Nợ sang lượt 3 (suy ra từ công thức min); cần kế toán xác nhận. Tương tự, khi cả ngoại lệ liền kề và điều kiện cùng đối tác đều có dòng thỏa, code ưu tiên dòng liền kề.
 5. **Đã chốt:** phát sinh có số tiền bằng 0 tính là "đối ứng hoàn toàn" (quyết định 9). Lưu ý cho giai đoạn 5: cột trạng thái của dữ liệu cũ mặc định là "chưa đối ứng", nên trình tạo đối ứng phải cập nhật cả các dòng bằng 0.
-6. **`readme.md` gây cảnh báo khi nạp module**: Odoo đọc file này như reStructuredText nên báo lỗi cú pháp ở các bảng Markdown. Trang `static/description/index.html` ở giai đoạn 6 sẽ thay thế nó.
+6. **Đã xử lý:** `readme.md` từng gây cảnh báo khi nạp module vì Odoo đọc nó như reStructuredText. Manifest giờ có `description` riêng và trang mô tả lấy từ `static/description/index.html`. Khi thêm hoặc sửa chuỗi hiển thị, xuất lại file `.pot` rồi cập nhật `vi.po`.

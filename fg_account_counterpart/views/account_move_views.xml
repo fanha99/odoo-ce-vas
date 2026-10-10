@@ -5,6 +5,13 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_counterparts" type="object"
+                        class="oe_stat_button" icon="fa-exchange"
+                        string="Counterparts"
+                        groups="account.group_account_readonly"
+                        invisible="state != 'posted' or countered_status == 'none'"/>
+            </div>
             <xpath expr="//page[@id='aml_tab']/field[@name='line_ids']/list/field[@name='account_id']" position="after">
                 <field name="countered_account_ids" widget="many2many_tags" optional="hide" readonly="1"/>
             </xpath>

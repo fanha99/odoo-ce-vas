@@ -276,17 +276,11 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def action_ctp_regenerate(self):
-        """ Regenerate the counterparts of the selected posted entries.
-
-        TODO(phase 4)
-        """
+        """ Regenerate the counterparts of the selected posted entries. """
         self.filtered(lambda move: move.state == 'posted')._ctp_generate(regenerate=True)
 
     def action_view_counterparts(self):
-        """ Open the counterparts of the selected entries.
-
-        TODO(phase 4)
-        """
+        """ Open the counterparts of the selected entries. """
         action = self.env['ir.actions.act_window']._for_xml_id(
             'fg_account_counterpart.account_move_line_ctp_action')
         action['domain'] = [('move_id', 'in', self.ids)]

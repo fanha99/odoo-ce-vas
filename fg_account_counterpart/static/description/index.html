@@ -1,0 +1,139 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">Đối ứng tài khoản</h2>
+        <h3 class="oe_slogan">Biết từng dòng Nợ đi với dòng Có nào, số tiền bao nhiêu</h3>
+        <p>
+            Odoo lưu các dòng Nợ và các dòng Có của một bút toán, nhưng không lưu dòng nào đi với dòng nào.
+            Module này bổ sung phần còn thiếu đó: khi bút toán được ghi sổ, từng dòng Nợ được ghép với các
+            dòng Có tương ứng, kèm số tiền của từng cặp.
+        </p>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3>Vì sao cần tài khoản đối ứng</h3>
+        <ul>
+            <li>
+                Sổ cái, sổ chi tiết tài khoản, sổ quỹ tiền mặt và sổ tiền gửi ngân hàng theo mẫu Việt Nam
+                đều có cột "Tài khoản đối ứng".
+            </li>
+            <li>
+                Báo cáo lưu chuyển tiền tệ phân loại dòng tiền theo tài khoản đối ứng của 111 và 112:
+                thu từ khách hàng, trả người lao động, trả lãi vay.
+            </li>
+            <li>
+                Cùng một tài khoản có thể chứa các khoản khác bản chất: ghi Có 515 đối ứng với 112 là lãi
+                tiền gửi, đối ứng với 331 là lãi chênh lệch tỷ giá khi thanh toán.
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3>Module mang lại gì</h3>
+        <ul>
+            <li>
+                Trên mỗi hạng mục bút toán: các hạng mục đối ứng, các tài khoản đối ứng, số tiền đã đối ứng
+                và trạng thái (chưa, một phần, hoàn toàn).
+            </li>
+            <li>Trên mỗi bút toán: trạng thái đối ứng chung và nút mở danh sách các cặp đối ứng.</li>
+            <li>Bảng phân tích số tiền theo cặp Tài khoản Nợ × Tài khoản Có.</li>
+            <li>
+                Trình tạo đối ứng cho dữ liệu có từ trước khi cài module: tạo phần còn thiếu hoặc tạo lại
+                toàn bộ, lọc theo sổ nhật ký và khoảng ngày.
+            </li>
+        </ul>
+        <p>Ví dụ với một hóa đơn bán hàng 110.000.000:</p>
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Tài khoản</th>
+                    <th class="text-end">Nợ</th>
+                    <th class="text-end">Có</th>
+                    <th>Tài khoản đối ứng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>131 Phải thu của khách hàng</td>
+                    <td class="text-end">110.000.000</td>
+                    <td></td>
+                    <td>33311, 511</td>
+                </tr>
+                <tr>
+                    <td>511 Doanh thu bán hàng và cung cấp dịch vụ</td>
+                    <td></td>
+                    <td class="text-end">100.000.000</td>
+                    <td>131</td>
+                </tr>
+                <tr>
+                    <td>33311 Thuế GTGT đầu ra</td>
+                    <td></td>
+                    <td class="text-end">10.000.000</td>
+                    <td>131</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3>Cách ghép Nợ với Có</h3>
+        <p>
+            Đối ứng được tạo khi bút toán được ghi sổ và bị xoá khi bút toán được đưa về nháp.
+            Các dòng Nợ được xét lần lượt theo thứ tự tạo dòng, qua ba lượt:
+        </p>
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Lượt</th>
+                    <th>Điều kiện</th>
+                    <th>Cách ghép</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Dòng Nợ và dòng Có bằng số tiền, cùng đối tác hoặc cùng không có đối tác</td>
+                    <td>Ghép một-một với dòng Có đầu tiên thỏa điều kiện</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Cùng đối tác hoặc cùng không có đối tác</td>
+                    <td>Chia phần còn lại của dòng Nợ cho các dòng Có cùng đối tác, theo tỷ lệ số tiền còn lại</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Mọi dòng còn dư</td>
+                    <td>Chia phần còn lại của dòng Nợ cho mọi dòng Có còn dư, theo tỷ lệ số tiền còn lại</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            Ngoại lệ ở lượt 1: dòng Có đầu tiên còn lại, nếu nằm liền kề dòng Nợ và bằng số tiền, được ghép
+            luôn mà không xét đối tác.
+        </p>
+        <ul>
+            <li>Chênh lệch do làm tròn khi chia tỷ lệ được dồn vào dòng Có cuối cùng.</li>
+            <li>Với bút toán ngoại tệ, số tiền nguyên tệ được tính song song theo cùng cách.</li>
+            <li>Dòng có số tiền bằng 0 được coi là đã đối ứng hoàn toàn.</li>
+            <li>Bút toán có dòng mang số âm hiện chưa được xử lý và giữ trạng thái "chưa đối ứng".</li>
+        </ul>
+        <p>Các nghiệp vụ minh họa đầy đủ nằm trong file <code>readme.md</code> của module.</p>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3>Sau khi cài đặt</h3>
+        <p>
+            Các bút toán đã ghi sổ từ trước chưa có đối ứng. Vào
+            <b>Kế toán › Cấu hình › Kế toán › Tạo đối ứng</b> để tạo. Với dữ liệu lớn, nên chạy theo từng
+            sổ nhật ký hoặc từng khoảng ngày.
+        </p>
+        <p>Tác giả: Fanha Giang. Giấy phép: AGPL-3.</p>
+    </div>
+</section>
