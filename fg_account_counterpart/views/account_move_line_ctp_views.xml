@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_line_ctp_view_list" model="ir.ui.view">
+        <field name="name">account.move.line.ctp.list</field>
+        <field name="model">account.move.line.ctp</field>
+        <field name="arch" type="xml">
+            <list string="Counterparts" create="false" edit="false" delete="false">
+                <field name="date"/>
+                <field name="move_id"/>
+                <field name="journal_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="dr_account_id"/>
+                <field name="cr_account_id"/>
+                <field name="dr_aml_id" optional="hide"/>
+                <field name="cr_aml_id" optional="hide"/>
+                <field name="company_currency_id" column_invisible="True"/>
+                <field name="countered_amt" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="account_move_line_ctp_view_pivot" model="ir.ui.view">
+        <field name="name">account.move.line.ctp.pivot</field>
+        <field name="model">account.move.line.ctp</field>
+        <field name="arch" type="xml">
+            <pivot string="Counterparts Analysis">
+                <field name="dr_account_id" type="row"/>
+                <field name="cr_account_id" type="col"/>
+                <field name="countered_amt" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="account_move_line_ctp_view_search" model="ir.ui.view">
+        <field name="name">account.move.line.ctp.search</field>
+        <field name="model">account.move.line.ctp</field>
+        <field name="arch" type="xml">
+            <search string="Counterparts">
+                <field name="move_id"/>
+                <field name="dr_account_id"/>
+                <field name="cr_account_id"/>
+                <field name="journal_id"/>
+                <filter string="Date" name="date" date="date"/>
+                <group>
+                    <filter string="Debit Account" name="group_by_dr_account" context="{'group_by': 'dr_account_id'}"/>
+                    <filter string="Credit Account" name="group_by_cr_account" context="{'group_by': 'cr_account_id'}"/>
+                    <filter string="Journal Entry" name="group_by_move" context="{'group_by': 'move_id'}"/>
+                    <filter string="Journal" name="group_by_journal" context="{'group_by': 'journal_id'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="account_move_line_ctp_action" model="ir.actions.act_window">
+        <field name="name">Counterparts</field>
+        <field name="res_model">account.move.line.ctp</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="search_view_id" ref="account_move_line_ctp_view_search"/>
+    </record>
+
+    <menuitem id="account_move_line_ctp_menu"
+        action="account_move_line_ctp_action"
+        parent="account.account_audit_control_menu"
+        groups="account.group_account_readonly"
+        sequence="20"/>
+</odoo>

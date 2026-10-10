@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_counterpart_generate_view_form" model="ir.ui.view">
+        <field name="name">account.counterpart.generate.form</field>
+        <field name="model">account.counterpart.generate</field>
+        <field name="arch" type="xml">
+            <form string="Generate Counterparts">
+                <group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="mode" widget="radio"/>
+                        <field name="journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="move_count"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Generate" name="action_generate" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_counterpart_generate_action" model="ir.actions.act_window">
+        <field name="name">Generate Counterparts</field>
+        <field name="res_model">account.counterpart.generate</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="account_counterpart_generate_menu"
+        action="account_counterpart_generate_action"
+        parent="account.account_account_menu"
+        groups="account.group_account_manager"
+        sequence="90"/>
+</odoo>

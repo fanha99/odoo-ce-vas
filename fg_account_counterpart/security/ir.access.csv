@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_account_move_line_ctp_readonly,account.move.line.ctp readonly,account.move.line.ctp,account.group_account_readonly,r,
+access_account_move_line_ctp_invoice,account.move.line.ctp invoice,account.move.line.ctp,account.group_account_invoice,r,
+account_move_line_ctp_comp_rule,Journal Item Counterpart multi-company,account.move.line.ctp,,crud,"[('company_id', 'parent_of', company_ids)]"
+access_account_counterpart_generate,account.counterpart.generate,account.counterpart.generate,account.group_account_manager,cru,

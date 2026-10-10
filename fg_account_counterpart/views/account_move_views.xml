@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form.counterpart</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='aml_tab']/field[@name='line_ids']/list/field[@name='account_id']" position="after">
+                <field name="countered_account_ids" widget="many2many_tags" optional="hide" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_move_filter" model="ir.ui.view">
+        <field name="name">account.move.select.counterpart</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <filter name="posted" position="after">
+                <filter string="Not Fully Countered" name="not_fully_countered"
+                    domain="[('state', '=', 'posted'), ('countered_status', '!=', 'fully')]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="account_move_ctp_regenerate_action" model="ir.actions.server">
+        <field name="name">Regenerate Counterparts</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="group_ids" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">records.action_ctp_regenerate()</field>
+    </record>
+</odoo>
