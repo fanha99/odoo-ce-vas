@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountMoveLineCtp(models.Model):
@@ -59,9 +60,12 @@ class AccountMoveLineCtp(models.Model):
     def _check_same_move(self):
         """ Both items must belong to the same journal entry, the first one on
         the debit side and the second one on the credit side.
-
-        TODO(phase 1)
         """
+        for ctp in self:
+            if ctp.dr_aml_id.move_id != ctp.cr_aml_id.move_id:
+                raise ValidationError(_("The two journal items of a counterpart must belong to the same journal entry."))
+            if ctp.dr_aml_id._ctp_side() != 'dr' or ctp.cr_aml_id._ctp_side() != 'cr':
+                raise ValidationError(_("A counterpart must link a debit journal item with a credit journal item."))
 
     def _get_counterpart_values(self, countered_aml):
         """ Return the counterpart as seen from the other item of the pair:
@@ -73,6 +77,7 @@ class AccountMoveLineCtp(models.Model):
         return {
             'aml': countered_aml,
             'account': countered_aml.account_id,
+            'account_code': countered_aml.account_id.with_company(countered_aml.company_id).code,
             'amount': self.countered_amt,
             'amount_currency': self.countered_amt_currency,
         }

@@ -4,7 +4,7 @@ Viết mới hoàn toàn, dựa trên code Odoo 20.0, không dùng lại code c�
 
 `readme.md` là bản mô tả nghiệp vụ và là nguồn gốc của kế hoạch này: readme nói module phải làm gì, kế hoạch nói làm bằng cách nào. Readme không định nghĩa model, trường hay hàm; tất cả những thứ đó nằm ở đây. Khi hai tài liệu lệch nhau thì sửa kế hoạch theo readme.
 
-Trạng thái: **khung module đã xong và cài được**. Các hàm đánh dấu `TODO(phase N)` chưa có nội dung.
+Trạng thái: **giai đoạn 0 đến 3 đã xong**, 24 test qua trên Odoo 20.0. Còn lại giai đoạn 4 (action, tên hiển thị), 5 (trình tạo đối ứng) và 6 (bản dịch, trang mô tả).
 
 ## 1. Quyết định thiết kế
 
@@ -43,7 +43,7 @@ fg_account_counterpart/
 │   └── account_move_views.xml            form, search của bút toán, action tạo lại
 └── tests/
     ├── common.py
-    ├── test_counterpart.py           21 test
+    ├── test_counterpart.py           24 test
     └── test_counterpart_generate.py  5 test
 ```
 
@@ -61,21 +61,24 @@ Ràng buộc SQL (đã viết): hai phát sinh phải khác nhau, số tiền kh
 
 | Hàm | Việc cần làm | Giai đoạn |
 |---|---|---|
-| `_check_same_move()` | Hai phát sinh cùng một bút toán, phát sinh thứ nhất bên Nợ, thứ hai bên Có. | 1 |
-| `_get_counterpart_values(countered_aml)` | Trả về một cặp đối ứng nhìn từ phát sinh còn lại; dùng bởi `_get_counterparts`. Đã viết. | 2 |
+| `_check_same_move()` | Hai phát sinh cùng một bút toán, phát sinh thứ nhất bên Nợ, thứ hai bên Có. | 1, xong |
+| `_get_counterpart_values(countered_aml)` | Trả về một cặp đối ứng nhìn từ phát sinh còn lại; dùng bởi `_get_counterparts`. | 2, xong |
 | `_compute_display_name()` | Tên hiển thị dạng "131 / 5111: 100". | 4 |
 
 ### `account.move.line` (mở rộng)
 
-Trường: `ctp_dr_ids`, `ctp_cr_ids`, `countered_aml_ids`, `countered_account_ids`, `countered_amt`, `countered_status` (none / partially / fully).
+Trường: `ctp_dr_ids`, `ctp_cr_ids`, `countered_aml_ids`, `countered_account_ids`, `countered_account_codes`, `countered_amt`, `countered_status` (none / partially / fully).
+
+`countered_account_codes` là chuỗi mã tài khoản đối ứng, ví dụ "511, 33311". Các view hiển thị trường này thay cho `countered_account_ids` để chỉ thấy mã, không kèm tên tài khoản. Trường không lưu trong database (mã tài khoản phụ thuộc công ty), nên tìm kiếm và nhóm vẫn dùng `countered_account_ids`.
 
 | Hàm | Việc cần làm | Giai đoạn |
 |---|---|---|
-| `_ctp_is_counterable()` | Phát sinh có tham gia đối ứng không. Đã có bản đầu. | 1 |
-| `_ctp_side()` | Trả về `'dr'`, `'cr'` hoặc `False`. Đã có bản đầu. | 1 |
-| `_ctp_amount()` | Số tiền cần đối ứng, có dấu. Đã có bản đầu. | 1 |
-| `_compute_countered()` | Tính 4 trường đối ứng từ các bản ghi ctp. | 2 |
-| `_get_counterparts()` | Hàm công khai cho module khác (mục 4b). Đã viết, chờ test ở giai đoạn 2. | 2 |
+| `_ctp_is_counterable()` | Phát sinh có tham gia đối ứng không. | 1, xong |
+| `_ctp_side()` | Trả về `'dr'`, `'cr'` hoặc `False`. | 1, xong |
+| `_ctp_amount()` | Số tiền cần đối ứng, có dấu. | 1, xong |
+| `_compute_countered()` | Tính 4 trường đối ứng từ các bản ghi ctp. | 2, xong |
+| `_get_counterparts()` | Hàm công khai cho module khác (mục 4b). | 2, xong |
+| `_compute_countered_account_codes()` | Ghép mã các tài khoản đối ứng thành chuỗi, sắp theo mã. | 2, xong |
 | `action_view_counterparts()` | Mở danh sách đối ứng của phát sinh. Đã có bản đầu. | 4 |
 
 ### `account.move` (mở rộng)
@@ -84,15 +87,15 @@ Trường: `countered_status`.
 
 | Hàm | Việc cần làm | Giai đoạn |
 |---|---|---|
-| `_compute_countered_status()` | Tổng hợp trạng thái từ các phát sinh. | 2 |
-| `_post()` | Gọi `_ctp_generate()` cho bút toán vừa ghi sổ. Đã viết. | 3 |
-| `button_draft()` | Gọi `_ctp_remove()`. Đã viết. | 3 |
-| `_ctp_generate(regenerate=False)` | Tạo bản ghi ctp còn thiếu cho nhiều bút toán trong một lần `create`. | 3 |
-| `_ctp_remove()` | Xoá toàn bộ đối ứng của bút toán. | 3 |
-| `_ctp_prepare_vals_list()` | Sắp phát sinh theo `id`, tách Nợ/Có, trả về dữ liệu để tạo ctp. | 3 |
-| `_ctp_allocate(dr_items, cr_items)` | Điều phối 3 lượt ghép (mục 4). Hàm thuần, không đụng database. | 3 |
-| `_ctp_find_exact_match(dr_item, cr_items)` | Lượt 1: tìm dòng Có bằng tiền, cùng đối tác, kèm ngoại lệ `id` liền kề. | 3 |
-| `_ctp_distribute(dr_item, cr_items)` | Lượt 2 và 3: phân bổ theo tỷ lệ trên một nhóm dòng Có, dồn chênh lệch làm tròn vào dòng cuối. | 3 |
+| `_compute_countered_status()` | Tổng hợp trạng thái từ các phát sinh đối ứng được. Bút toán đã ghi sổ mà không có gì để đối ứng là "hoàn toàn". | 2, xong |
+| `_post()` | Gọi `_ctp_generate()` cho bút toán vừa ghi sổ. | 3, xong |
+| `button_draft()` | Gọi `_ctp_remove()`. | 3, xong |
+| `_ctp_generate(regenerate=False)` | Mặc định chỉ xử lý bút toán đã ghi sổ chưa đối ứng hoàn toàn: xoá đối ứng dở dang rồi tạo lại. `regenerate=True` xử lý cả bút toán đã đủ. Tạo trong một lần `create`, bằng `sudo`. | 3, xong |
+| `_ctp_remove()` | Xoá toàn bộ đối ứng của bút toán. | 3, xong |
+| `_ctp_prepare_vals_list()` | Sắp phát sinh theo `id`, tách Nợ/Có, trả về dữ liệu để tạo ctp. Bút toán có số âm trả về rỗng (`TODO(storno)`). | 3, xong |
+| `_ctp_allocate(dr_items, cr_items, currency)` | Điều phối 3 lượt ghép (mục 4). Hàm thuần, không đụng database. | 3, xong |
+| `_ctp_find_exact_match(dr_item, cr_items, currency)` | Lượt 1: tìm dòng Có bằng tiền, cùng đối tác, kèm ngoại lệ `id` liền kề. | 3, xong |
+| `_ctp_distribute(dr_item, cr_items, currency)` | Lượt 2 và 3: phân bổ theo tỷ lệ trên một nhóm dòng Có, dồn chênh lệch làm tròn vào dòng cuối. | 3, xong |
 | `action_ctp_regenerate()` | Tạo lại đối ứng cho các bút toán đang chọn. Đã có bản đầu. | 4 |
 | `action_view_counterparts()` | Mở danh sách đối ứng của bút toán. Đã có bản đầu. | 4 |
 
@@ -122,7 +125,9 @@ Quy tắc ghép 3 lượt được mô tả trong `readme.md` mục 2 và minh h
 - **Cùng đối tác** so sánh `partner_id` của hai dòng; hai dòng cùng không có đối tác cũng tính là cùng.
 - **Công thức chia tỷ lệ:** min(Nợ còn lại, tổng Có còn lại) × (Có còn lại của dòng / tổng Có còn lại). Làm tròn theo tiền tệ công ty; dòng Có cuối cùng của lần chia nhận phần còn lại.
 - **Mỗi lượt duyệt hết các dòng Nợ** rồi mới sang lượt sau. Phần dư của dòng Nợ sau lượt 2 chuyển sang lượt 3.
-- **Nguyên tệ:** `countered_amt_currency` được chia song song bằng cùng công thức trên số dư nguyên tệ.
+- **Nguyên tệ:** `countered_amt_currency` được chia song song bằng cùng công thức trên số dư nguyên tệ, khi các dòng Có cùng tiền tệ với dòng Nợ. Nếu khác tiền tệ, nguyên tệ của dòng Nợ được chia theo đúng tỷ lệ số tiền hạch toán của nó.
+- **Thứ tự kiểm tra ở lượt 1:** ngoại lệ dòng liền kề được xét trước, rồi mới tìm dòng Có bằng tiền cùng đối tác.
+- **Một cặp chỉ có một bản ghi:** nếu cùng một cặp Nợ/Có được ghép ở hai lượt thì số tiền được cộng dồn.
 
 Đối chiếu nghiệp vụ trong readme với test:
 
@@ -142,7 +147,8 @@ Quy tắc ghép 3 lượt được mô tả trong `readme.md` mục 2 và minh h
 Các module in sổ (sổ cái, sổ chi tiết tài khoản, sổ quỹ, lưu chuyển tiền tệ) lấy dữ liệu đối ứng theo hai cách:
 
 - **Trường có lưu trên phát sinh:** `countered_account_ids`, `countered_aml_ids`, `countered_amt`, `countered_status`. Dùng được trong điều kiện lọc và nhóm.
-- **Hàm `account.move.line._get_counterparts()`:** gọi trên một tập phát sinh, trả về `{id phát sinh: [cặp đối ứng, ...]}`. Mỗi cặp là một dict gồm `aml` (phát sinh đối ứng), `account` (tài khoản đối ứng), `amount` (số tiền hạch toán), `amount_currency` (số tiền nguyên tệ), sắp theo `id` của phát sinh đối ứng. Phát sinh không có đối ứng trả về danh sách rỗng. Module gọi không cần biết phát sinh nằm bên Nợ hay bên Có.
+- **Trường hiển thị:** `countered_account_codes`, chuỗi mã tài khoản đối ứng để in thẳng lên sổ.
+- **Hàm `account.move.line._get_counterparts()`:** gọi trên một tập phát sinh, trả về `{id phát sinh: [cặp đối ứng, ...]}`. Mỗi cặp là một dict gồm `aml` (phát sinh đối ứng), `account` (tài khoản đối ứng), `account_code` (mã của tài khoản đó), `amount` (số tiền hạch toán), `amount_currency` (số tiền nguyên tệ), sắp theo `id` của phát sinh đối ứng. Phát sinh không có đối ứng trả về danh sách rỗng. Module gọi không cần biết phát sinh nằm bên Nợ hay bên Có.
 
 Ví dụ với hóa đơn ở readme mục 3.2: dòng 131 trả về (511, 100.000.000) và (33311, 10.000.000); dòng 511 trả về (131, 100.000.000).
 
@@ -153,9 +159,9 @@ Báo cáo trên dữ liệu lớn nên truy vấn thẳng bảng `account_move_l
 | Giai đoạn | Nội dung | Xong khi |
 |---|---|---|
 | 0 | Khung module, view, phân quyền, test giữ chỗ. | **Đã xong**: cài được trên 20.0. |
-| 1 | Hàm phụ trợ trên phát sinh và ràng buộc `_check_same_move`. | Test dòng bằng 0, dòng ghi chú, storno về bên Nợ/Có qua. |
-| 2 | Hai hàm compute (phát sinh và bút toán). | Test `test_line_fields`, `test_move_status` qua khi tạo ctp bằng tay. |
-| 3 | Bộ máy sinh đối ứng và thuật toán ghép 3 lượt. | Bảy nghiệp vụ ở readme mục 3, làm tròn, ngoại tệ, về nháp, ghi sổ lại đều qua. |
+| 1 | Hàm phụ trợ trên phát sinh và ràng buộc `_check_same_move`. | **Đã xong.** |
+| 2 | Hai hàm compute (phát sinh và bút toán), hàm `_get_counterparts`. | **Đã xong.** |
+| 3 | Bộ máy sinh đối ứng và thuật toán ghép 3 lượt. | **Đã xong:** bảy nghiệp vụ ở readme mục 3, làm tròn, ngoại tệ, về nháp, ghi sổ lại đều qua. |
 | 4 | Hoàn thiện action và tên hiển thị. | Mở được đối ứng từ bút toán và phát sinh. |
 | 5 | Trình tạo đối ứng. | 5 test của wizard qua; thử trên database thật có dữ liệu cũ. |
 | 6 | Bản dịch `i18n/vi.po`, trang mô tả `static/description/index.html`. | Giao diện tiếng Việt đầy đủ. |
@@ -164,7 +170,7 @@ Báo cáo trên dữ liệu lớn nên truy vấn thẳng bảng `account_move_l
 
 1. **Đã chốt:** thuật toán ghép 3 lượt theo yêu cầu của kế toán; readme đã được viết lại theo hướng nghiệp vụ.
 2. **Bút toán âm (storno): đã neo lại**, xem quyết định 12. Các chỗ cần quay lại được đánh dấu `TODO(storno)` trong `models/account_move.py` và `tests/test_counterpart.py`.
-3. **Nguyên tệ của `countered_amt_currency`:** hai dòng Nợ và Có của cùng một bút toán có thể khác tiền tệ. Khung hiện lấy tiền tệ của dòng Nợ; cần kế toán xác nhận.
-4. **Lượt 2 khi nhóm cùng đối tác không đủ:** nếu tổng Có cùng đối tác nhỏ hơn dòng Nợ, phần dư của dòng Nợ chuyển sang lượt 3 (suy ra từ công thức min).
+3. **Nguyên tệ của `countered_amt_currency`:** hai dòng Nợ và Có của cùng một bút toán có thể khác tiền tệ. Code lấy tiền tệ của dòng Nợ và xử lý như mô tả ở mục 4; cần kế toán xác nhận.
+4. **Lượt 2 khi nhóm cùng đối tác không đủ:** code chuyển phần dư của dòng Nợ sang lượt 3 (suy ra từ công thức min); cần kế toán xác nhận. Tương tự, khi cả ngoại lệ liền kề và điều kiện cùng đối tác đều có dòng thỏa, code ưu tiên dòng liền kề.
 5. **Đã chốt:** phát sinh có số tiền bằng 0 tính là "đối ứng hoàn toàn" (quyết định 9). Lưu ý cho giai đoạn 5: cột trạng thái của dữ liệu cũ mặc định là "chưa đối ứng", nên trình tạo đối ứng phải cập nhật cả các dòng bằng 0.
 6. **`readme.md` gây cảnh báo khi nạp module**: Odoo đọc file này như reStructuredText nên báo lỗi cú pháp ở các bảng Markdown. Trang `static/description/index.html` ở giai đoạn 6 sẽ thay thế nó.
