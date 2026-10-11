@@ -1,0 +1,20 @@
+// Trial balance: the top-level parent accounts use the group color of the
+// other reports. The parents below only differ by bold and indentation.
+
+.o_vn_report_table {
+    .o_cdps_root_row {
+        background-color: #D9E1F2 !important;
+
+        // transparent cells, so that the background of the <tr> shows through
+        // and is not covered by the nth-child(even) rule of the base table
+        > td { background: transparent !important; }
+
+        &:hover {
+            background-color: #C5D2EA !important;
+            > td { background: transparent !important; }
+        }
+    }
+
+    // Off-balance accounts use .o_vn_off_balance_row, defined in
+    // fg_vn_accounting_reports/abstract_report.scss.
+}

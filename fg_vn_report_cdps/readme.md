@@ -48,7 +48,7 @@ Khi bật **Hiển thị phân cấp**, tài khoản được xếp theo cây ch
 - Khi mới mở báo cáo, chỉ cấp cao nhất được mở.
 - Tổng cộng của bảng không bị cộng trùng giữa cha và con.
 
-Bộ lọc **Cấp tài khoản** trên màn hình dùng khi không bật phân cấp: cấp 1 chỉ hiện tài khoản có mã đến 3 chữ số, cấp 2 đến 4 chữ số, cấp 3 đến 5 chữ số. Bộ lọc chỉ ẩn bớt dòng trên màn hình: số của các tài khoản bị ẩn không được cộng vào dòng nào, dòng Tổng cộng vẫn là tổng của mọi tài khoản, và file Excel, PDF xuất ra vẫn gồm mọi tài khoản.
+Bộ lọc **Cấp tài khoản** trên màn hình dùng khi không bật phân cấp: cấp 1 chỉ hiện tài khoản có mã đến 3 chữ số, cấp 2 đến 4 chữ số, cấp 3 đến 5 chữ số. Bộ lọc được giữ khi quay lại từ màn hình chi tiết. Nó chỉ ẩn bớt dòng trên màn hình: số của các tài khoản bị ẩn không được cộng vào dòng nào, dòng Tổng cộng vẫn là tổng của mọi tài khoản, và file Excel, PDF xuất ra vẫn gồm mọi tài khoản.
 
 ## 4. So sánh với kỳ khác
 
@@ -69,9 +69,11 @@ Kỳ so sánh chọn được trong cửa sổ tham số và đổi được tro
 
 - Chỉ hiện khi còn số dư đầu kỳ hoặc cuối kỳ. Tài khoản chỉ có phát sinh trong kỳ mà hai đầu đều bằng 0 thì không hiện.
 - Dòng có nền cam nhạt để phân biệt, trên cả màn hình, Excel và PDF.
-- Được cộng vào Tổng cộng.
+- Khi hiện thì được cộng vào Tổng cộng.
 
 **Tài khoản trung chuyển.** Khi công ty bật thiết lập *Ẩn tài khoản trung chuyển khi không có số dư* (module `fg_vn_transfer_account`, dành cho đơn vị áp dụng Thông tư 133), các tài khoản mà đơn vị đã chọn trong thiết lập đó chỉ hiện khi còn số dư đầu kỳ hoặc cuối kỳ. Khi bị ẩn, tài khoản cũng không được cộng vào Tổng cộng; vì lúc đó phát sinh Nợ và Có của nó bằng nhau, Tổng Nợ và Tổng Có của bảng vẫn cân.
+
+Quy tắc chung: Tổng cộng là tổng của mọi tài khoản không bị loại khỏi bảng theo hai quy tắc trên.
 
 ## 6. Xem chi tiết
 

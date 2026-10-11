@@ -1,0 +1,430 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fg_vn_accounting_reports
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 07:17+0000\n"
+"PO-Revision-Date: 2026-10-11 07:17+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.module.module,description:base.module_fg_vn_accounting_reports
+msgid ""
+"\n"
+"Vietnam Accounting Reports - Core\n"
+"=================================\n"
+"\n"
+"Common part of the Vietnamese accounting books: the on-screen report with its\n"
+"period, filters, search, folding and drill-down, the Excel export, and the PDF\n"
+"printing with running totals carried from page to page.\n"
+"\n"
+"This module holds no report. Each book is a separate module built on it.\n"
+"\n"
+"See readme.md in the module directory.\n"
+msgstr ""
+"\n"
+"Nền tảng báo cáo kế toán Việt Nam\n"
+"=================================\n"
+"\n"
+"Phần dùng chung của các sổ kế toán Việt Nam: màn hình báo cáo với kỳ, bộ lọc,\n"
+"tìm kiếm, thu gọn và xem chi tiết; xuất Excel; in PDF có cộng chuyển trang.\n"
+"\n"
+"Module này không chứa báo cáo nào. Mỗi sổ là một module riêng xây trên nó.\n"
+"\n"
+"Xem readme.md trong thư mục module.\n"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "(Signature, full name)"
+msgstr "(Ký, họ tên)"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "(Signature, full name, seal)"
+msgstr "(Ký, họ tên, đóng dấu)"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "-- All --"
+msgstr "-- Tất cả --"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model,name:fg_vn_accounting_reports.model_vn_report_wizard_abstract
+msgid "Abstract Report Wizard"
+msgstr "Wizard báo cáo cơ sở"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Apply"
+msgstr "Áp dụng"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Book opening date: %(date)s"
+msgstr "Ngày mở sổ: %(date)s"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Brought forward"
+msgstr "Số dư đầu trang"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Carried forward"
+msgstr "Cộng chuyển trang"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Chief Accountant"
+msgstr "Kế toán trưởng"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Clear all"
+msgstr "Xóa tất cả"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Date %(date)s"
+msgstr "Ngày %(date)s"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Director"
+msgstr "Giám đốc"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_abstract_report__display_name
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_access_mixin__display_name
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Excel"
+msgstr "Excel"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Export to Excel"
+msgstr "Xuất Excel"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Export to PDF"
+msgstr "Xuất PDF"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Export to XML"
+msgstr "Xuất XML"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "Exporting to Excel..."
+msgstr "Đang xuất Excel..."
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "Exporting to PDF..."
+msgstr "Đang xuất PDF..."
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Filters"
+msgstr "Bộ lọc"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Fold all"
+msgstr "Thu gọn tất cả"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__date_from
+msgid "From"
+msgstr "Từ ngày"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/abstract_report.py:0
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "From %(date_from)s to %(date_to)s"
+msgstr "Từ ngày %(date_from)s đến ngày %(date_to)s"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "From: %(date_from)s to: %(date_to)s"
+msgstr "Từ: %(date_from)s đến: %(date_to)s"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__gutter_mm
+msgid "Gutter (mm)"
+msgstr "Lề gáy (mm)"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_abstract_report__id
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_access_mixin__id
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/report_access_mixin.py:0
+msgid "Invalid company."
+msgstr "Công ty không hợp lệ."
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_cdps_wizard__orientation__landscape
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_wizard_abstract__orientation__landscape
+msgid "Landscape (A4)"
+msgstr "Ngang (A4)"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,help:fg_vn_accounting_reports.field_vn_report_wizard_abstract__report_lang
+msgid ""
+"Language the report is displayed, exported and printed in. It does not "
+"depend on the language of your interface."
+msgstr ""
+"Ngôn ngữ dùng để hiển thị, xuất và in báo cáo. Không phụ thuộc ngôn ngữ giao"
+" diện của bạn."
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "Last month"
+msgstr "Tháng trước"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "Last quarter"
+msgstr "Quý trước"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "Last year"
+msgstr "Năm trước"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Loading..."
+msgstr "Đang tải dữ liệu..."
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__mirror_margin
+msgid "Mirror Margins (two-sided printing)"
+msgstr "Lề đối xứng (in 2 mặt)"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "No data"
+msgstr "Không có dữ liệu"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__orientation
+msgid "Orientation"
+msgstr "Hướng giấy"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "PDF"
+msgstr "PDF"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Page %(page)s/%(total)s"
+msgstr "Trang %(page)s/%(total)s"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_cdps_wizard__orientation__portrait
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_wizard_abstract__orientation__portrait
+msgid "Portrait (A4)"
+msgstr "Đứng (A4)"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "Prepared by"
+msgstr "Người lập biểu"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/tests/common.py:0
+#: code:addons/fg_vn_accounting_reports/wizard/abstract_wizard.py:0
+msgid "Report"
+msgstr "Báo cáo"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__report_lang
+msgid "Report Language"
+msgstr "Ngôn ngữ báo cáo"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Report language"
+msgstr "Ngôn ngữ báo cáo"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "Search %s..."
+msgstr "Tìm %s..."
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Search..."
+msgstr "Tìm kiếm..."
+
+#. module: fg_vn_accounting_reports
+#: model:ir.module.module,summary:base.module_fg_vn_accounting_reports
+msgid ""
+"Shared screen, Excel export and PDF printing of the Vietnamese accounting "
+"books"
+msgstr "Màn hình, xuất Excel và in PDF dùng chung của các sổ kế toán Việt Nam"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__show_zero_balance
+msgid "Show Lines Without Figures"
+msgstr "Hiện dòng không có phát sinh"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/wizard/abstract_wizard.py:0
+msgid "The start date must be before the end date."
+msgstr "Ngày bắt đầu phải trước ngày kết thúc."
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/pdf_renderer.py:0
+msgid "This book has %(pages)s pages, numbered from page 1 to page %(pages)s"
+msgstr "Sổ này bao gồm %(pages)s trang, đánh số từ trang số 1 đến %(pages)s"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "This month"
+msgstr "Tháng này"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "This quarter"
+msgstr "Quý này"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "This year"
+msgstr "Năm nay"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_vn_report_wizard_abstract__date_to
+msgid "To"
+msgstr "Đến ngày"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Unfold all"
+msgstr "Mở rộng tất cả"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.ui.menu,name:fg_vn_accounting_reports.menu_vn_vas_reports
+msgid "VAS Reports"
+msgstr "Báo cáo VAS"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model,name:fg_vn_accounting_reports.model_vn_abstract_report
+msgid "Vietnam Abstract Report"
+msgstr "Báo cáo Việt Nam cơ sở"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.module.module,shortdesc:base.module_fg_vn_accounting_reports
+msgid "Vietnam Accounting Reports - Core"
+msgstr "Nền tảng báo cáo kế toán Việt Nam"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model,name:fg_vn_accounting_reports.model_vn_report_access_mixin
+msgid "Vietnam Report Access Mixin"
+msgstr "Kiểm tra quyền báo cáo Việt Nam"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "View details"
+msgstr "Xem chi tiết"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "XML"
+msgstr "XML"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Yes"
+msgstr "Có"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/report_access_mixin.py:0
+msgid "You are not allowed to view the figures of this company."
+msgstr "Bạn không có quyền xem số liệu của công ty này."
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/report_access_mixin.py:0
+msgid "You are not allowed to view this report."
+msgstr "Bạn không có quyền xem báo cáo này."
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "to"
+msgstr "đến ngày"

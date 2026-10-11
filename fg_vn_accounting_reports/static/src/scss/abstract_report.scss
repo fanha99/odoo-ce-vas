@@ -1,0 +1,730 @@
+/**
+ * Vietnam Accounting Reports - Styles
+ * Giống account_reports của Odoo Enterprise
+ */
+
+.o_vn_report {
+    padding: 16px;
+    background: #f8f9fa;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    // ==================== HEADER (1-row toolbar) ====================
+    // Grid 1fr | auto | 1fr → middle (toolbar) luôn căn giữa toàn row,
+    // ưu tiên đủ chỗ cho controls. Title trái + actions phải chia đều 1fr,
+    // title clip bằng ellipsis khi quá dài.
+    .o_vn_report_header {
+        background: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 12px;
+
+        // LEFT: title (chiếm 1fr trái, clip nếu dài)
+        .o_vn_report_title {
+            justify-self: start;
+            min-width: 0;
+            max-width: 100%;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            overflow: hidden;
+
+            .o_vn_report_title_text {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #333;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .o_vn_report_code {
+                font-style: italic;
+                color: #888;
+                font-size: 0.78rem;
+                white-space: nowrap;
+            }
+        }
+
+        // MIDDLE: toolbar (date / filter / search / expand-collapse) — auto width, luôn giữa
+        .o_vn_report_filters {
+            justify-self: center;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        // RIGHT: export buttons (chiếm 1fr phải, align về cuối)
+        .o_vn_report_actions {
+            justify-self: end;
+            display: flex;
+            gap: 6px;
+        }
+    }
+
+    // ==================== DATE FILTER (custom dropdown, không dùng Odoo Dropdown - v19) ====================
+    .o_vn_date_dropdown {
+        position: relative;
+        flex-shrink: 0;
+
+        .o_vn_date_btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            font-size: 13px;
+            color: #374151;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+
+            &:hover {
+                background: #f9fafb;
+                border-color: #9ca3af;
+            }
+
+            .fa-calendar {
+                color: #6b7280;
+            }
+        }
+
+        .o_vn_date_menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            z-index: 1050;
+            min-width: 200px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 4px 0;
+
+            .o_vn_date_item {
+                display: block;
+                padding: 8px 16px 8px 36px;
+                font-size: 14px;
+                color: #374151;
+                cursor: pointer;
+                white-space: nowrap;
+                position: relative;
+
+                &:hover {
+                    background: #f3f4f6;
+                }
+
+                &.active {
+                    color: #2563eb;
+                    font-weight: 500;
+                }
+
+                .fa-check {
+                    position: absolute;
+                    left: 14px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 12px;
+                    color: #2563eb;
+                }
+            }
+
+            .o_vn_date_divider {
+                height: 1px;
+                background: #e5e7eb;
+                margin: 4px 0;
+            }
+
+            .o_vn_date_custom {
+                padding: 6px 12px;
+
+                .o_vn_date_custom_row {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 6px;
+                    flex-wrap: nowrap;
+
+                    label {
+                        font-size: 12px;
+                        color: #6b7280;
+                        white-space: nowrap;
+                        flex-shrink: 0;
+                        margin-bottom: 0;
+                    }
+
+                    input.o_datetime_input {
+                        width: 95px;
+                        flex: 0 0 95px;
+                        padding: 4px 6px;
+                        font-size: 12px;
+                        border: 1px solid #d1d5db;
+                        border-radius: 4px;
+
+                        &:focus {
+                            outline: none;
+                            border-color: #2563eb;
+                        }
+                    }
+
+                    .btn-primary {
+                        padding: 4px 10px;
+                        font-size: 12px;
+                        flex-shrink: 0;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+    }
+
+    // ==================== FILTER DROPDOWN ====================
+    .o_vn_filter_dropdown {
+        position: relative;
+
+        .o_vn_filter_btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            font-size: 13px;
+            color: #374151;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+            
+            &:hover {
+                background: #f9fafb;
+                border-color: #9ca3af;
+            }
+            
+            .o_vn_badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 18px;
+                height: 18px;
+                padding: 0 5px;
+                font-size: 11px;
+                font-weight: 600;
+                color: white;
+                background: #2563eb;
+                border-radius: 9px;
+            }
+        }
+
+        .o_vn_filter_menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            z-index: 1050;
+            min-width: 320px;
+            max-width: 400px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+            .o_vn_filter_content {
+                max-height: 400px;
+                overflow-y: auto;
+                padding: 16px;
+            }
+
+            .o_vn_filter_item {
+                margin-bottom: 16px;
+                
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                label {
+                    display: block;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #374151;
+                    margin-bottom: 6px;
+                }
+                
+                .o_vn_filter_input,
+                .o_vn_filter_select {
+                    width: 100%;
+                    padding: 8px 10px;
+                    font-size: 13px;
+                    border: 1px solid #d1d5db;
+                    border-radius: 4px;
+                    
+                    &:focus {
+                        outline: none;
+                        border-color: #2563eb;
+                    }
+                }
+                
+                .o_vn_filter_search_wrapper {
+                    position: relative;
+                    
+                    .o_vn_filter_search_results {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        background: white;
+                        border: 1px solid #e5e7eb;
+                        border-top: none;
+                        border-radius: 0 0 4px 4px;
+                        max-height: 200px;
+                        overflow-y: auto;
+                        z-index: 10;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        
+                        .o_vn_filter_search_item {
+                            padding: 8px 12px;
+                            cursor: pointer;
+                            font-size: 13px;
+                            
+                            &:hover {
+                                background: #f3f4f6;
+                            }
+                        }
+                    }
+                }
+
+                .o_vn_filter_tags {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 6px;
+                    margin-top: 8px;
+                    
+                    .o_vn_tag {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                        padding: 4px 8px;
+                        font-size: 12px;
+                        color: #1e40af;
+                        background: #dbeafe;
+                        border-radius: 4px;
+                        
+                        .fa-times {
+                            cursor: pointer;
+                            opacity: 0.7;
+                            
+                            &:hover {
+                                opacity: 1;
+                            }
+                        }
+                    }
+                }
+                
+                .o_vn_checkbox {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    
+                    input {
+                        width: 16px;
+                        height: 16px;
+                    }
+                    
+                    span {
+                        font-size: 13px;
+                        color: #374151;
+                    }
+                }
+            }
+
+            .o_vn_filter_actions {
+                display: flex;
+                gap: 8px;
+                padding: 12px 16px;
+                background: #f9fafb;
+                border-top: 1px solid #e5e7eb;
+            }
+        }
+    }
+
+    // ==================== BUTTONS ====================
+    .o_vn_btn_primary,
+    .o_vn_btn_secondary,
+    .o_vn_btn_success,
+    .o_vn_btn_danger,
+    .o_vn_btn_warning,
+    .o_vn_btn_icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+    }
+    
+    .o_vn_btn_primary {
+        color: white;
+        background: #2563eb;
+        
+        &:hover {
+            background: #1d4ed8;
+        }
+    }
+    
+    .o_vn_btn_secondary {
+        color: #374151;
+        background: #f3f4f6;
+        
+        &:hover {
+            background: #e5e7eb;
+        }
+    }
+    
+    .o_vn_btn_success {
+        color: white;
+        background: #059669;
+        
+        &:hover {
+            background: #047857;
+        }
+    }
+    
+    .o_vn_btn_danger {
+        color: white;
+        background: #dc2626;
+
+        &:hover {
+            background: #b91c1c;
+        }
+    }
+
+    .o_vn_btn_warning {
+        color: white;
+        background: #d97706;
+
+        &:hover {
+            background: #b45309;
+        }
+    }
+
+    .o_vn_btn_icon {
+        padding: 5px 8px;
+        color: #6b7280;
+        background: white;
+        border: 1px solid #d1d5db;
+
+        &:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+    }
+
+    // ==================== SEARCH BOX ====================
+    .o_vn_search_box {
+        position: relative;
+
+        .fa-search {
+            position: absolute;
+            left: 9px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        input {
+            padding: 5px 10px 5px 28px;
+            font-size: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            width: 160px;
+
+            &:focus {
+                outline: none;
+                border-color: #2563eb;
+                box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+            }
+
+            &::placeholder {
+                color: #9ca3af;
+            }
+        }
+    }
+
+    // ==================== LOADING ====================
+    .o_vn_report_loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px;
+        color: #6b7280;
+
+        p {
+            margin-top: 16px;
+        }
+    }
+
+    // ==================== CONTENT ====================
+    .o_vn_report_content {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: auto;
+        flex: 1;
+    }
+
+    // ==================== TABLE ====================
+    .o_vn_report_table {
+        width: fit-content;
+        margin: 0 auto;
+        font-size: 13px;
+
+        th {
+            background: #4472C4;
+            color: white;
+            font-weight: 600;
+            vertical-align: middle;
+            padding: 10px 8px;
+            border-color: #3d64a8;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            // border-collapse "ăn mất" viền khi sticky → dùng box-shadow giả viền dưới
+            box-shadow: inset 0 -1px 0 #3d64a8;
+        }
+
+        td {
+            vertical-align: middle;
+            padding: 8px;
+        }
+
+        .o_vn_group_row {
+            cursor: pointer;
+
+            &:hover {
+                background: #e3f2fd;
+            }
+
+            .o_vn_group_header {
+                background: #D9E1F2;
+                font-weight: 600;
+                padding: 10px 12px;
+
+                .fa-caret-down,
+                .fa-caret-right {
+                    margin-right: 8px;
+                    color: #4472C4;
+                }
+
+                .o_vn_group_code {
+                    color: #4472C4;
+                    margin-right: 8px;
+                }
+            }
+        }
+
+        .o_vn_opening_row {
+            background: #E2EFDA;
+
+            td {
+                border-top: 2px solid #A9D08E;
+            }
+        }
+
+        // TK ngoài bảng (đầu '0', ghi đơn) — nền cam nhạt, cho report cộng
+        // TK ngoài bảng vào tổng (vd CDPS). > td transparent !important để
+        // thắng column-alternation của .o_vn_detail_row.
+        .o_vn_off_balance_row {
+            background: #FCE4D6 !important;
+
+            > td { background: transparent !important; }
+
+            &:hover {
+                background: #F8D7C0 !important;
+                > td { background: transparent !important; }
+            }
+        }
+
+        // Alternation theo CỘT (không theo dòng) — chỉ áp dụng cho data row.
+        // Cột 1 = action cell (caret + drill-down) luôn trắng,
+        // cột 2/4/6... tô nhẹ.
+        .o_vn_detail_row {
+            > td:nth-child(even) {
+                background: #fafafa;
+            }
+
+            > td.o_vn_action_cell {
+                background: transparent;
+            }
+
+            &:hover > td {
+                background: #f0f0f0;
+            }
+
+            &:hover > td.o_vn_action_cell {
+                background: transparent;
+            }
+        }
+
+        // ==================== ACTION CELL (caret + drill-down) ====================
+        .o_vn_action_th {
+            width: 50px !important;
+            min-width: 50px !important;
+            max-width: 50px !important;
+            padding: 4px !important;
+        }
+
+        .o_vn_action_cell {
+            width: 50px !important;
+            min-width: 50px !important;
+            max-width: 50px !important;
+            text-align: center;
+            vertical-align: middle;
+            padding: 2px 4px !important;
+            white-space: nowrap;
+
+            .o_vn_caret {
+                cursor: pointer;
+                color: #4472C4;
+                margin-right: 4px;
+            }
+        }
+
+        // Drill-down button: icon-only, mờ khi idle, rõ khi hover row
+        .o_vn_drilldown_btn {
+            border: none;
+            background: transparent;
+            padding: 2px 6px;
+            color: #6b7280;
+            opacity: 0.35;
+            cursor: pointer;
+            transition: opacity 0.15s ease, color 0.15s ease;
+            line-height: 1;
+
+            .fa {
+                font-size: 13px;
+            }
+
+            &:hover {
+                color: #2563eb;
+                opacity: 1;
+            }
+        }
+
+        // Multi-item dropdown (3-dots) trong drilldown cell
+        .o_vn_action_menu_btn {
+            color: #9ca3af;
+            opacity: 0.4;
+            transition: opacity 0.15s ease;
+            padding: 2px 6px !important;
+
+            &:hover {
+                color: #4b5563;
+                opacity: 1;
+            }
+
+            .fa-ellipsis-v {
+                font-size: 14px;
+            }
+        }
+
+        .dropdown-menu {
+            min-width: 180px;
+            padding: 4px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 6px;
+
+            .dropdown-item {
+                padding: 8px 14px;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+
+                &:hover {
+                    background-color: #f3f4f6;
+                }
+
+                .fa {
+                    width: 18px;
+                    text-align: center;
+                    color: #6b7280;
+                }
+            }
+        }
+
+        // Show drill-down/menu button on row hover
+        .o_vn_group_row:hover,
+        .o_vn_detail_row:hover,
+        .o_vn_data_row:hover {
+            .o_vn_drilldown_btn,
+            .o_vn_action_menu_btn {
+                opacity: 1;
+            }
+        }
+
+        .o_vn_total_row {
+            background: #E2EFDA;
+
+            td {
+                border-top: 2px solid #A9D08E;
+            }
+        }
+
+        .o_vn_closing_row {
+            background: #E2EFDA;
+
+            td {
+                border-bottom: 2px solid #A9D08E;
+            }
+        }
+    }
+
+    // ==================== EMPTY STATE ====================
+    .o_vn_report_empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px;
+        color: #9ca3af;
+    }
+}
+
+// ==================== RESPONSIVE ====================
+@media (max-width: 992px) {
+    .o_vn_report {
+        .o_vn_report_header {
+            grid-template-columns: 1fr auto;
+            row-gap: 8px;
+
+            .o_vn_report_title {
+                grid-column: 1;
+            }
+
+            .o_vn_report_actions {
+                grid-column: 2;
+            }
+
+            // Toolbar xuống dòng dưới khi không đủ chỗ
+            .o_vn_report_filters {
+                grid-column: 1 / -1;
+                justify-self: center;
+                flex-wrap: wrap;
+            }
+        }
+    }
+}

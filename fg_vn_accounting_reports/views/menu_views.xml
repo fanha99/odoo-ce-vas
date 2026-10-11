@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu cha "VAS Reports" dưới Accounting > Reporting -->
+    <menuitem id="menu_vn_vas_reports"
+              name="VAS Reports"
+              parent="account.menu_finance_reports"
+              sequence="0"/>
+
+</odoo>

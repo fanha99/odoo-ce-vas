@@ -5,7 +5,22 @@ Nguồn: `D:\openerp\V19\fanha-addons\fg_vn_accounting_reports` (19.0.1.0.0, com
 
 `readme.md` mô tả module làm gì cho người dùng; kế hoạch này nói làm bằng cách nào. Khi hai tài liệu lệch nhau thì sửa kế hoạch theo readme.
 
-Trạng thái: **các quyết định đã chốt hết; chờ duyệt lần cuối trước khi code.** Chưa viết dòng code nào. Thư mục module hiện chỉ có `readme.md` và `PLAN.md`.
+Trạng thái: **đã xong cả sáu giai đoạn (2026-10-11).** 52 test chạy qua trên Odoo 20.0. Giao diện OWL 3 được kiểm bằng tour trình duyệt của `fg_vn_report_cdps` (Chrome headless), không có lỗi hay cảnh báo trong console.
+
+Khác với kế hoạch, phát sinh khi code:
+
+| Điểm | Kế hoạch | Thực tế | Lý do |
+|---|---|---|---|
+| Mở rộng dữ liệu báo cáo | Báo cáo con ghi đè `get_report_data()` | Thêm hook `_build_report_data(options)`; báo cáo con ghi đè hook này | `get_report_data()` chuyển sang ngôn ngữ báo cáo ở bên trong; phần ghi đè chạy bên ngoài sẽ dịch nhãn theo ngôn ngữ người dùng. |
+| Giữ trạng thái qua drill-down | Ghi vào `props.action.context` và `sessionStorage` | Chỉ `sessionStorage`, kèm `report_token` do wizard cấp cho mỗi lần mở | Không phụ thuộc việc OWL 3 có cho ghi vào props hay không. Token phân biệt "mở mới từ wizard" (dùng tham số mới) với "quay lại từ drill-down, F5" (dùng trạng thái đã lưu). |
+| Tìm giá trị cho bộ lọc nhiều-nhiều | `searchRead` theo `name`, `display_name` | `name_search` | Tìm được tài khoản theo mã; không phụ thuộc trường `name` của model. |
+| Lỗi khi tải báo cáo | Hiện thông báo chung "Lỗi khi tải dữ liệu" | Để lỗi đi tới dịch vụ lỗi của Odoo | Người dùng thấy đúng nội dung lỗi (không có quyền, thiếu ngày kỳ so sánh). |
+| `<select>` của bộ lọc | `t-att-selected` trên `<option>` | Thêm `t-att-value` trên `<select>` | Khi chạy thật, `t-att-selected` không chọn đúng dòng của ô ngôn ngữ. |
+| Test wizard cơ sở | Wizard giả trong test của nền tảng | Test qua wizard thật của CDPS (`fg_vn_report_cdps/tests/test_wizard.py`) | `AbstractModel` không tạo được bản ghi; wizard thật kiểm đúng điều cần kiểm. |
+| Model báo cáo giả trong test | Khai model riêng | Vá các hook của chính `vn.abstract.report` trong test | Không phải thêm model vào registry lúc chạy test. |
+| Controller | `return request.not_found()` | `raise request.not_found()` | Odoo 20 cảnh báo khi route trả về `HTTPException`. |
+
+Chưa làm: xem lại SCSS bằng mắt ở chế độ tối. Ảnh chụp từ tour cho thấy bố cục đúng ở chế độ sáng.
 
 Module được chuyển và kiểm thử song song với `fg_vn_report_cdps` (xem `fg_vn_report_cdps/PLAN.md`).
 

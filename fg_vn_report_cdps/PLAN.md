@@ -5,7 +5,18 @@ Nguồn: `D:\openerp\V19\fanha-addons\fg_vn_report_cdps` (19.0.1.0.0, commit `64
 
 `readme.md` mô tả báo cáo làm gì cho người dùng; kế hoạch này nói làm bằng cách nào. Khi hai tài liệu lệch nhau thì sửa kế hoạch theo readme.
 
-Trạng thái: **các quyết định đã chốt; chờ duyệt lần cuối trước khi code.** Chưa viết dòng code nào.
+Trạng thái: **đã xong cả sáu giai đoạn (2026-10-11).** 72 test chạy qua trên Odoo 20.0, gồm một tour trình duyệt 50 bước (wizard, ngôn ngữ, phân cấp, tìm kiếm, bộ lọc, so sánh, cấp tài khoản, kỳ, drill-down và quay lại, tải lại trang).
+
+Khác với kế hoạch, phát sinh khi code:
+
+| Điểm | Kế hoạch | Thực tế | Lý do |
+|---|---|---|---|
+| Tổng cộng | Loại tài khoản trung chuyển đang ẩn khi nó hết số dư | Tổng cộng là tổng số riêng của mọi tài khoản không bị loại khỏi báo cáo. Tài khoản bị loại là tài khoản ngoài bảng hoặc tài khoản được ẩn mà hết số dư đầu và cuối kỳ. | Cùng kết quả với kế hoạch cho tài khoản trung chuyển, và là đúng cách 19.0 xử lý tài khoản ngoài bảng. Một tài khoản hết số dư có phát sinh Nợ bằng Có, nên loại nó không làm lệch tổng. |
+| `account_level` | JS xoá khỏi `options` trước khi gửi | JS giữ trong `options`; máy chủ không đọc | Tour phát hiện cấp tài khoản bị mất sau khi quay lại từ drill-down, vì trạng thái được khôi phục từ `options` đã lưu. Bản 19.0 có cùng lỗi. |
+| Phần trăm chênh lệch khi kỳ so sánh bằng 0 | Như 19.0: luôn `+100%` | `+100%` hoặc `-100%` theo dấu của chênh lệch | 19.0 hiện `+100%` cạnh một chênh lệch âm. |
+| Mở rộng `get_report_data()` | Ghi đè `get_report_data()` | Ghi đè `_build_report_data()` của nền tảng | Nhãn cột so sánh phải theo ngôn ngữ báo cáo. |
+| Tài khoản đã lưu trữ | Không nêu | Giữ như 19.0: tài khoản đã lưu trữ không có trong báo cáo, kể cả khi còn phát sinh | Xem mục 9. |
+| Đọc số liệu | SQL như 19.0 | Thêm `flush_model()` cho `account.move.line` và `account.account` trước khi chạy SQL | Thay đổi chưa ghi xuống database không được SQL thấy; test phát hiện. |
 
 Module này được chuyển song song với `fg_vn_accounting_reports` và là báo cáo dùng để kiểm thử nền tảng trên số liệu thật. Các thay đổi của nền tảng (OWL 3, `ir.access`, phân quyền, chuỗi tiếng Anh) mô tả ở `fg_vn_accounting_reports/PLAN.md`; kế hoạch này chỉ ghi phần riêng của CDPS.
 
@@ -286,3 +297,11 @@ Cách A được chọn. Cách B được ghi lại để dùng nếu sau này c
 | Truy vấn database | 1 câu SQL chính, thêm 1 câu cho 131/331, gấp đôi khi có so sánh. | Y hệt. |
 | Khi đổi cấp trên màn hình | Tức thì, không gọi máy chủ. | Tải lại báo cáo. |
 | Kiểm thử | Phần lọc ở JS, không có test tự động. | Phần lọc ở Python, có test. |
+
+## 9. Điểm để ngỏ
+
+Giữ nguyên hành vi 19.0, chưa được bàn; ghi lại để quyết định sau.
+
+1. **Tài khoản đã lưu trữ còn số dư hoặc phát sinh không có trong báo cáo.** Câu SQL chỉ lấy tài khoản `active`. Nếu một tài khoản bị lưu trữ khi còn số liệu, Tổng Nợ và Tổng Có của bảng sẽ lệch nhau đúng bằng số của nó.
+2. **Tài khoản của công ty con (chi nhánh).** Báo cáo lấy tài khoản gắn trực tiếp với công ty của báo cáo. Hệ thống tài khoản của Odoo thường gắn với công ty gốc; báo cáo lập cho một chi nhánh sẽ không thấy các tài khoản đó.
+3. **Tách theo đối tác chỉ cho 131 và 331.** Các tài khoản công nợ khác (138, 338, 141…) được bù trừ trong từng tài khoản.

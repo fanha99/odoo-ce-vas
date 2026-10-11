@@ -1,0 +1,470 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fg_vn_report_cdps
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 07:19+0000\n"
+"PO-Revision-Date: 2026-10-11 07:19+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fg_vn_report_cdps
+#: model:ir.module.module,description:base.module_fg_vn_report_cdps
+msgid ""
+"\n"
+"Vietnam - Trial Balance\n"
+"=======================\n"
+"\n"
+"Trial balance of the Vietnamese accounting system: opening balance, movements\n"
+"of the period and closing balance of every account, debit and credit apart.\n"
+"\n"
+"* receivable and payable accounts 131 and 331 split by partner\n"
+"* account hierarchy, comparison with another period\n"
+"* on screen, Excel, PDF, and the XML appendix F01-CDTK\n"
+"\n"
+"See readme.md in the module directory.\n"
+msgstr ""
+"\n"
+"Bảng cân đối số phát sinh\n"
+"=========================\n"
+"\n"
+"Bảng cân đối số phát sinh theo chế độ kế toán Việt Nam: số dư đầu kỳ, phát sinh\n"
+"trong kỳ và số dư cuối kỳ của từng tài khoản, tách riêng Nợ và Có.\n"
+"\n"
+"* tài khoản công nợ 131 và 331 tách theo từng đối tác\n"
+"* phân cấp tài khoản, so sánh với kỳ khác\n"
+"* xem trên màn hình, xuất Excel, PDF và phụ lục XML F01-CDTK\n"
+"\n"
+"Xem readme.md trong thư mục module.\n"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Account"
+msgstr "Mã TK"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__hierarchy
+msgid "Account Hierarchy"
+msgstr "Hiển thị phân cấp"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Account Name"
+msgstr "Tên tài khoản"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Account level"
+msgstr "Cấp tài khoản"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__account_ids
+msgid "Accounts"
+msgstr "Tài khoản"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Accounts without figures"
+msgstr "Tài khoản không có số liệu"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "All accounts"
+msgstr "Tất cả tài khoản"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,help:fg_vn_report_cdps.field_vn_report_cdps_wizard__hierarchy
+msgid "Arrange the accounts along their parent accounts."
+msgstr "Xếp tài khoản theo tài khoản cha."
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Closing Credit"
+msgstr "Dư Có cuối kỳ"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Closing Debit"
+msgstr "Dư Nợ cuối kỳ"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__comparison_type
+msgid "Compare With"
+msgstr "So sánh với"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Compare with"
+msgstr "So sánh với"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Compared Closing Credit"
+msgstr "Dư Có cuối kỳ so sánh"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Compared Closing Debit"
+msgstr "Dư Nợ cuối kỳ so sánh"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__comparison_date_from
+msgid "Compared From"
+msgstr "Kỳ so sánh từ ngày"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__comparison_date_to
+msgid "Compared To"
+msgstr "Kỳ so sánh đến ngày"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Compared from"
+msgstr "Kỳ so sánh từ ngày"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Compared period"
+msgstr "Kỳ so sánh"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Compared to"
+msgstr "Kỳ so sánh đến ngày"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "Comparison"
+msgstr "So sánh"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__create_uid
+msgid "Created by"
+msgstr "Người tạo"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__create_date
+msgid "Created on"
+msgstr "Ngày tạo"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Credit"
+msgstr "Phát sinh Có"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_cdps.selection__vn_report_cdps_wizard__comparison_type__custom
+msgid "Custom period"
+msgstr "Tự chọn kỳ"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Debit"
+msgstr "Phát sinh Nợ"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Detailed"
+msgstr "Chi tiết"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "Discard"
+msgstr "Đóng"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps__display_name
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "Excel"
+msgstr "Excel"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Exporting to XML..."
+msgstr "Đang xuất XML..."
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__date_from
+msgid "From"
+msgstr "Từ ngày"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__gutter_mm
+msgid "Gutter (mm)"
+msgstr "Lề gáy (mm)"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Hide"
+msgstr "Ẩn"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Hierarchy"
+msgstr "Phân cấp"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps__id
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Journal Items"
+msgstr "Chi tiết bút toán"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,help:fg_vn_report_cdps.field_vn_report_cdps_wizard__report_lang
+msgid ""
+"Language the report is displayed, exported and printed in. It does not "
+"depend on the language of your interface."
+msgstr ""
+"Ngôn ngữ dùng để hiển thị, xuất và in báo cáo. Không phụ thuộc ngôn ngữ giao"
+" diện của bạn."
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Người cập nhật lần cuối"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__write_date
+msgid "Last Updated on"
+msgstr "Ngày cập nhật lần cuối"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,help:fg_vn_report_cdps.field_vn_report_cdps_wizard__account_ids
+msgid "Leave empty for all the accounts."
+msgstr "Để trống để xem tất cả tài khoản."
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Level 1 (3 digits)"
+msgstr "Cấp 1 (3 số)"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Level 2 (4 digits)"
+msgstr "Cấp 2 (4 số)"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Level 3 (5 digits)"
+msgstr "Cấp 3 (5 số)"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__mirror_margin
+msgid "Mirror Margins (two-sided printing)"
+msgstr "Lề đối xứng (in 2 mặt)"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_cdps.selection__vn_report_cdps_wizard__comparison_type__none
+msgid "No comparison"
+msgstr "Không so sánh"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Opening Credit"
+msgstr "Dư Có đầu kỳ"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Opening Debit"
+msgstr "Dư Nợ đầu kỳ"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "Options"
+msgstr "Tùy chọn"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__orientation
+msgid "Orientation"
+msgstr "Hướng giấy"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "PDF"
+msgstr "PDF"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "PDF Printing"
+msgstr "In PDF"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "Period"
+msgstr "Kỳ báo cáo"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+#: code:addons/fg_vn_report_cdps/wizard/cdps_wizard.py:0
+msgid "Please set the start and end dates of the compared period."
+msgstr "Vui lòng nhập ngày bắt đầu và ngày kết thúc của kỳ so sánh."
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_cdps.selection__vn_report_cdps_wizard__comparison_type__previous_period
+msgid "Previous period"
+msgstr "Kỳ trước"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__report_lang
+msgid "Report Language"
+msgstr "Ngôn ngữ báo cáo"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_cdps.selection__vn_report_cdps_wizard__comparison_type__same_period_last_year
+msgid "Same period last year"
+msgstr "Cùng kỳ năm trước"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__show_zero_balance
+msgid "Show Accounts Without Figures"
+msgstr "Hiện tài khoản không có số liệu"
+
+#. module: fg_vn_report_cdps
+#. odoo-javascript
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
+msgid "Show the account hierarchy"
+msgstr "Hiện phân cấp tài khoản"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "TOTAL"
+msgstr "TỔNG CỘNG"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "TRIAL BALANCE"
+msgstr "BẢNG CÂN ĐỐI SỐ PHÁT SINH"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+#: code:addons/fg_vn_report_cdps/wizard/cdps_wizard.py:0
+msgid "The start date of the compared period must be before its end date."
+msgstr "Ngày bắt đầu của kỳ so sánh phải trước ngày kết thúc."
+
+#. module: fg_vn_report_cdps
+#: model:ir.model.fields,field_description:fg_vn_report_cdps.field_vn_report_cdps_wizard__date_to
+msgid "To"
+msgstr "Đến ngày"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+#: code:addons/fg_vn_report_cdps/wizard/cdps_wizard.py:0
+#: model:ir.actions.act_window,name:fg_vn_report_cdps.action_vn_report_cdps_wizard
+#: model:ir.actions.client,name:fg_vn_report_cdps.action_vn_report_cdps
+#: model:ir.model,name:fg_vn_report_cdps.model_vn_report_cdps
+#: model:ir.ui.menu,name:fg_vn_report_cdps.menu_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "Trial Balance"
+msgstr "Bảng cân đối số phát sinh"
+
+#. module: fg_vn_report_cdps
+#: model:ir.model,name:fg_vn_report_cdps.model_vn_report_cdps_wizard
+msgid "Trial Balance Wizard"
+msgstr "Wizard bảng cân đối số phát sinh"
+
+#. module: fg_vn_report_cdps
+#: model:ir.module.module,summary:base.module_fg_vn_report_cdps
+msgid ""
+"Trial balance with account hierarchy, period comparison and XML appendix"
+msgstr ""
+"Bảng cân đối số phát sinh có phân cấp tài khoản, so sánh kỳ và phụ lục XML"
+
+#. module: fg_vn_report_cdps
+#. odoo-python
+#: code:addons/fg_vn_report_cdps/models/cdps_pdf.py:0
+#: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+msgid "Variance"
+msgstr "Chênh lệch"
+
+#. module: fg_vn_report_cdps
+#: model:ir.module.module,shortdesc:base.module_fg_vn_report_cdps
+msgid "Vietnam - Trial Balance"
+msgstr "Việt Nam - Bảng cân đối số phát sinh"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "View"
+msgstr "Xem báo cáo"
+
+#. module: fg_vn_report_cdps
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_cdps.view_vn_report_cdps_wizard_form
+msgid "XML"
+msgstr "XML"

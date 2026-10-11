@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="fg_vn_accounting_reports.AbstractReport">
+        <div class="o_vn_report o_action">
+            <!-- Header on one line: title | filters, period, search, folding | exports -->
+            <div class="o_vn_report_header">
+                <div class="o_vn_report_title">
+                    <span t-if="this.state.reportData" class="o_vn_report_title_text" t-out="this.state.reportData.header.title"/>
+                    <span t-if="this.state.reportData" class="o_vn_report_code" t-out="this.state.reportData.header.template_code"/>
+                </div>
+
+                <div class="o_vn_report_filters">
+
+                    <!-- Period. A hand-made dropdown: the menu of the Dropdown
+                         component is rendered outside of the report, where the
+                         styles of the report do not apply. -->
+                    <div class="o_vn_date_dropdown" t-ref="this.dateDropdownRef">
+                        <button class="o_vn_date_btn" t-on-click="this.toggleDateDropdown">
+                            <i class="fa fa-calendar"/>
+                            <span t-out="this.dateRangeLabel"/>
+                            <i class="fa fa-caret-down"/>
+                        </button>
+
+                        <div t-if="this.state.showDateDropdown" class="o_vn_date_menu" t-on-click.stop="">
+                            <t t-foreach="this.dateFilters" t-as="dateFilterGroup" t-key="dateFilterGroup_index">
+                                <t t-foreach="dateFilterGroup" t-as="dateFilter" t-key="dateFilter.id">
+                                    <div t-on-click="() => this.onDateFilterSelected(dateFilter.id)"
+                                         t-att-class="'o_vn_date_item' + (this.state.selectedFilter === dateFilter.id ? ' active' : '')">
+                                        <i class="fa fa-check" t-if="this.state.selectedFilter === dateFilter.id"/>
+                                        <t t-out="dateFilter.label"/>
+                                    </div>
+                                </t>
+                                <div class="o_vn_date_divider"/>
+                            </t>
+                            <!-- Custom period -->
+                            <div t-att-class="'o_vn_date_custom' + (this.state.selectedFilter === 'custom' ? ' active' : '')">
+                                <div class="o_vn_date_custom_row">
+                                    <label>From</label>
+                                    <DateTimeInput type="'date'" format="'yyyy/MM/dd'" value="this.dateFromValue" onChange.bind="this.onDateFromChange"/>
+                                    <label>to</label>
+                                    <DateTimeInput type="'date'" format="'yyyy/MM/dd'" value="this.dateToValue" onChange.bind="this.onDateToChange"/>
+                                    <button class="btn btn-sm btn-primary" t-on-click="this.applyCustomDate">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters of the report, and the language of the report -->
+                    <div class="o_vn_filter_dropdown" t-ref="this.filterDropdownRef">
+                        <button class="o_vn_filter_btn" t-on-click="this.toggleFilterDropdown">
+                            <i class="fa fa-filter"/>
+                            <span>Filters</span>
+                            <span t-if="this.state.activeFilterCount > 0" class="o_vn_badge" t-out="this.state.activeFilterCount"/>
+                            <i class="fa fa-caret-down"/>
+                        </button>
+
+                        <div t-if="this.state.showFilterDropdown" class="o_vn_filter_menu" t-on-click.stop="">
+                            <div class="o_vn_filter_content">
+                                <t t-foreach="this.filterDefinitions" t-as="filterDef" t-key="filterDef.key">
+                                    <div t-if="this.isFilterVisible(filterDef)" class="o_vn_filter_item" t-att-data-filter="filterDef.key">
+                                        <label t-out="filterDef.label"/>
+
+                                        <!-- Many2many / many2one -->
+                                        <t t-if="filterDef.type === 'many2many' or filterDef.type === 'many2one'">
+                                            <div class="o_vn_m2x_filter">
+                                                <div class="o_vn_filter_search_wrapper">
+                                                    <input type="text"
+                                                           class="o_vn_filter_input"
+                                                           t-att-placeholder="this.getFilterPlaceholder(filterDef)"
+                                                           t-att-value="this.state.filterSearchText[filterDef.key] || ''"
+                                                           t-on-input="(ev) => this.onFilterSearchInput(filterDef.key, ev)"/>
+                                                    <div t-if="this.state.filterSearchResults[filterDef.key]?.length"
+                                                         class="o_vn_filter_search_results">
+                                                        <t t-foreach="this.state.filterSearchResults[filterDef.key]" t-as="result" t-key="result.id">
+                                                            <div class="o_vn_filter_search_item"
+                                                                 t-on-click="() => this.selectFilterValue(filterDef.key, result)">
+                                                                <t t-out="result.display_name || result.name"/>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="o_vn_filter_tags" t-if="this.state.advancedFilters[filterDef.key]?.length">
+                                                    <t t-foreach="this.state.advancedFilters[filterDef.key]" t-as="val" t-key="val.id">
+                                                        <span class="o_vn_tag">
+                                                            <t t-out="val.display_name"/>
+                                                            <i class="fa fa-times"
+                                                               t-on-click="() => this.removeFilterValue(filterDef.key, val.id)"/>
+                                                        </span>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                        <!-- Selection -->
+                                        <t t-if="filterDef.type === 'selection'">
+                                            <select class="o_vn_filter_select"
+                                                    t-att-value="this.state.advancedFilters[filterDef.key] || ''"
+                                                    t-on-change="(ev) => this.onSelectionChanged(filterDef.key, ev)">
+                                                <option t-if="filterDef.emptyLabel" value="" t-out="filterDef.emptyLabel"/>
+                                                <option t-else="" value="">-- All --</option>
+                                                <t t-foreach="filterDef.options" t-as="opt" t-key="opt.value">
+                                                    <option t-att-value="opt.value"
+                                                            t-att-selected="this.state.advancedFilters[filterDef.key] === opt.value">
+                                                        <t t-out="opt.label"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </t>
+
+                                        <!-- Boolean -->
+                                        <t t-if="filterDef.type === 'boolean'">
+                                            <div class="o_vn_checkbox">
+                                                <input type="checkbox"
+                                                       t-att-checked="this.state.advancedFilters[filterDef.key]"
+                                                       t-on-change="(ev) => this.onBooleanChanged(filterDef.key, ev)"/>
+                                                <span t-if="filterDef.checkLabel" t-out="filterDef.checkLabel"/>
+                                                <span t-else="">Yes</span>
+                                            </div>
+                                        </t>
+
+                                        <!-- Date -->
+                                        <t t-if="filterDef.type === 'date'">
+                                            <input type="date"
+                                                   class="o_vn_filter_input"
+                                                   t-att-value="this.state.advancedFilters[filterDef.key] || ''"
+                                                   t-on-change="(ev) => this.onDateFilterChanged(filterDef.key, ev)"/>
+                                        </t>
+                                    </div>
+                                </t>
+
+                                <!-- Language the report is displayed, exported and printed in -->
+                                <div t-if="this.state.reportData?.languages?.length > 1" class="o_vn_filter_item o_vn_filter_lang">
+                                    <label>Report language</label>
+                                    <select class="o_vn_filter_select"
+                                            t-att-value="this.state.reportLang"
+                                            t-on-change="this.onReportLangChanged">
+                                        <t t-foreach="this.state.reportData.languages" t-as="lang" t-key="lang.code">
+                                            <option t-att-value="lang.code"
+                                                    t-att-selected="this.state.reportLang === lang.code">
+                                                <t t-out="lang.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="o_vn_filter_actions">
+                                <button t-if="this.hasFilters" class="o_vn_btn_secondary" t-on-click="this.clearAllFilters">
+                                    <i class="fa fa-times"/> Clear all
+                                </button>
+                                <button class="o_vn_btn_primary" t-on-click="this.applyFilters">
+                                    <i class="fa fa-check"/> Apply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="o_vn_search_box">
+                        <i class="fa fa-search"/>
+                        <input type="text" placeholder="Search..." t-on-input="this.onSearchChange"/>
+                    </div>
+
+                    <!-- Unfold / fold -->
+                    <button class="o_vn_btn_icon" t-on-click="this.expandAll" title="Unfold all">
+                        <i class="fa fa-expand"/>
+                    </button>
+                    <button class="o_vn_btn_icon" t-on-click="this.collapseAll" title="Fold all">
+                        <i class="fa fa-compress"/>
+                    </button>
+                </div>
+
+                <div class="o_vn_report_actions">
+                    <button class="o_vn_btn_success" t-on-click="this.exportXlsx" title="Export to Excel">
+                        <i class="fa fa-file-excel-o"/> Excel
+                    </button>
+                    <button class="o_vn_btn_danger" t-on-click="this.exportPdf" title="Export to PDF">
+                        <i class="fa fa-file-pdf-o"/> PDF
+                    </button>
+                    <button t-if="this.hasXmlExport" class="o_vn_btn_warning" t-on-click="this.exportXml" title="Export to XML">
+                        <i class="fa fa-file-code-o"/> XML
+                    </button>
+                </div>
+            </div>
+
+            <div t-if="this.state.isLoading" class="o_vn_report_loading">
+                <i class="fa fa-spinner fa-spin fa-3x"/>
+                <p>Loading...</p>
+            </div>
+
+            <div t-if="!this.state.isLoading and this.state.reportData" class="o_vn_report_content">
+                <t t-call="{{ this.constructor.tableTemplate }}"/>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        Menu of actions of a row.
+        Usage: <t t-call="fg_vn_accounting_reports.ActionMenu" menuItems="items"/>
+    -->
+    <t t-name="fg_vn_accounting_reports.ActionMenu">
+        <Dropdown>
+            <button class="btn btn-link btn-sm p-0 o_vn_action_menu_btn">
+                <i class="fa fa-ellipsis-v"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="menuItems" t-as="menuItem" t-key="menuItem.key">
+                    <DropdownItem onSelected="menuItem.action">
+                        <i t-attf-class="fa #{menuItem.icon} me-2"/>
+                        <t t-out="menuItem.label"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+    <!--
+        Generic table, rendered from the columns and the typed rows.
+        Each row: { type, cells, id, parentId?, expandable?, isParent?, level?, data? }
+        Layout: [action cell: caret + drill-down] [data cells, or one spanning cell]
+    -->
+    <t t-name="fg_vn_accounting_reports.DataTable">
+        <t t-set="columns" t-value="this.state.reportData.columns"/>
+        <t t-set="rows" t-value="this.visibleRows"/>
+        <table class="o_vn_report_table table table-sm table-bordered">
+            <thead>
+                <tr class="o_vn_header_row">
+                    <th class="o_vn_action_th"></th>
+                    <t t-foreach="columns" t-as="col" t-key="col.name || col_index">
+                        <th t-att-class="this.getColHeaderClass(col)"
+                            t-att-style="this.getColHeaderStyle(col)"
+                            t-on-click="() => this.onColumnHeaderClick(col)">
+                            <t t-out="col.label"/>
+                            <i t-if="col.sortable and this.state.sortColumn === col.name"
+                               t-attf-class="fa fa-sort-#{this.state.sortOrder === 'asc' ? 'up' : 'down'} ms-1"/>
+                        </th>
+                    </t>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="rows" t-as="row" t-key="row.id">
+                    <tr t-att-class="this.getDataRowClass(row)"
+                        t-on-click="() => this.onRowClick(row)">
+                        <td class="o_vn_action_cell" t-on-click.stop="">
+                            <t t-if="row.expandable">
+                                <i t-attf-class="fa #{this.isNodeExpanded(row.id) ? 'fa-caret-down' : 'fa-caret-right'} o_vn_caret"
+                                   t-on-click.stop="() => this.toggleNode(row.id)"/>
+                            </t>
+                            <t t-set="rowMenuItems" t-value="this.getRowMenuItems(row)"/>
+                            <t t-if="rowMenuItems.length === 1">
+                                <button class="o_vn_drilldown_btn"
+                                        t-att-title="rowMenuItems[0].label"
+                                        t-on-click.stop="() => rowMenuItems[0].action()">
+                                    <i t-attf-class="fa #{rowMenuItems[0].icon || 'fa-external-link'}"/>
+                                </button>
+                            </t>
+                            <t t-elif="rowMenuItems.length > 1">
+                                <t t-call="fg_vn_accounting_reports.ActionMenu" menuItems="rowMenuItems"/>
+                            </t>
+                        </td>
+                        <t t-if="row.span_all">
+                            <td t-att-colspan="columns.length"
+                                t-att-class="this.getSpanCellClass(row)"
+                                t-att-style="this.getRowIndentStyle(row)">
+                                <t t-out="this.getSpanLabel(row)"/>
+                            </td>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="columns" t-as="col" t-key="col.name || col_index">
+                                <td t-att-class="this.getCellClass(row, col)"
+                                    t-att-style="col_index === 0 ? this.getRowIndentStyle(row) : ''">
+                                    <t t-out="this.formatCell(row.cells[col_index], col.type, row.type)"/>
+                                </td>
+                            </t>
+                        </t>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+
+        <div t-if="!rows.length" class="o_vn_report_empty">
+            <i class="fa fa-inbox fa-3x"/>
+            <p>No data</p>
+        </div>
+    </t>
+
+</templates>
