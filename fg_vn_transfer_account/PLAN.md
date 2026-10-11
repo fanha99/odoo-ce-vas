@@ -3,7 +3,9 @@
 Nguồn: `D:\openerp\V19\fanha-addons\fg_vn_transfer_account` (19.0.1.0.0, 76 dòng).
 Đối chiếu lõi Odoo: 19.0 tại `c50a4e0513e`, 20.0 tại `97d8ce809`.
 
-Trạng thái: **các quyết định đã chốt; chờ duyệt lần cuối trước khi code.** Chưa viết dòng code nào.
+Trạng thái: **đã xong (2026-10-11).** 8 test chạy qua trên Odoo 20.0; bản dịch tiếng Việt nạp được; script nâng cấp đã chạy thử bằng cách giả lập phiên bản cài 19.0.1.0.0. Trang thiết lập chưa được xem bằng mắt trên trình duyệt.
+
+Khác với kế hoạch: `res.company` không tự kiểm tra công ty của trường `check_company` (model không bật `_check_company_auto`), nên có thêm ràng buộc `_check_fg_hidden_transfer_account_ids` gọi `_check_company`.
 
 Module này được chuyển trước vì `fg_vn_report_cdps` phụ thuộc nó.
 

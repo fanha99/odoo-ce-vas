@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.fg_vn_transfer_account</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Vietnam Accounting" id="fg_vn_accounting_block">
+                    <setting id="fg_hide_transfer_account_setting"
+                             help="Circular 133 (no account 113): enable, then select the inter-banks transfer account and the outstanding receipts/payments accounts in use. Circular 200 and Circular 99 (account 113 exists): leave disabled.">
+                        <field name="fg_hide_transfer_account"/>
+                        <div class="content-group" invisible="not fg_hide_transfer_account">
+                            <div class="row mt8">
+                                <label for="fg_hidden_transfer_account_ids" class="col-lg-5 o_light_label"/>
+                                <field name="fg_hidden_transfer_account_ids"
+                                       widget="many2many_tags"
+                                       options="{'no_create': True}"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

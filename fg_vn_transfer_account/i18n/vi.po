@@ -1,0 +1,126 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fg_vn_transfer_account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 06:37+0000\n"
+"PO-Revision-Date: 2026-10-11 06:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fg_vn_transfer_account
+#: model:ir.module.module,description:base.module_fg_vn_transfer_account
+msgid ""
+"\n"
+"Vietnam - Hide Transfer Accounts\n"
+"================================\n"
+"\n"
+"Adds a company setting to hide the transfer accounts that have no balance,\n"
+"and lets the user choose which accounts are concerned. The accounting books\n"
+"and printouts read this setting; this module has no report of its own.\n"
+"\n"
+"Meant for companies applying Circular 133, whose chart of accounts has no\n"
+"account 113.\n"
+"\n"
+"See readme.md in the module directory.\n"
+msgstr ""
+"\n"
+"Ẩn tài khoản trung chuyển\n"
+"=========================\n"
+"\n"
+"Thêm một thiết lập theo công ty để ẩn các tài khoản trung chuyển không có số dư,\n"
+"và cho người dùng chọn những tài khoản được ẩn. Các sổ kế toán và phiếu in\n"
+"đọc thiết lập này; module không có báo cáo riêng.\n"
+"\n"
+"Dành cho đơn vị áp dụng Thông tư 133, hệ thống tài khoản không có\n"
+"tài khoản 113.\n"
+"\n"
+"Xem readme.md trong thư mục module.\n"
+
+#. module: fg_vn_transfer_account
+#: model:ir.model.fields,help:fg_vn_transfer_account.field_res_company__fg_hidden_transfer_account_ids
+#: model:ir.model.fields,help:fg_vn_transfer_account.field_res_config_settings__fg_hidden_transfer_account_ids
+msgid "Accounts hidden when they have no balance."
+msgstr "Các tài khoản được ẩn khi không có số dư."
+
+#. module: fg_vn_transfer_account
+#: model_terms:ir.ui.view,arch_db:fg_vn_transfer_account.res_config_settings_view_form
+msgid ""
+"Circular 133 (no account 113): enable, then select the inter-banks transfer "
+"account and the outstanding receipts/payments accounts in use. Circular 200 "
+"and Circular 99 (account 113 exists): leave disabled."
+msgstr ""
+"Thông tư 133 (không có tài khoản 113): bật, rồi chọn tài khoản trung chuyển "
+"liên ngân hàng và các tài khoản chờ thu, chờ chi đang dùng. Thông tư 200 và "
+"Thông tư 99 (có tài khoản 113): để tắt."
+
+#. module: fg_vn_transfer_account
+#: model:ir.model,name:fg_vn_transfer_account.model_res_company
+msgid "Company"
+msgstr "Công ty"
+
+#. module: fg_vn_transfer_account
+#: model:ir.module.module,summary:base.module_fg_vn_transfer_account
+msgid ""
+"Company setting to hide the transfer accounts without balance on accounting "
+"books"
+msgstr ""
+"Thiết lập theo công ty để ẩn tài khoản trung chuyển không có số dư trên sổ "
+"kế toán"
+
+#. module: fg_vn_transfer_account
+#: model:ir.model,name:fg_vn_transfer_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Thiết lập cấu hình"
+
+#. module: fg_vn_transfer_account
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_company__display_name
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: fg_vn_transfer_account
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_company__fg_hidden_transfer_account_ids
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_config_settings__fg_hidden_transfer_account_ids
+msgid "Hidden Transfer Accounts"
+msgstr "Tài khoản được ẩn"
+
+#. module: fg_vn_transfer_account
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_company__fg_hide_transfer_account
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_config_settings__fg_hide_transfer_account
+msgid "Hide Transfer Accounts Without Balance"
+msgstr "Ẩn tài khoản trung chuyển khi không có số dư"
+
+#. module: fg_vn_transfer_account
+#: model:ir.model.fields,help:fg_vn_transfer_account.field_res_company__fg_hide_transfer_account
+#: model:ir.model.fields,help:fg_vn_transfer_account.field_res_config_settings__fg_hide_transfer_account
+msgid ""
+"Hide the selected transfer accounts on the accounting books and printouts "
+"when they have no balance. The journal entries are not modified."
+msgstr ""
+"Ẩn các tài khoản trung chuyển đã chọn trên sổ kế toán và phiếu in khi chúng "
+"không có số dư. Bút toán không bị sửa."
+
+#. module: fg_vn_transfer_account
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_company__id
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fg_vn_transfer_account
+#: model:ir.module.module,shortdesc:base.module_fg_vn_transfer_account
+msgid "Vietnam - Hide Transfer Accounts"
+msgstr "Việt Nam - Ẩn tài khoản trung chuyển"
+
+#. module: fg_vn_transfer_account
+#: model_terms:ir.ui.view,arch_db:fg_vn_transfer_account.res_config_settings_view_form
+msgid "Vietnam Accounting"
+msgstr "Kế toán Việt Nam"

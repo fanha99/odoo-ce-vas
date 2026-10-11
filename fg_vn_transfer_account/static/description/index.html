@@ -1,0 +1,55 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">Ẩn tài khoản trung chuyển</h2>
+        <h3 class="oe_slogan">Sổ sách không còn tài khoản 113 với đơn vị áp dụng Thông tư 133</h3>
+        <p>
+            Odoo ghi chuyển tiền giữa quỹ và ngân hàng qua một tài khoản trung chuyển (113), và ghi phiếu
+            thu, phiếu chi chưa khớp sao kê qua các tài khoản chờ. Chế độ kế toán theo Thông tư 133 không
+            có các tài khoản này. Module thêm một thiết lập để các sổ kế toán và phiếu in không trình bày
+            chúng khi chúng không còn số dư.
+        </p>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3>Thiết lập</h3>
+        <p>Kế toán › Cấu hình › Thiết lập, khối <b>Kế toán Việt Nam</b>:</p>
+        <ul>
+            <li><b>Ẩn tài khoản trung chuyển khi không có số dư</b>: bật hoặc tắt, riêng cho từng công ty.</li>
+            <li>
+                <b>Tài khoản được ẩn</b>: danh sách tài khoản do đơn vị tự chọn. Khi mới bật, tài khoản
+                trung chuyển của công ty được điền sẵn.
+            </li>
+        </ul>
+        <table class="table table-bordered">
+            <thead>
+                <tr><th>Chế độ kế toán</th><th>Nên đặt</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Thông tư 133 (không có tài khoản 113)</td>
+                    <td>Bật. Chọn tài khoản trung chuyển và các tài khoản chờ thu, chờ chi đang dùng.</td>
+                </tr>
+                <tr>
+                    <td>Thông tư 200, Thông tư 99 (có tài khoản 113)</td>
+                    <td>Tắt.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3>Điều cần biết</h3>
+        <ul>
+            <li>Thiết lập chỉ đổi cách trình bày trên sổ và phiếu in. Bút toán không bị sửa.</li>
+            <li>Tài khoản trong danh sách còn số dư thì vẫn được trình bày, để số liệu không bị thiếu.</li>
+            <li>
+                Module không có báo cáo riêng. Các module sổ kế toán (ví dụ Bảng cân đối số phát sinh)
+                đọc thiết lập này.
+            </li>
+        </ul>
+    </div>
+</section>

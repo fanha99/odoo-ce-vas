@@ -9,6 +9,7 @@ Nhánh `20.0` dành cho Odoo 20.0. Mỗi module nằm trong một thư mục ri�
 | Module | Mô tả | Phiên bản | Cập nhật lần cuối |
 |---|---|---|---|
 | [`fg_account_counterpart`](fg_account_counterpart/readme.md) | Đối ứng tài khoản: xác định các phát sinh đối ứng và tài khoản đối ứng của từng phát sinh khi bút toán được ghi sổ. Là dữ liệu nền cho các sổ kế toán có cột "Tài khoản đối ứng". Chưa xử lý bút toán có số tiền âm. | 20.0.1.0.0 | 2026-10-10 |
+| [`fg_vn_transfer_account`](fg_vn_transfer_account/readme.md) | Ẩn tài khoản trung chuyển: thiết lập theo công ty để các sổ kế toán và phiếu in không trình bày tài khoản trung chuyển (113) và các tài khoản chờ do đơn vị chọn khi chúng không có số dư. Dành cho đơn vị áp dụng Thông tư 133. | 20.0.1.0.0 | 2026-10-11 |
 
 Khi thêm hoặc cập nhật một module, sửa dòng tương ứng trong bảng: phiên bản lấy theo `version` trong `__manifest__.py` của module, ngày ghi theo dạng năm-tháng-ngày.
 
