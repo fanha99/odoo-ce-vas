@@ -66,6 +66,15 @@ class MyPdf(FanhaReportPDF):
 
 `__init__(report_data, env)`: lớp con có `__init__` riêng phải nhận và chuyển tiếp `env`. Nhãn lấy qua `self.env._("…")`.
 
+Tiêu đề trang là một danh sách dòng. Báo cáo đổi tiêu đề bằng cách ghi đè hàm trả danh sách, không vẽ lại:
+
+| Hàm | Nội dung |
+|---|---|
+| `_get_page_header_lines(page)` | Trả `[{'text', 'bold', 'size', 'align', 'space_after'}]`. Mặc định: tên công ty, tên báo cáo, kỳ, và nhãn nhóm của trang nếu báo cáo ngắt trang theo nhóm. Ghi đè, gọi `super()`, rồi thêm, bớt hoặc sửa dòng. `page == 0` nghĩa là "tiêu đề cao nhất của tài liệu", dùng để dành chỗ. |
+| `_format_group_label(group)` | Nhãn của nhóm in ở đầu mọi trang của nhóm ("Tài khoản: …"). Trả `''` để không in. |
+
+Chiều cao vùng tiêu đề tự tính theo các dòng (tối thiểu 22 mm). Trang trắng chèn thêm khi in lề đối xứng không có tiêu đề và số trang.
+
 | Hàm | Mặc định | Tác dụng |
 |---|---|---|
 | `_get_carry_cols()` | `[]` | Chỉ số các cột được cộng dồn qua trang. Rỗng thì không có dòng cộng chuyển trang |
@@ -118,7 +127,7 @@ Báo cáo không cần file template: nền tảng hiển thị bảng chung. B�
 | `getFilterDefinitions()` | Bộ lọc trong menu Bộ lọc (bảng dưới) |
 | `getSearchKeys()` | Khoá dùng cho ô tìm kiếm |
 | `getDefaultSort()` | Sắp xếp mặc định `{ column, order }`; cột sắp xếp được khai `sortable: true` ở `_get_columns()` |
-| `getLineMenuItems(line)`, `getGroupMenuItems(group)` | Mục menu của dòng; một mục thì hiện thành nút, nhiều mục thành menu |
+| `getLineMenuItems(line)`, `getGroupMenuItems(group)` | Mục menu của dòng `{ key, label, icon, action }`; một mục thì hiện thành nút, nhiều mục thành menu. `icon` là tên biểu tượng Material Symbols (ví dụ `open_in_new`), không phải lớp FontAwesome |
 | `getDataRowClass(row)` | Thêm class CSS cho dòng |
 | `hasXmlExport`, `exportXml()` | Nút XML |
 | `_buildOptions()` | Đổi tên hoặc bớt tuỳ chọn trước khi gửi máy chủ |
@@ -138,7 +147,34 @@ Trạng thái (`this.state`) là `proxy` của OWL 3. `expandedNodes` là `Set`:
 
 Template viết theo OWL 3: thành viên của component phải viết `this.x`.
 
-## 6. Định dạng xuất riêng
+Biểu tượng: Odoo 20 không còn FontAwesome. Viết `<i class="oi" data-icon="tên"/>` với tên Material Symbols; chỉ những tên có trong `web/tooling/icons/icons_wishlist.txt` của lõi mới hiện. Nút trong view: `icon="tên"`.
+
+## 6. Sổ dài: tải dần
+
+Báo cáo có thể có rất nhiều dòng thì khai ba hook; nền tảng lo phần còn lại.
+
+| Hook | Nội dung |
+|---|---|
+| `_count_lines(options)` | Số dòng của báo cáo, bằng một câu `COUNT` rẻ. Trả `None` (mặc định) nghĩa là báo cáo không tải dần. |
+| `_get_group_summaries(options)` | Các nhóm **không có dòng**, đủ số liệu để vẽ dòng tiêu đề và dòng cộng (tính bằng SQL), kèm `line_count`. Nhóm có `preload: True` được nạp sẵn đoạn đầu (báo cáo chỉ có một nhóm). |
+| `_get_group_lines(options, group_id, offset, limit)` | Khoảng `limit` dòng của nhóm kể từ `offset`, theo đúng thứ tự của báo cáo. Được trả nhiều hơn `limit` khi các dòng phải đi cùng nhau. |
+
+Cách hoạt động:
+
+- `_count_lines()` không vượt `fg_vn_accounting_reports.lazy_line_threshold` (mặc định 2.000): `get_report_data()` gọi `_get_lines()` như thường, `lazy` là `False`.
+- Vượt ngưỡng: `get_report_data()` trả các nhóm của `_get_group_summaries()` với `lazy: True`; màn hình gọi `get_group_lines(options, group_id, offset)` khi một nhóm được mở và khi người dùng bấm "Xem thêm". Mỗi lần `fg_vn_accounting_reports.lazy_chunk_size` dòng (mặc định 500).
+- Excel và PDF luôn đi qua `_get_lines()`: `_get_lines()` phải trả cả báo cáo.
+- `get_pdf_rl()` từ chối khi `_count_lines()` vượt `fg_vn_accounting_reports.pdf_line_limit` (mặc định 30.000; 0 là không giới hạn).
+
+Yêu cầu với báo cáo: `_get_lines()` và các đoạn của `_get_group_lines()` ghép lại phải cho cùng dòng, cùng thứ tự; số tổng hợp của nhóm phải tính trên cả nhóm, không phải trên các dòng đã tải. Viết test so hai đường với nhau (xem `fg_vn_report_s03a/tests/test_lazy.py`).
+
+Ở component:
+
+- `groupsToRows()` thêm dòng "Xem thêm" sau các dòng của nhóm: `const row = this.getLoadMoreRow(group, parentId); if (row) rows.push(row);`.
+- `this.isLazy` cho biết báo cáo đang tải dần. Khi đó nút "Mở rộng tất cả" bị ẩn, và nhóm chưa có dòng được tải khi người dùng mở nó.
+- Ô tìm kiếm mặc định lọc các nhóm ở trình duyệt. Báo cáo tìm theo **dòng** đặt `static lazySearch = true`: khi tải dần, chữ tìm kiếm được gửi lên máy chủ trong `options.search` và báo cáo phải áp nó trong các câu SQL của mình (đếm, tổng, lấy dòng).
+
+## 7. Định dạng xuất riêng
 
 ```python
 from odoo.addons.fg_vn_accounting_reports.controllers.main import VNReportController
@@ -152,9 +188,10 @@ class MyController(VNReportController):
 
 `get_xml(options)` trả `bytes` và tự gọi `_check_report_access(options)`. Ở JS: `window.location.href = this.getExportUrl("xml")`.
 
-## 7. Test
+## 8. Test
 
 - Số liệu: kế thừa `AccountTestInvoicingCommon`, tạo tài khoản và bút toán, gọi `get_report_data()`.
 - Giao diện: một tour trong `static/tests/tours/` (bundle `web.assets_tests`), chạy bằng `start_tour`. Cần gói Python `websocket-client` và Chrome.
+- Tham số hệ thống trong test: `self.env['ir.config_parameter'].sudo().set_int(key, value)`.
 - Bản dịch trong test: `self.env['ir.module.module']._load_module_terms([...], ['vi_VN'])`.
 - Test HTTP cần `--db-filter` khớp tên database khi file cấu hình có `dbfilter = ^%d$`.

@@ -12,6 +12,9 @@ const AMOUNT_FIELDS = [
 ];
 
 export class CDPSReport extends AbstractVNReport {
+    // name in the breadcrumb when the action carries none (page reload)
+    static displayName = _t("Trial Balance");
+
     getReportModel() {
         return "vn.report.cdps";
     }

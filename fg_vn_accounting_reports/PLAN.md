@@ -340,7 +340,7 @@ Sau mỗi giai đoạn: chạy lại toàn bộ test của hai module và ghi v�
 
 Không còn điểm nào chờ xác nhận ở module này.
 
-## 9. Bản 20.0.1.1.0 (đã duyệt, chưa làm)
+## 9. Bản 20.0.1.1.0 (đã xong, 2026-10-11)
 
 Ba việc phát sinh khi chuẩn bị chuyển sổ nhật ký chung và sổ cái; đã được duyệt cùng hai kế hoạch đó ngày 2026-10-11.
 
@@ -353,3 +353,12 @@ Ba việc phát sinh khi chuẩn bị chuyển sổ nhật ký chung và sổ c�
 Báo cáo không bật tải dần, không khai `_count_lines()` và không ngắt trang theo nhóm (CDPS) không thay đổi.
 
 Thứ tự làm chung của đợt này: đo trên dữ liệu lớn → `fg_vn_transfer_account` 20.0.1.1.0 (quy tắc ghép dùng chung) → nền tảng 20.0.1.1.0 (ba việc trên) → `fg_vn_report_s03a` → `fg_vn_report_s03b`.
+
+Kết quả: 69 test của nền tảng chạy qua; 72 test của CDPS không đổi kết quả. Giới hạn in PDF mặc định là 30.000 dòng, theo số đo ở `fg_vn_report_s03a/PLAN.md` mục 9.
+
+Ghi chú khi làm:
+
+- Tham số hệ thống đọc bằng `ir.config_parameter.get_int()`: Odoo 20 đã bỏ `get_param`/`set_param`.
+- Tìm kiếm ở máy chủ là lựa chọn của từng báo cáo (`static lazySearch = true` trên component): sổ nhật ký chung tìm theo dòng nên bật; sổ cái tìm theo tài khoản, vốn luôn có đủ trên màn hình, nên không bật.
+- Trang trắng chèn thêm khi in lề đối xứng trước đây vẫn mang số trang của trang trước, vì canvas của ReportLab giữ lại thông tin chân trang. Nay trang trắng không có tiêu đề và không có số trang.
+- Chiều cao vùng tiêu đề trang được tính từ các dòng tiêu đề, tối thiểu 22 mm như cũ; báo cáo không ngắt trang theo nhóm giữ nguyên bố cục.

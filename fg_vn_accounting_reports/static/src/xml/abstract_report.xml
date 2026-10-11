@@ -17,9 +17,9 @@
                          styles of the report do not apply. -->
                     <div class="o_vn_date_dropdown" t-ref="this.dateDropdownRef">
                         <button class="o_vn_date_btn" t-on-click="this.toggleDateDropdown">
-                            <i class="fa fa-calendar"/>
+                            <i class="oi" data-icon="calendar_today"/>
                             <span t-out="this.dateRangeLabel"/>
-                            <i class="fa fa-caret-down"/>
+                            <i class="oi" data-icon="arrow_drop_down"/>
                         </button>
 
                         <div t-if="this.state.showDateDropdown" class="o_vn_date_menu" t-on-click.stop="">
@@ -27,7 +27,7 @@
                                 <t t-foreach="dateFilterGroup" t-as="dateFilter" t-key="dateFilter.id">
                                     <div t-on-click="() => this.onDateFilterSelected(dateFilter.id)"
                                          t-att-class="'o_vn_date_item' + (this.state.selectedFilter === dateFilter.id ? ' active' : '')">
-                                        <i class="fa fa-check" t-if="this.state.selectedFilter === dateFilter.id"/>
+                                        <i class="oi o_vn_date_check" data-icon="check" t-if="this.state.selectedFilter === dateFilter.id"/>
                                         <t t-out="dateFilter.label"/>
                                     </div>
                                 </t>
@@ -49,10 +49,10 @@
                     <!-- Filters of the report, and the language of the report -->
                     <div class="o_vn_filter_dropdown" t-ref="this.filterDropdownRef">
                         <button class="o_vn_filter_btn" t-on-click="this.toggleFilterDropdown">
-                            <i class="fa fa-filter"/>
+                            <i class="oi" data-icon="filter_alt"/>
                             <span>Filters</span>
                             <span t-if="this.state.activeFilterCount > 0" class="o_vn_badge" t-out="this.state.activeFilterCount"/>
-                            <i class="fa fa-caret-down"/>
+                            <i class="oi" data-icon="arrow_drop_down"/>
                         </button>
 
                         <div t-if="this.state.showFilterDropdown" class="o_vn_filter_menu" t-on-click.stop="">
@@ -84,7 +84,7 @@
                                                     <t t-foreach="this.state.advancedFilters[filterDef.key]" t-as="val" t-key="val.id">
                                                         <span class="o_vn_tag">
                                                             <t t-out="val.display_name"/>
-                                                            <i class="fa fa-times"
+                                                            <i class="oi o_vn_tag_remove" data-icon="close"
                                                                t-on-click="() => this.removeFilterValue(filterDef.key, val.id)"/>
                                                         </span>
                                                     </t>
@@ -147,10 +147,10 @@
 
                             <div class="o_vn_filter_actions">
                                 <button t-if="this.hasFilters" class="o_vn_btn_secondary" t-on-click="this.clearAllFilters">
-                                    <i class="fa fa-times"/> Clear all
+                                    <i class="oi" data-icon="close"/> Clear all
                                 </button>
                                 <button class="o_vn_btn_primary" t-on-click="this.applyFilters">
-                                    <i class="fa fa-check"/> Apply
+                                    <i class="oi" data-icon="check"/> Apply
                                 </button>
                             </div>
                         </div>
@@ -158,34 +158,34 @@
 
                     <!-- Search -->
                     <div class="o_vn_search_box">
-                        <i class="fa fa-search"/>
+                        <i class="oi" data-icon="search"/>
                         <input type="text" placeholder="Search..." t-on-input="this.onSearchChange"/>
                     </div>
 
                     <!-- Unfold / fold -->
-                    <button class="o_vn_btn_icon" t-on-click="this.expandAll" title="Unfold all">
-                        <i class="fa fa-expand"/>
+                    <button t-if="!this.isLazy" class="o_vn_btn_icon" t-on-click="this.expandAll" title="Unfold all">
+                        <i class="oi" data-icon="keyboard_double_arrow_down"/>
                     </button>
                     <button class="o_vn_btn_icon" t-on-click="this.collapseAll" title="Fold all">
-                        <i class="fa fa-compress"/>
+                        <i class="oi" data-icon="keyboard_double_arrow_up"/>
                     </button>
                 </div>
 
                 <div class="o_vn_report_actions">
                     <button class="o_vn_btn_success" t-on-click="this.exportXlsx" title="Export to Excel">
-                        <i class="fa fa-file-excel-o"/> Excel
+                        <i class="oi" data-icon="table"/> Excel
                     </button>
                     <button class="o_vn_btn_danger" t-on-click="this.exportPdf" title="Export to PDF">
-                        <i class="fa fa-file-pdf-o"/> PDF
+                        <i class="oi" data-icon="picture_as_pdf"/> PDF
                     </button>
                     <button t-if="this.hasXmlExport" class="o_vn_btn_warning" t-on-click="this.exportXml" title="Export to XML">
-                        <i class="fa fa-file-code-o"/> XML
+                        <i class="oi" data-icon="code"/> XML
                     </button>
                 </div>
             </div>
 
             <div t-if="this.state.isLoading" class="o_vn_report_loading">
-                <i class="fa fa-spinner fa-spin fa-3x"/>
+                <i class="oi oi-spin oi-3x" data-icon="progress_activity"/>
                 <p>Loading...</p>
             </div>
 
@@ -202,12 +202,12 @@
     <t t-name="fg_vn_accounting_reports.ActionMenu">
         <Dropdown>
             <button class="btn btn-link btn-sm p-0 o_vn_action_menu_btn">
-                <i class="fa fa-ellipsis-v"/>
+                <i class="oi" data-icon="more_vert"/>
             </button>
             <t t-set-slot="content">
                 <t t-foreach="menuItems" t-as="menuItem" t-key="menuItem.key">
                     <DropdownItem onSelected="menuItem.action">
-                        <i t-attf-class="fa #{menuItem.icon} me-2"/>
+                        <i class="oi me-2" t-att-data-icon="menuItem.icon"/>
                         <t t-out="menuItem.label"/>
                     </DropdownItem>
                 </t>
@@ -233,7 +233,8 @@
                             t-on-click="() => this.onColumnHeaderClick(col)">
                             <t t-out="col.label"/>
                             <i t-if="col.sortable and this.state.sortColumn === col.name"
-                               t-attf-class="fa fa-sort-#{this.state.sortOrder === 'asc' ? 'up' : 'down'} ms-1"/>
+                               class="oi ms-1"
+                               t-att-data-icon="this.state.sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward'"/>
                         </th>
                     </t>
                 </tr>
@@ -244,7 +245,8 @@
                         t-on-click="() => this.onRowClick(row)">
                         <td class="o_vn_action_cell" t-on-click.stop="">
                             <t t-if="row.expandable">
-                                <i t-attf-class="fa #{this.isNodeExpanded(row.id) ? 'fa-caret-down' : 'fa-caret-right'} o_vn_caret"
+                                <i class="oi o_vn_caret"
+                                   t-att-data-icon="this.isNodeExpanded(row.id) ? 'arrow_drop_down' : 'arrow_right'"
                                    t-on-click.stop="() => this.toggleNode(row.id)"/>
                             </t>
                             <t t-set="rowMenuItems" t-value="this.getRowMenuItems(row)"/>
@@ -252,14 +254,25 @@
                                 <button class="o_vn_drilldown_btn"
                                         t-att-title="rowMenuItems[0].label"
                                         t-on-click.stop="() => rowMenuItems[0].action()">
-                                    <i t-attf-class="fa #{rowMenuItems[0].icon || 'fa-external-link'}"/>
+                                    <i class="oi" t-att-data-icon="rowMenuItems[0].icon || 'open_in_new'"/>
                                 </button>
                             </t>
                             <t t-elif="rowMenuItems.length > 1">
                                 <t t-call="fg_vn_accounting_reports.ActionMenu" menuItems="rowMenuItems"/>
                             </t>
                         </td>
-                        <t t-if="row.span_all">
+                        <t t-if="row.type === 'load_more'">
+                            <td t-att-colspan="columns.length" class="o_vn_load_more_cell text-center">
+                                <span class="me-3" t-out="row.label"/>
+                                <button class="btn btn-sm btn-secondary o_vn_load_more_btn"
+                                        t-att-disabled="this.isGroupLoading(row.data)"
+                                        t-on-click.stop="() => this.loadMoreLines(row.data.id)">
+                                    <i t-if="this.isGroupLoading(row.data)" class="oi oi-spin me-1" data-icon="progress_activity"/>
+                                    Load more
+                                </button>
+                            </td>
+                        </t>
+                        <t t-elif="row.span_all">
                             <td t-att-colspan="columns.length"
                                 t-att-class="this.getSpanCellClass(row)"
                                 t-att-style="this.getRowIndentStyle(row)">
@@ -280,7 +293,7 @@
         </table>
 
         <div t-if="!rows.length" class="o_vn_report_empty">
-            <i class="fa fa-inbox fa-3x"/>
+            <i class="oi oi-3x" data-icon="inbox"/>
             <p>No data</p>
         </div>
     </t>

@@ -36,6 +36,8 @@ Phía trên bảng số liệu là một thanh công cụ, giống nhau ở mọ
 - **Sắp xếp.** Bấm vào tiêu đề của cột cho phép sắp xếp. Dòng số dư đầu kỳ, dòng cộng và dòng số dư cuối kỳ giữ nguyên vị trí; chỉ các dòng chi tiết bên trong đổi thứ tự.
 - **Xem chi tiết.** Từ một dòng có thể mở chứng từ gốc hoặc danh sách phát sinh tạo nên con số đó. Khi quay lại, báo cáo giữ nguyên kỳ, bộ lọc, cách sắp xếp và các nhóm đang mở.
 
+**Sổ dài.** Sổ có rất nhiều dòng (mặc định trên 2.000) không được tải hết một lần: màn hình hiện phần đầu, cho biết đã hiện bao nhiêu trên tổng số, và có nút **Xem thêm**. Các dòng cộng và số dư luôn tính trên cả sổ. Khi sổ đang ở chế độ này, không có nút mở rộng tất cả. Từng sổ mô tả cụ thể cách nó tải dần.
+
 Tải lại trang (F5) không làm mất các lựa chọn đang có. Chúng chỉ được xoá khi đóng tab trình duyệt.
 
 Quy ước hiển thị:
@@ -60,11 +62,13 @@ Nút **PDF** tạo file in theo khổ A4 với các đặc điểm mà sổ kế
 - **Cộng chuyển trang.** Khi sổ dài hơn một trang, cuối mỗi trang có dòng "Cộng chuyển trang" ghi số luỹ kế đến hết trang đó, và đầu trang sau có dòng "Số dư đầu trang" mang số đó sang. Báo cáo chọn những cột nào được cộng dồn; cột số dư thì mang giá trị cuối cùng sang chứ không cộng.
 - **Đánh số trang** dạng "Trang 3/12" ở cuối mỗi trang.
 - **Tiêu đề lặp lại** trên mọi trang: tên công ty, tên báo cáo, kỳ báo cáo và dòng tiêu đề cột.
-- **Mỗi nhóm bắt đầu ở trang mới** với báo cáo cần vậy, ví dụ sổ cái mỗi tài khoản một phần riêng. Số luỹ kế được tính lại từ đầu cho từng nhóm.
-- **Lề đối xứng** khi in hai mặt: số trang nằm ở mép ngoài, và mỗi nhóm luôn bắt đầu ở trang lẻ (thêm một trang trắng nếu cần).
+- **Mỗi nhóm bắt đầu ở trang mới** với báo cáo cần vậy, ví dụ sổ cái mỗi tài khoản một phần riêng. Tên nhóm được in ở đầu mọi trang của nhóm. Số luỹ kế được tính lại từ đầu cho từng nhóm.
+- **Lề đối xứng** khi in hai mặt: số trang nằm ở mép ngoài, và mỗi nhóm luôn bắt đầu ở trang lẻ (thêm một trang trắng nếu cần; trang trắng không có tiêu đề và số trang).
 - **Dòng không bị tách rời:** báo cáo có thể yêu cầu một dòng luôn nằm cùng trang với dòng kế tiếp, ví dụ dòng số dư đầu kỳ đi cùng dòng phát sinh đầu tiên.
 - **Phần ký tên** ở cuối: Người lập biểu, Kế toán trưởng, Giám đốc, kèm ngày lập.
 - **Phần ghi sổ** với các sổ cần: "Sổ này bao gồm ... trang, đánh số từ trang số 1 đến ..." và ngày mở sổ.
+
+Sổ quá dài (mặc định trên 30.000 dòng) không in được trong một lần: hệ thống báo số dòng và đề nghị thu hẹp kỳ hoặc bộ lọc, hoặc xuất Excel. Quản trị viên đổi giới hạn này bằng tham số hệ thống `fg_vn_accounting_reports.pdf_line_limit`.
 
 File PDF dùng phông chữ đi kèm module nên tiếng Việt hiển thị đúng trên mọi máy chủ, không phụ thuộc phông cài sẵn.
 
@@ -93,7 +97,7 @@ Danh sách chỉ gồm các ngôn ngữ đã cài trong database. Database chưa
 
 ## 7. Các báo cáo dùng nền tảng này
 
-Các module dưới đây thuộc bản 19.0. `fg_vn_report_cdps` được chuyển sang 20.0 cùng lúc với module này; các module còn lại chuyển sau.
+`fg_vn_report_cdps`, `fg_vn_report_s03a` và `fg_vn_report_s03b` đã có trên 20.0; các module còn lại thuộc bản 19.0 và chuyển sau.
 
 | Module | Báo cáo |
 |---|---|

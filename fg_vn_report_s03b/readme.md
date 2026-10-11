@@ -46,7 +46,7 @@ Các cột của một dòng phát sinh:
 | TK đối ứng | Mã các tài khoản đối ứng của dòng, cách nhau bằng dấu phẩy. |
 | Nợ, Có | Số tiền của dòng, theo đồng tiền hạch toán. |
 
-Chỉ bút toán đã ghi sổ được tính.
+Chỉ bút toán đã ghi sổ được tính. Dòng bút toán có số tiền bằng 0 không được đưa vào sổ.
 
 Mặc định, chỉ tài khoản có phát sinh trong kỳ được lập sổ. Tham số *Tài khoản không có phát sinh* cho phép lập thêm sổ cho các tài khoản còn số dư đầu kỳ, hoặc cho mọi tài khoản.
 
@@ -97,6 +97,7 @@ Tài khoản ngoài bảng (loại "Off-Balance Sheet" của Odoo, hoặc mã b�
 - Tài khoản ngoài bảng được nhận diện thêm theo loại "Off-Balance Sheet" của Odoo.
 - Bộ lọc Loại tài khoản có cả trên màn hình, không chỉ ở cửa sổ tham số.
 - Sổ nhanh hơn trên hệ thống nhiều tài khoản: số liệu của mọi tài khoản được đọc một lượt thay vì từng tài khoản một.
+- Dòng bút toán có số tiền bằng 0 không còn trên sổ.
 - Ngôn ngữ gốc của module là tiếng Anh, tiếng Việt là bản dịch. Giấy phép đổi từ LGPL-3 sang AGPL-3.
 
 ## 8. Cài đặt

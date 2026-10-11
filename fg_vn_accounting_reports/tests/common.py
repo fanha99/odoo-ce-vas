@@ -108,6 +108,9 @@ class FakeReportMixin:
         self.groups = make_groups()
         self.split_by_group = False
         self.renderer_cls = FakeReportPDF
+        # lazy loading: the fake report counts its lines only when asked to
+        self.countable = False
+        self.preload = False
         Report = self.registry[REPORT_MODEL]
         self.patch(Report, '_get_report_name', lambda report: report.env._("Report"))
         self.patch(Report, '_get_report_code', lambda report: 'S00 TEST')
@@ -116,6 +119,20 @@ class FakeReportMixin:
         self.patch(Report, '_group_to_xlsx_rows', lambda report, group: group_to_rows(group))
         self.patch(Report, '_should_xlsx_split_by_group', lambda report: self.split_by_group)
         self.patch(Report, '_get_pdf_rl_renderer', lambda report: self.renderer_cls)
+        self.patch(Report, '_count_lines', lambda report, options: (
+            sum(len(group['lines']) for group in self.groups) if self.countable else None
+        ))
+        self.patch(Report, '_get_group_summaries', lambda report, options: [
+            {
+                **{key: value for key, value in group.items() if key != 'lines'},
+                'line_count': len(group['lines']),
+                'preload': self.preload,
+            }
+            for group in self.groups
+        ])
+        self.patch(Report, '_get_group_lines', lambda report, options, group_id, offset, limit: next(
+            group['lines'][offset:offset + limit] for group in self.groups if group['id'] == group_id
+        ))
         self.patch(Report, '_get_drill_down_action', lambda report, options, params: {
             'type': 'ir.actions.act_window',
             'res_model': 'account.move.line',

@@ -94,7 +94,7 @@
                 border-color: #9ca3af;
             }
 
-            .fa-calendar {
+            .oi[data-icon="calendar_today"] {
                 color: #6b7280;
             }
         }
@@ -129,7 +129,7 @@
                     font-weight: 500;
                 }
 
-                .fa-check {
+                .o_vn_date_check {
                     position: absolute;
                     left: 14px;
                     top: 50%;
@@ -317,7 +317,7 @@
                         background: #dbeafe;
                         border-radius: 4px;
                         
-                        .fa-times {
+                        .o_vn_tag_remove {
                             cursor: pointer;
                             opacity: 0.7;
                             
@@ -436,7 +436,7 @@
     .o_vn_search_box {
         position: relative;
 
-        .fa-search {
+        .oi[data-icon="search"] {
             position: absolute;
             left: 9px;
             top: 50%;
@@ -524,8 +524,7 @@
                 font-weight: 600;
                 padding: 10px 12px;
 
-                .fa-caret-down,
-                .fa-caret-right {
+                .o_vn_caret {
                     margin-right: 8px;
                     color: #4472C4;
                 }
@@ -637,7 +636,7 @@
                 opacity: 1;
             }
 
-            .fa-ellipsis-v {
+            .oi {
                 font-size: 14px;
             }
         }
@@ -727,4 +726,23 @@
             }
         }
     }
+}
+
+// Row offering to load the next lines of a long report
+.o_vn_report_table {
+    .o_vn_load_more_row > td {
+        background: #f8f9fa;
+        padding: 6px 8px;
+        color: #495057;
+    }
+}
+
+// Icons are Material Symbols (<i class="oi" data-icon="...">): align them
+// with the text of the buttons and cells they sit in.
+.o_vn_report .oi {
+    vertical-align: middle;
+}
+.o_vn_report_table .o_vn_caret {
+    cursor: pointer;
+    font-size: 18px;
 }

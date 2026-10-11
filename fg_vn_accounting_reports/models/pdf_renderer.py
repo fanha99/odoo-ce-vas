@@ -243,7 +243,15 @@ class FanhaReportPDF:
     # ── Fixed heights ─────────────────────────────────────────────────────
 
     def _company_hdr_height(self):
-        return 22 * mm
+        """ Height reserved for the page header: 22 mm, or more when the
+        header lines need it. """
+        frame_w = self._frame_width()
+        height = self.HEADER_TOP_INSET
+        # page 0 stands for "the tallest header of the document"
+        for line in self._get_page_header_lines(0):
+            _w, line_h = self._header_paragraph(line).wrap(frame_w, 100)
+            height += line_h + line.get('space_after', 0)
+        return max(22 * mm, height + self.HEADER_BOTTOM_GAP)
 
     def _col_hdr_height(self):
         return 9 * mm
@@ -251,34 +259,81 @@ class FanhaReportPDF:
     def _footer_height(self):
         return 7 * mm
 
+    # ── Page header ───────────────────────────────────────────────────────
+    #
+    # The header of a page is a list of lines. A report changes its header by
+    # overriding _get_page_header_lines() (add, remove or change a line) or
+    # _format_group_label(); it never has to redraw the header itself.
+
+    HEADER_TOP_INSET = 3    # points between the top margin and the first line
+    HEADER_BOTTOM_GAP = 6   # points between the last line and the table
+
+    def _get_page_header_lines(self, page):
+        """ Lines of the header of the given page, from top to bottom.
+
+        :param int page: page number, starting at 1. 0 asks for the tallest
+            header of the document, to reserve its height.
+        :return: list of dicts {'text', 'bold', 'size', 'align' ('L', 'C' or
+            'R'), 'space_after' (points)}; only 'text' is required
+        """
+        lines = [
+            {'text': self.company.get('name', ''), 'bold': True, 'size': 9, 'align': 'L', 'space_after': 2},
+            {'text': self.hdr.get('title', ''), 'bold': True, 'size': 11, 'align': 'C', 'space_after': 2},
+            {
+                'text': self.env._(
+                    "From %(date_from)s to %(date_to)s",
+                    date_from=self.hdr.get('date_from', ''), date_to=self.hdr.get('date_to', ''),
+                ),
+                'size': 8, 'align': 'C', 'space_after': 4,
+            },
+        ]
+        group_label = self._get_page_group_label(page)
+        if group_label:
+            lines.append({'text': group_label, 'bold': True, 'size': 9, 'align': 'L'})
+        return lines
+
+    def _get_page_group_label(self, page):
+        """ Label of the group printed on the given page, '' when the report
+        is not paginated by group. For page 0, the longest label. """
+        if not self._should_paginate_by_group():
+            return ''
+        if page == 0:
+            labels = [self._format_group_label(group) or '' for group in self.groups]
+            return max(labels, key=len, default='')
+        return self._page_group_labels.get(page, '')
+
+    def _is_blank_page(self, page):
+        """ Filler page inserted so that the next group starts on an odd
+        page, when printing with mirror margins. """
+        return self._page_info.get(page) == (0, 0)
+
+    def _header_paragraph(self, line):
+        return self._p(
+            line.get('text', ''), bold=line.get('bold', False),
+            size=line.get('size'), align=line.get('align', 'L'),
+        )
+
     # ── Canvas callbacks ──────────────────────────────────────────────────
 
     def _draw_page_header(self, c, doc, ml):
-        """Draw page header using Paragraph.drawOn() for correct Vietnamese rendering."""
+        """ Draw the lines of _get_page_header_lines(). Paragraph.drawOn()
+        renders Vietnamese correctly. Nothing is drawn on a filler page. """
+        if self._is_blank_page(doc.page):
+            return
         frame_w = self._frame_width()
-        y = self.PAGE_H - self.MT - 3  # 3pt top inset
-
-        p = self._p(self.company.get('name', ''), bold=True, size=9, align='L')
-        _, ph = p.wrap(frame_w, 30)
-        p.drawOn(c, ml, y - ph)
-        y -= ph + 2
-
-        p = self._p(self.hdr.get('title', ''), bold=True, size=11, align='C')
-        _, ph = p.wrap(frame_w, 30)
-        p.drawOn(c, ml, y - ph)
-        y -= ph + 2
-
-        d_from = self.hdr.get('date_from', '')
-        d_to   = self.hdr.get('date_to', '')
-        p = self._p(
-            self.env._("From %(date_from)s to %(date_to)s", date_from=d_from, date_to=d_to),
-            size=8, align='C',
-        )
-        _, ph = p.wrap(frame_w, 30)
-        p.drawOn(c, ml, y - ph)
+        y = self.PAGE_H - self.MT - self.HEADER_TOP_INSET
+        for line in self._get_page_header_lines(doc.page):
+            p = self._header_paragraph(line)
+            _w, line_h = p.wrap(frame_w, 100)
+            p.drawOn(c, ml, y - line_h)
+            y -= line_h + line.get('space_after', 0)
 
     def _draw_page_footer(self, c, doc, align='right', x_left=None, x_right=None):
         """Store footer info on canvas — _NumberedCanvas will draw 'Page X/Y' in save()."""
+        if self._is_blank_page(doc.page):
+            # the canvas keeps the footer of the previous page otherwise
+            c._footer_info = None
+            return
         c._footer_info = (
             align,
             x_left  or self.ML,
@@ -503,8 +558,9 @@ class FanhaReportPDF:
         return True
 
     def _format_group_label(self, group):
-        """Hook for subclasses to format the per-group label drawn in the
-        page header (e.g. account name for S03b, product label for S06)."""
+        """ Hook: label of a group, drawn in the header of each of its pages
+        when the report is paginated by group ("Account: ...", "Product: ...").
+        Return '' for no label. """
         return group.get('name', '')
 
     def render(self):

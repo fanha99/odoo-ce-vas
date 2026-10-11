@@ -5,6 +5,7 @@ from PyPDF2 import PdfReader
 from odoo.addons.fg_vn_accounting_reports.models.pdf_renderer import (
     RT_BROUGHT_FWD, RT_CARRY_FWD, RT_DATA,
 )
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
 from .common import FakeReportMixin, FakeReportPDF, make_groups
@@ -177,10 +178,107 @@ class TestPdfRenderer(FakeReportMixin, TransactionCase):
         # one page per group, and a blank page after each group but the last
         self.assertEqual(len(pages), 5)
         self.assertIn("Account 110", pages[0])
-        self.assertNotIn("Entry", pages[1])
         self.assertIn("Account 111", pages[2])
-        self.assertNotIn("Entry", pages[3])
         self.assertIn("Account 112", pages[4])
+        # a filler page has no header and no page number, but counts as a page
+        self.assertEqual(pages[1].strip(), '')
+        self.assertEqual(pages[3].strip(), '')
+        self.assertIn("Page 1/5", pages[0])
+        self.assertIn("Page 3/5", pages[2])
+
+    # ------------------------------------------------------------ page header
+
+    def test_header_lines_of_a_plain_report(self):
+        renderer = self._renderer()
+        lines = renderer._get_page_header_lines(1)
+        self.assertEqual(
+            [line['text'] for line in lines],
+            [self.report_user.company_id.name, "Report", "From 2026-01-01 to 2026-01-31"],
+        )
+        self.assertEqual(renderer._get_page_group_label(1), '')
+        self.assertAlmostEqual(renderer._company_hdr_height(), 22 * 72 / 25.4, places=3)
+
+    def test_group_label_is_on_every_page_of_the_group(self):
+        self.groups = make_groups(group_count=2, line_count=90)
+
+        class LabelPDF(GroupPaginatedPDF):
+            def _format_group_label(self, group):
+                return "Ledger of %s" % group['name']
+
+        pages = self._read(self._renderer(LabelPDF).render())
+        first_group = [text for text in pages if "Ledger of Account 110" in text]
+        second_group = [text for text in pages if "Ledger of Account 111" in text]
+        self.assertGreater(len(first_group), 1, "the group spreads over several pages")
+        self.assertEqual(len(first_group) + len(second_group), len(pages))
+        for text in pages:
+            self.assertIn("Report", text)
+
+    def test_report_without_group_label(self):
+        self.groups = make_groups(group_count=2, line_count=2)
+
+        class NoLabelPDF(GroupPaginatedPDF):
+            def _format_group_label(self, group):
+                return ''
+
+        renderer = self._renderer(NoLabelPDF)
+        self.assertEqual(len(renderer._get_page_header_lines(0)), 3)
+        self.assertEqual(len(self._read(renderer.render())), 2)
+
+    def test_report_adds_header_lines(self):
+        """ A report extends the header through _get_page_header_lines(),
+        without redrawing it; the room for the header follows. """
+        self.groups = make_groups(group_count=1, line_count=120)
+
+        class TallHeaderPDF(FakeReportPDF):
+            def _get_page_header_lines(self, page):
+                lines = super()._get_page_header_lines(page)
+                lines.insert(1, {'text': "Tax code: 0123456789", 'size': 8})
+                lines += [{'text': "Extra line %s" % i, 'size': 9} for i in range(4)]
+                return lines
+
+        plain = self._renderer()
+        tall = self._renderer(TallHeaderPDF)
+        self.assertGreater(tall._company_hdr_height(), plain._company_hdr_height())
+
+        pages = self._read(tall.render())
+        self.assertGreater(len(pages), 1)
+        for text in pages:
+            self.assertIn("Tax code: 0123456789", text)
+            self.assertIn("Extra line 3", text)
+        # less room for the table: more pages than the plain report
+        self.assertGreaterEqual(len(pages), len(self._read(plain.render())))
+
+    def test_longest_group_label_reserves_the_height(self):
+        self.groups = make_groups(group_count=2, line_count=2)
+        self.groups[1]['name'] = "A very long account name " * 12
+        renderer = self._renderer(GroupPaginatedPDF)
+        self.assertGreater(renderer._company_hdr_height(), 22 * 72 / 25.4)
+        pages = self._read(renderer.render())
+        self.assertEqual(len(pages), 2)
+
+    # --------------------------------------------------------------- PDF limit
+
+    def _set_pdf_limit(self, limit):
+        self.env['ir.config_parameter'].sudo().set_int('fg_vn_accounting_reports.pdf_line_limit', limit)
+
+    def test_pdf_line_limit(self):
+        self.countable = True  # 6 lines
+        self._set_pdf_limit(5)
+        with self.assertRaises(UserError):
+            self.Report.get_pdf_rl(dict(OPTIONS))
+        # Excel is not limited
+        self.assertTrue(self.Report.get_xlsx(dict(OPTIONS)))
+        self._set_pdf_limit(6)
+        self.assertTrue(self.Report.get_pdf_rl(dict(OPTIONS)))
+
+    def test_pdf_line_limit_disabled(self):
+        self.countable = True
+        self._set_pdf_limit(0)
+        self.assertTrue(self.Report.get_pdf_rl(dict(OPTIONS)))
+
+    def test_pdf_line_limit_needs_a_countable_report(self):
+        self._set_pdf_limit(1)
+        self.assertTrue(self.Report.get_pdf_rl(dict(OPTIONS)))
 
     def test_render_book_information(self):
         text = self._read(self._renderer(BookPDF).render())[0]

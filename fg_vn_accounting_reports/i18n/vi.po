@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 07:17+0000\n"
-"PO-Revision-Date: 2026-10-11 07:17+0000\n"
+"POT-Creation-Date: 2026-10-11 09:18+0000\n"
+"PO-Revision-Date: 2026-10-11 09:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi\n"
@@ -41,6 +41,12 @@ msgstr ""
 "Module này không chứa báo cáo nào. Mỗi sổ là một module riêng xây trên nó.\n"
 "\n"
 "Xem readme.md trong thư mục module.\n"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
+msgid "%(loaded)s of %(total)s lines shown"
+msgstr "Đã hiện %(loaded)s / %(total)s dòng"
 
 #. module: fg_vn_accounting_reports
 #. odoo-python
@@ -213,6 +219,8 @@ msgstr "Công ty không hợp lệ."
 
 #. module: fg_vn_accounting_reports
 #: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_cdps_wizard__orientation__landscape
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_s03a_wizard__orientation__landscape
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_s03b_wizard__orientation__landscape
 #: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_wizard_abstract__orientation__landscape
 msgid "Landscape (A4)"
 msgstr "Ngang (A4)"
@@ -243,6 +251,12 @@ msgstr "Quý trước"
 #: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
 msgid "Last year"
 msgstr "Năm trước"
+
+#. module: fg_vn_accounting_reports
+#. odoo-javascript
+#: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
+msgid "Load more"
+msgstr "Xem thêm"
 
 #. module: fg_vn_accounting_reports
 #. odoo-javascript
@@ -280,6 +294,8 @@ msgstr "Trang %(page)s/%(total)s"
 
 #. module: fg_vn_accounting_reports
 #: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_cdps_wizard__orientation__portrait
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_s03a_wizard__orientation__portrait
+#: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_s03b_wizard__orientation__portrait
 #: model:ir.model.fields.selection,name:fg_vn_accounting_reports.selection__vn_report_wizard_abstract__orientation__portrait
 msgid "Portrait (A4)"
 msgstr "Đứng (A4)"
@@ -355,6 +371,17 @@ msgstr "Tháng này"
 #: code:addons/fg_vn_accounting_reports/static/src/js/abstract_report.js:0
 msgid "This quarter"
 msgstr "Quý này"
+
+#. module: fg_vn_accounting_reports
+#. odoo-python
+#: code:addons/fg_vn_accounting_reports/models/abstract_report.py:0
+msgid ""
+"This report has %(count)s lines, more than the %(limit)s lines that can be "
+"printed to PDF at once. Please narrow the period or the filters, or export "
+"to Excel."
+msgstr ""
+"Báo cáo có %(count)s dòng, vượt quá %(limit)s dòng có thể in PDF trong một "
+"lần. Vui lòng thu hẹp kỳ hoặc bộ lọc, hoặc xuất Excel."
 
 #. module: fg_vn_accounting_reports
 #. odoo-javascript

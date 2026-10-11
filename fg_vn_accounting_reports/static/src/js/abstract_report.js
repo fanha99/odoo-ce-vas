@@ -20,6 +20,10 @@ export class AbstractVNReport extends Component {
     // overrides this; the others get the generic table.
     static tableTemplate = "fg_vn_accounting_reports.DataTable";
     static components = { Dropdown, DropdownItem, DateTimeInput };
+    // When the report is loaded lazily, whether the search box searches on
+    // the server (the lines are not all there) instead of filtering the
+    // loaded groups. For a report whose search bears on the lines.
+    static lazySearch = false;
 
     props = useProps(standardActionServiceProps);
 
@@ -100,7 +104,12 @@ export class AbstractVNReport extends Component {
             filterSearchText: {},
             filterSearchResults: {},
             activeFilterCount: 0,
+            // ids of the groups whose next chunk of lines is being loaded
+            loadingGroups: new Set(),
         });
+        // search text the report data was loaded with, when searching on the server
+        this._serverSearch = "";
+        this._searchTimer = null;
 
         useListener(document, "click", this._onClickOutside.bind(this), { capture: true });
 
@@ -521,6 +530,16 @@ export class AbstractVNReport extends Component {
         return options;
     }
 
+    /** Options sent to the server to load data: the report options, plus
+     *  the search text when the search is done on the server. */
+    _buildLoadOptions() {
+        const options = { ...this.state.options };
+        if (this._serverSearch) {
+            options.search = this._serverSearch;
+        }
+        return options;
+    }
+
     async loadReportData() {
         this.state.isLoading = true;
         try {
@@ -528,9 +547,12 @@ export class AbstractVNReport extends Component {
             this.state.options = options;
             this._persistOptions(options);
 
-            const data = await this.orm.call(this.getReportModel(), "get_report_data", [options]);
+            const data = await this.orm.call(this.getReportModel(), "get_report_data", [
+                this._buildLoadOptions(),
+            ]);
 
             this.state.reportData = data;
+            this._ensureDisplayName(data);
             if (data.options?.lang) {
                 this.state.reportLang = data.options.lang;
             }
@@ -539,6 +561,23 @@ export class AbstractVNReport extends Component {
                 // setup() restored the unfolded nodes: keep them on the first
                 // load; the next loads unfold everything again
                 this._pendingExpandRestore = false;
+                if (data.lazy) {
+                    for (const group of data.lines || []) {
+                        if (this.state.expandedNodes.has(group.id)) {
+                            this._ensureGroupLoaded(group.id);
+                        }
+                    }
+                }
+            } else if (data.lazy) {
+                // only the groups that came with lines are unfolded
+                const expanded = new Set();
+                for (const group of data.lines || []) {
+                    if (group.lines?.length) {
+                        expanded.add(group.id);
+                    }
+                }
+                this.state.expandedNodes = expanded;
+                this.state.expandedGroups = new Set(expanded);
             } else {
                 const expanded = new Set();
                 for (const group of data.lines || []) {
@@ -562,10 +601,116 @@ export class AbstractVNReport extends Component {
         this.state.isLoading = false;
     }
 
+    /**
+     * Name of the report in the breadcrumb and the browser tab. It comes
+     * from the action opened by the wizard, or from `static displayName` of
+     * the report. After a page reload neither may be there: fall back on the
+     * title of the report.
+     */
+    _ensureDisplayName(data) {
+        const config = this.env.config;
+        if (config?.setDisplayName && !config.getDisplayName?.() && data.header?.title) {
+            config.setDisplayName(data.header.title);
+        }
+    }
+
+    // ==================== LAZY LOADING ====================
+    // A long report comes with its groups and their figures only; the lines
+    // of a group are loaded by chunks, when the group is unfolded and when
+    // the user asks for more.
+
+    get isLazy() {
+        return Boolean(this.state.reportData?.lazy);
+    }
+
+    /** Whether the search box is applied by the server on the whole report */
+    get isServerSearch() {
+        return this.constructor.lazySearch && (this.isLazy || Boolean(this._serverSearch));
+    }
+
+    _findGroup(groupId) {
+        return (this.state.reportData?.lines || []).find((group) => group.id === groupId);
+    }
+
+    hasMoreLines(group) {
+        return this.isLazy && (group.lines?.length || 0) < (group.line_count || 0);
+    }
+
+    isGroupLoading(group) {
+        return this.state.loadingGroups.has(group.id);
+    }
+
+    async loadMoreLines(groupId) {
+        const group = this._findGroup(groupId);
+        if (!group || !this.hasMoreLines(group) || this.isGroupLoading(group)) {
+            return;
+        }
+        const reportData = this.state.reportData;
+        this.state.loadingGroups = new Set([...this.state.loadingGroups, groupId]);
+        try {
+            const result = await this.orm.call(this.getReportModel(), "get_group_lines", [
+                this._buildLoadOptions(),
+                groupId,
+                group.lines.length,
+            ]);
+            // the report may have been reloaded meanwhile
+            if (this.state.reportData === reportData) {
+                if (result.lines.length) {
+                    group.lines.push(...result.lines);
+                } else {
+                    // nothing left on the server: stop offering more
+                    group.line_count = group.lines.length;
+                }
+            }
+        } finally {
+            const loading = new Set(this.state.loadingGroups);
+            loading.delete(groupId);
+            this.state.loadingGroups = loading;
+        }
+    }
+
+    /** Load the first lines of a lazy group that has none yet */
+    _ensureGroupLoaded(groupId) {
+        const group = this._findGroup(groupId);
+        if (group && this.isLazy && !group.lines?.length && group.line_count) {
+            return this.loadMoreLines(groupId);
+        }
+    }
+
+    /**
+     * Row offering to load more lines of a group, or null when all its lines
+     * are there. To add after the lines of the group in groupsToRows().
+     */
+    getLoadMoreRow(group, parentId) {
+        if (!this.hasMoreLines(group)) {
+            return null;
+        }
+        return {
+            id: `load_more_${group.id}`,
+            parentId,
+            type: "load_more",
+            span_all: true,
+            label: _t("%(loaded)s of %(total)s lines shown", {
+                loaded: this.formatInteger(group.lines.length) || "0",
+                total: this.formatInteger(group.line_count),
+            }),
+            cells: [],
+            data: group,
+        };
+    }
+
     // ==================== SEARCH ====================
 
     onSearchChange(ev) {
         this.state.filters.searchText = ev.target.value.toLowerCase();
+        if (this.isServerSearch) {
+            // search on the server once the user stops typing
+            clearTimeout(this._searchTimer);
+            this._searchTimer = setTimeout(() => {
+                this._serverSearch = this.state.filters.searchText.trim();
+                this.loadReportData();
+            }, 400);
+        }
     }
 
     get filteredLines() {
@@ -573,7 +718,7 @@ export class AbstractVNReport extends Component {
             return [];
         }
         const searchText = this.state.filters.searchText;
-        if (!searchText) {
+        if (!searchText || this.isServerSearch) {
             return this.state.reportData.lines;
         }
         const searchKeys = this.getSearchKeys();
@@ -602,6 +747,9 @@ export class AbstractVNReport extends Component {
     }
 
     expandAll() {
+        if (this.isLazy) {
+            return; // would load the whole report
+        }
         const expanded = new Set(this.state.expandedNodes);
         for (const row of this.tableRows) {
             if (row.expandable && row.id != null) {
@@ -627,14 +775,15 @@ export class AbstractVNReport extends Component {
     /**
      * Menu items of a group header. Override to customize.
      * @param {Object} group
-     * @returns {Array} [{ key, label, icon, action }]
+     * @returns {Array} [{ key, label, icon, action }], `icon` being the
+     *      name of a Material Symbols icon (<i class="oi" data-icon=...>)
      */
     getGroupMenuItems(group) {
         return [
             {
                 key: "drill_down",
                 label: _t("View details"),
-                icon: "fa-external-link",
+                icon: "open_in_new",
                 action: () => this.handleGroupDrillDown(group),
             },
         ];
@@ -643,14 +792,15 @@ export class AbstractVNReport extends Component {
     /**
      * Menu items of a detail line. Override to customize.
      * @param {Object} line
-     * @returns {Array} [{ key, label, icon, action }]
+     * @returns {Array} [{ key, label, icon, action }], `icon` being the
+     *      name of a Material Symbols icon (<i class="oi" data-icon=...>)
      */
     getLineMenuItems(line) {
         return [
             {
                 key: "drill_down",
                 label: _t("View details"),
-                icon: "fa-external-link",
+                icon: "open_in_new",
                 action: () => this.handleLineDrillDown(line),
             },
         ];
@@ -850,6 +1000,7 @@ export class AbstractVNReport extends Component {
             expanded.delete(rowId);
         } else {
             expanded.add(rowId);
+            this._ensureGroupLoaded(rowId);
         }
         this.state.expandedNodes = expanded;
         this._persistUiState();
@@ -911,6 +1062,9 @@ export class AbstractVNReport extends Component {
             case "group_total":
             case "grand_total":
                 cls.push("o_vn_total_row", "fw-bold");
+                break;
+            case "load_more":
+                cls.push("o_vn_load_more_row");
                 break;
             default:
                 cls.push("o_vn_detail_row");

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 06:37+0000\n"
-"PO-Revision-Date: 2026-10-11 06:37+0000\n"
+"POT-Creation-Date: 2026-10-11 09:18+0000\n"
+"PO-Revision-Date: 2026-10-11 09:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi\n"
@@ -25,7 +25,9 @@ msgid ""
 "\n"
 "Adds a company setting to hide the transfer accounts that have no balance,\n"
 "and lets the user choose which accounts are concerned. The accounting books\n"
-"and printouts read this setting; this module has no report of its own.\n"
+"and printouts read this setting; this module has no report of its own. It\n"
+"also holds the rule they share to present the entries meeting on a hidden\n"
+"account as one operation.\n"
 "\n"
 "Meant for companies applying Circular 133, whose chart of accounts has no\n"
 "account 113.\n"
@@ -38,7 +40,9 @@ msgstr ""
 "\n"
 "Thêm một thiết lập theo công ty để ẩn các tài khoản trung chuyển không có số dư,\n"
 "và cho người dùng chọn những tài khoản được ẩn. Các sổ kế toán và phiếu in\n"
-"đọc thiết lập này; module không có báo cáo riêng.\n"
+"đọc thiết lập này; module không có báo cáo riêng. Module cũng chứa quy tắc\n"
+"dùng chung để trình bày các bút toán gặp nhau ở một tài khoản được ẩn\n"
+"như một nghiệp vụ.\n"
 "\n"
 "Dành cho đơn vị áp dụng Thông tư 133, hệ thống tài khoản không có\n"
 "tài khoản 113.\n"
@@ -82,6 +86,7 @@ msgid "Config Settings"
 msgstr "Thiết lập cấu hình"
 
 #. module: fg_vn_transfer_account
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_company__display_name
 #: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_config_settings__display_name
 msgid "Display Name"
@@ -110,10 +115,16 @@ msgstr ""
 "không có số dư. Bút toán không bị sửa."
 
 #. module: fg_vn_transfer_account
+#: model:ir.model.fields,field_description:fg_vn_transfer_account.field_account_move__id
 #: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_company__id
 #: model:ir.model.fields,field_description:fg_vn_transfer_account.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: fg_vn_transfer_account
+#: model:ir.model,name:fg_vn_transfer_account.model_account_move
+msgid "Journal Entry"
+msgstr "Bút toán"
 
 #. module: fg_vn_transfer_account
 #: model:ir.module.module,shortdesc:base.module_fg_vn_transfer_account

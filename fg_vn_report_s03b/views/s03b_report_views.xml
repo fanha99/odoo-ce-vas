@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_vn_report_s03b" model="ir.actions.client">
+        <field name="name">General Ledger</field>
+        <field name="tag">vn_report_s03b</field>
+    </record>
+
+    <!-- The menu opens the wizard, which opens the client action -->
+    <menuitem id="menu_vn_report_s03b"
+              name="General Ledger (S03b-DNN)"
+              parent="fg_vn_accounting_reports.menu_vn_vas_reports"
+              action="action_vn_report_s03b_wizard"
+              sequence="20"/>
+
+</odoo>

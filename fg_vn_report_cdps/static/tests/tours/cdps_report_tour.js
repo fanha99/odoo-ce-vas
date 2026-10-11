@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("fg_vn_report_cdps_tour", {
         },
         {
             content: "Unfold everything",
-            trigger: ".o_vn_btn_icon:has(.fa-expand)",
+            trigger: ".o_vn_btn_icon:has([data-icon=keyboard_double_arrow_down])",
             run: "click",
         },
         {
@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add("fg_vn_report_cdps_tour", {
         },
         {
             content: "Fold everything",
-            trigger: ".o_vn_btn_icon:has(.fa-compress)",
+            trigger: ".o_vn_btn_icon:has([data-icon=keyboard_double_arrow_up])",
             run: "click",
         },
         {
@@ -195,6 +195,10 @@ registry.category("web_tour.tours").add("fg_vn_report_cdps_tour", {
             trigger: ".o_list_view .o_data_row",
         },
         {
+            content: "The breadcrumb names the report",
+            trigger: ".o_breadcrumb .breadcrumb-item a:contains(Trial Balance)",
+        },
+        {
             content: "Go back to the report",
             trigger: ".o_back_button, .breadcrumb-item a",
             run: "click",
@@ -224,6 +228,24 @@ registry.category("web_tour.tours").add("fg_vn_report_cdps_tour", {
             content: "The report kept its language, comparison and account level after the reload",
             trigger: `${TABLE}:has(td:contains(FGT Cash)):not(:has(td:contains(FGT Cash VND))) .o_vn_header_row th:eq(12)`,
         },
+        {
+            content: "Open the journal items of an account again, after the reload",
+            trigger: `${TABLE} tr:has(td:contains(FGT Expense)) .o_vn_drilldown_btn`,
+            run: "click",
+        },
+        {
+            content: "The breadcrumb still names the report, though the reloaded action has no name",
+            trigger: ".o_list_view:has(.o_data_row) .o_breadcrumb .breadcrumb-item a:contains(Trial Balance)",
+        },
+        {
+            content: "Go back to the report",
+            trigger: ".o_back_button, .breadcrumb-item a",
+            run: "click",
+        },
+        {
+            content: "The report is back",
+            trigger: `${TABLE} td:contains(FGT Cash)`,
+        },
         // ----------------------------------------------------------- language
         {
             content: "Open the filters",
@@ -247,7 +269,7 @@ registry.category("web_tour.tours").add("fg_vn_report_cdps_tour", {
         // ------------------------------------------------------------ exports
         {
             content: "The three exports are offered",
-            trigger: ".o_vn_report_actions:has(.fa-file-excel-o):has(.fa-file-pdf-o):has(.fa-file-code-o)",
+            trigger: ".o_vn_report_actions:has([data-icon=table]):has([data-icon=picture_as_pdf]):has([data-icon=code])",
         },
     ],
 });

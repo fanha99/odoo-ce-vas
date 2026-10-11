@@ -5,9 +5,18 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import xlsxwriter
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 DEFAULT_TIMEZONE = 'Asia/Ho_Chi_Minh'
 DEFAULT_REPORT_LANG = 'vi_VN'
+
+# System parameters of the long reports
+LAZY_THRESHOLD_PARAM = 'fg_vn_accounting_reports.lazy_line_threshold'
+LAZY_CHUNK_PARAM = 'fg_vn_accounting_reports.lazy_chunk_size'
+PDF_LINE_LIMIT_PARAM = 'fg_vn_accounting_reports.pdf_line_limit'
+DEFAULT_LAZY_THRESHOLD = 2000
+DEFAULT_LAZY_CHUNK = 500
+DEFAULT_PDF_LINE_LIMIT = 30000
 
 
 class AbstractVNReport(models.AbstractModel):
@@ -161,9 +170,12 @@ class AbstractVNReport(models.AbstractModel):
         to add or change data.
         """
         company = self.env['res.company'].browse(options['company_id'])
+        lazy = self._is_lazy(options)
 
         return {
             'options': options,
+            'lazy': lazy,
+            'chunk_size': self._get_lazy_chunk_size(),
             'languages': [
                 {'code': code, 'name': name}
                 for code, name in self._get_report_languages()
@@ -181,9 +193,76 @@ class AbstractVNReport(models.AbstractModel):
                 'date_from': options['date']['date_from'],
                 'date_to': options['date']['date_to'],
             },
-            'lines': self._get_lines(options),
+            'lines': self._get_lazy_groups(options) if lazy else self._get_lines(options),
             'columns': self._get_columns(),
         }
+
+    # ==================== LONG REPORTS: LAZY LOADING ====================
+    #
+    # A report with many lines opts in by implementing the three hooks below.
+    # Under the threshold nothing changes: _get_lines() returns everything.
+    # Over it, the screen gets the groups with their figures (computed in
+    # SQL) and loads the lines by chunks, on demand. The exports always use
+    # _get_lines().
+
+    def _count_lines(self, options):
+        """ Hook: number of lines of the report, with a cheap COUNT query.
+        Return None (the default) for a report that does not load lazily. """
+        return None
+
+    def _get_group_summaries(self, options):
+        """ Hook: the groups of the report without their lines. Each group
+        has the keys the report needs to render its header and total rows,
+        plus `line_count`. A group with `preload: True` gets its first chunk
+        of lines right away (a report made of a single group). """
+        raise NotImplementedError("A lazy report must implement _get_group_summaries()")
+
+    def _get_group_lines(self, options, group_id, offset, limit):
+        """ Hook: about `limit` lines of the group, starting at `offset`, in
+        the order of the report. More than `limit` lines may be returned when
+        lines must stay together. """
+        raise NotImplementedError("A lazy report must implement _get_group_lines()")
+
+    def _get_int_param(self, key, default):
+        # a value that is not a number falls back on the default
+        return self.env['ir.config_parameter'].sudo().get_int(key, default)
+
+    def _get_lazy_threshold(self):
+        return self._get_int_param(LAZY_THRESHOLD_PARAM, DEFAULT_LAZY_THRESHOLD)
+
+    def _get_lazy_chunk_size(self):
+        return max(1, self._get_int_param(LAZY_CHUNK_PARAM, DEFAULT_LAZY_CHUNK))
+
+    def _is_lazy(self, options):
+        """ Whether the screen loads the lines of this report on demand. """
+        if self.env.context.get('fg_report_full'):
+            return False  # exports
+        count = self._count_lines(options)
+        return count is not None and count > self._get_lazy_threshold()
+
+    def _get_lazy_groups(self, options):
+        chunk_size = self._get_lazy_chunk_size()
+        groups = self._get_group_summaries(options)
+        for group in groups:
+            group.setdefault('line_count', 0)
+            if group.pop('preload', False):
+                group['lines'] = self._get_group_lines(options, group['id'], 0, chunk_size)
+            else:
+                group['lines'] = []
+        return groups
+
+    @api.model
+    def get_group_lines(self, options, group_id, offset=0):
+        """ Return the next chunk of lines of a group of a lazy report.
+
+        :return: {'lines': [...], 'offset': offset to ask for the next chunk}
+        """
+        options = self._get_default_options(options or {})
+        self._check_report_access(options)
+        self = self._with_report_lang(options)
+        offset = max(0, int(offset or 0))
+        lines = self._get_group_lines(options, group_id, offset, self._get_lazy_chunk_size())
+        return {'lines': lines, 'offset': offset + len(lines)}
 
     # ==================== DRILL DOWN ====================
 
@@ -263,7 +342,7 @@ class AbstractVNReport(models.AbstractModel):
         """ Return the report as the content of an .xlsx file. """
         options = self._get_default_options(options or {})
         # access is checked by get_report_data()
-        self = self._with_report_lang(options)
+        self = self._with_report_lang(options).with_context(fg_report_full=True)
         data = self.get_report_data(options)
         columns = data['columns']
         groups = data.get('lines', [])
@@ -422,8 +501,9 @@ class AbstractVNReport(models.AbstractModel):
         """ Return the report as a PDF built with ReportLab (running totals
         carried from page to page). """
         options = self._get_default_options(options or {})
-        # access is checked by get_report_data()
-        self = self._with_report_lang(options)
+        self._check_report_access(options)
+        self = self._with_report_lang(options).with_context(fg_report_full=True)
+        self._check_pdf_line_limit(options)
         data = self.get_report_data(options)
         renderer_cls = self._get_pdf_rl_renderer()
         if not renderer_cls:
@@ -433,6 +513,20 @@ class AbstractVNReport(models.AbstractModel):
     def _get_pdf_rl_renderer(self):
         """ Override: renderer class (subclass of FanhaReportPDF). """
         return None
+
+    def _check_pdf_line_limit(self, options):
+        """ Refuse to print a report too long to be laid out within one
+        request. Only for the reports that can count their lines. """
+        limit = self._get_int_param(PDF_LINE_LIMIT_PARAM, DEFAULT_PDF_LINE_LIMIT)
+        if limit <= 0:
+            return
+        count = self._count_lines(options)
+        if count is not None and count > limit:
+            raise UserError(_(
+                "This report has %(count)s lines, more than the %(limit)s lines that can be "
+                "printed to PDF at once. Please narrow the period or the filters, or export to Excel.",
+                count=count, limit=limit,
+            ))
 
     # ==================== UTILITY METHODS ====================
 

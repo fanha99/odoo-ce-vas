@@ -51,10 +51,22 @@ Mỗi module dưới đây mô tả cụ thể cách nó xử lý trong readme c
 
 Ở thời điểm viết tài liệu này, chỉ `fg_vn_report_cdps` đang được chuyển sang Odoo 20; ba module còn lại thuộc bản 19.0 và ở đó chỉ ẩn đúng một tài khoản trung chuyển của công ty.
 
-## 4. Khác với bản 19.0
+## 4. Hai bút toán trình bày như một nghiệp vụ
 
-Bản 19.0 chỉ có nút bật/tắt và luôn áp dụng cho đúng một tài khoản trung chuyển của công ty. Bản 20.0 cho chọn danh sách tài khoản.
+Quy tắc dưới đây dùng chung cho mọi sổ và phiếu in đọc thiết lập này. Nó chỉ có tác dụng khi thiết lập đang bật.
 
-## 5. Cài đặt
+Lấy ví dụ ở mục 1: phiếu chi CASH/001 (Nợ 113, Có 1111) và giấy báo có BANK/001 (Nợ 1121, Có 113), hai dòng 113 đã đối soát với nhau.
+
+- **Dòng bị ẩn.** Một dòng bút toán bị ẩn khi nó ghi vào một tài khoản thuộc danh sách tài khoản được ẩn và đã được đối soát hết. Dòng chưa đối soát, hoặc mới đối soát một phần, vẫn hiện.
+- **Bút toán nối với nhau.** Hai bút toán nối với nhau khi mỗi bên có một dòng bị ẩn trên cùng một tài khoản, thuộc cùng một lần đối soát, một bên ghi Nợ và một bên ghi Có. Nhiều phiếu chi gộp vào một lần nộp thì cùng nối với giấy báo có đó, và tạo thành một cụm.
+- **Số chứng từ.** Mọi bút toán của một cụm mang chung một số, dạng `chính (các bút toán còn lại)`: `BANK/001 (CASH/001)`, hoặc `BANK/001 (CASH/001, CASH/002)`. Số này không phụ thuộc sổ nào đang in hay kỳ nào đang xem.
+- **Bút toán chính và thứ tự.** Trong một cụm, các bút toán cùng ngày được xếp liền nhau: bút toán của sổ nhật ký ngân hàng trước, tiền mặt sau, rồi tới các sổ khác; cùng loại thì bút toán có mã tài khoản nhỏ hơn đứng trước. Bút toán khác ngày nằm ở ngày của nó. Bút toán chính là bút toán đứng đầu cụm theo thứ tự này.
+
+## 5. Khác với bản 19.0
+
+- Bản 19.0 chỉ có nút bật/tắt và luôn áp dụng cho đúng một tài khoản trung chuyển của công ty. Bản 20.0 cho chọn danh sách tài khoản.
+- Quy tắc ở mục 4 nằm trong module này. Ở bản 19.0 mỗi sổ tự viết một bản; hai bản cho ra số chứng từ khác nhau khi nhiều phiếu gộp vào một lần nộp, và khi bút toán chính nằm ngoài kỳ đang xem.
+
+## 6. Cài đặt
 
 Module được cài tự động khi cài một module báo cáo phụ thuộc nó. Cài riêng thì chỉ có thêm thiết lập ở trang cấu hình.

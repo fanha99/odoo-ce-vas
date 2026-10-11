@@ -5,7 +5,17 @@ Nguồn: `D:\openerp\V19\fanha-addons\fg_vn_report_s03a` (19.0.1.0.0, commit cu�
 
 `readme.md` mô tả sổ làm gì cho người dùng; kế hoạch này nói làm bằng cách nào. Khi hai tài liệu lệch nhau thì sửa kế hoạch theo readme.
 
-Trạng thái: **các quyết định đã chốt (2026-10-11); chờ lệnh bắt đầu code.** Chưa viết dòng code nào.
+Trạng thái: **đã xong cả bảy giai đoạn (2026-10-11).** 50 test chạy qua trên Odoo 20.0, gồm hai tour trình duyệt (sổ nhỏ và sổ tải dần). Số đo ở mục 9.
+
+Khác với kế hoạch, phát sinh khi code:
+
+| Điểm | Kế hoạch | Thực tế | Lý do |
+|---|---|---|---|
+| Dòng bị ẩn | Lấy từ `hidden_line_ids` của hàm ghép | Loại ngay trong điều kiện SQL của sổ (`account_id` thuộc tập được ẩn và có `full_reconcile_id`) | Đếm, tính tổng và lấy dòng dùng chung một điều kiện; không phải chuyển danh sách id dòng giữa các bước. Hàm ghép vẫn trả `hidden_line_ids` cho module khác. |
+| Hàm ghép chỉ được gọi cho bút toán có dòng bị ẩn | Gọi cho mọi bút toán của kỳ | Câu sắp xếp đánh dấu bút toán nào có dòng bị ẩn; chỉ các bút toán đó đi qua hàm ghép, số còn lại dùng khoá mặc định của cùng module | Không phải đọc 52.000 bút toán qua ORM mỗi lần tải. |
+| Bút toán chính của cụm | 19.0 chọn trong các bút toán của kỳ đang xem | Chọn trên cả cụm, kể cả bút toán ngoài kỳ | Số chứng từ ghép không đổi theo kỳ đang xem hay sổ đang in. |
+| Tìm kiếm ở máy chủ | Bật khi sổ đang tải dần | Thêm: giữ ở máy chủ cho tới khi ô tìm kiếm được xoá, kể cả khi kết quả tìm đã xuống dưới ngưỡng | Kết quả dưới ngưỡng là một tập đã lọc; xoá ô tìm kiếm phải tải lại cả sổ. |
+| Tham số hệ thống | `get_param` | `get_int` | Odoo 20 bỏ `ir.config_parameter.get_param/set_param` (đã ghi vault). |
 
 Đã chốt:
 
@@ -288,3 +298,31 @@ Một dòng cho `vn.report.s03a.wizard`, nhóm `account.group_account_user`, tha
 ## 8. Điểm cần xác nhận
 
 Không còn. Hai con số sẽ được xác nhận lại bằng số đo ở giai đoạn 0, trước khi viết code của sổ: ngưỡng tải dần (đang là 2.000 dòng, mỗi lần 500) và giới hạn số dòng khi in PDF.
+
+## 9. Số đo
+
+Đo ngày 2026-10-11 trên máy phát triển (Windows 11, PostgreSQL 16), một công ty có 61.000 bút toán và 184.000 dòng bút toán, trong đó quý đo có 52.000 bút toán, 154.000 dòng, gồm 1.000 cặp nộp tiền qua tài khoản trung chuyển đã đối soát. Số trong bảng là lần nhanh nhất trong ba lần chạy, tính ở máy chủ (chưa gồm thời gian trình duyệt dựng bảng).
+
+| Thao tác trên sổ nhật ký chung | Không ẩn | Có ẩn tài khoản trung chuyển |
+|---|---|---|
+| Đếm dòng của quý | 0,07 giây | 0,07 giây |
+| Tính dòng Cộng | 0,08 giây | 0,09 giây |
+| Sắp xếp 52.000 bút toán | 0,24 giây | 0,38 giây |
+| **Mở sổ (500 dòng đầu)** | **0,47 giây**, 0,11 MB | **0,61 giây**, 0,11 MB |
+| Xem thêm, từ dòng 500 | 0,25 giây | 0,39 giây |
+| Xem thêm, từ dòng 100.000 | 0,26 giây | 0,39 giây |
+| Tìm kiếm trên cả quý | 0,93 giây | 0,93 giây |
+| Tải cả sổ một lần, như 19.0 | 1,6 giây, 32,8 MB | 1,8 giây, 32,4 MB |
+
+| Xuất file | Thời gian | Kích thước |
+|---|---|---|
+| Excel cả quý, 152.000 dòng | 10 giây | 4,9 MB |
+| PDF một tuần, 11.700 dòng | 14 giây | 1,5 MB |
+| PDF một tháng, 50.200 dòng | 59 giây | 6,3 MB |
+
+Kết luận:
+
+- **Ngưỡng 2.000 dòng và mỗi lần 500 dòng được giữ.** Mở sổ và mỗi lần "Xem thêm" đều dưới một giây, và không chậm đi khi đi sâu vào sổ. Lượng dữ liệu gửi về giảm từ 33 MB xuống 0,11 MB.
+- Chi phí cố định của mỗi lần tải là bước sắp xếp bút toán (0,24 đến 0,38 giây cho 52.000 bút toán), vì máy chủ không giữ trạng thái giữa hai lần gọi. Nếu về sau cần nhanh hơn với kỳ lớn hơn nhiều, đây là chỗ để lưu tạm.
+- **PDF tốn khoảng 1,2 mili giây mỗi dòng.** Giới hạn mặc định `fg_vn_accounting_reports.pdf_line_limit` đặt là **30.000 dòng**, tương ứng khoảng 35 giây; đặt 0 để bỏ giới hạn.
+- Tải cả sổ một lần ở máy chủ chỉ mất 1,6 giây: phần chậm của 19.0 không nằm ở truy vấn mà ở 33 MB dữ liệu và hơn một triệu ô bảng trình duyệt phải dựng. Thời gian dựng bảng trên trình duyệt chưa được đo.

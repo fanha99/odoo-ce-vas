@@ -5,7 +5,18 @@ Nguồn: `D:\openerp\V19\fanha-addons\fg_vn_report_s03b` (19.0.1.0.0, commit cu�
 
 `readme.md` mô tả sổ làm gì cho người dùng; kế hoạch này nói làm bằng cách nào. Khi hai tài liệu lệch nhau thì sửa kế hoạch theo readme.
 
-Trạng thái: **các quyết định đã chốt (2026-10-11); chờ lệnh bắt đầu code.** Chưa viết dòng code nào.
+Trạng thái: **đã xong cả tám giai đoạn (2026-10-11).** 59 test chạy qua trên Odoo 20.0, gồm hai tour trình duyệt (sổ nhỏ và sổ tải dần). Số đo ở mục 9.
+
+Khác với kế hoạch, phát sinh khi code:
+
+| Điểm | Kế hoạch | Thực tế | Lý do |
+|---|---|---|---|
+| Số dư luỹ kế ở đầu mỗi đoạn tải dần | Trình duyệt gửi lại số dư của dòng cuối đã tải | Máy chủ tính bằng một câu `SUM` trên các dòng đứng trước | Máy chủ không phụ thuộc trạng thái của trình duyệt. Chi phí đo được: 0,55 giây khi bỏ qua 40.000 dòng, 0,07 giây ở đầu sổ. |
+| Số dư luỹ kế khi tách dòng | Ghi ở dòng cuối của mỗi phát sinh | Cộng dồn theo từng dòng sau khi tách | Đơn giản hơn; giá trị ở dòng cuối của phát sinh giống hệt. |
+| `_count_lines()` khi tách dòng | Đếm sau khi tách | Đếm số phát sinh (trước khi tách); số dòng của **từng tài khoản** trên màn hình thì đếm đúng sau khi tách | Con số này chỉ để quyết định tải dần và giới hạn PDF; đếm sau khi tách phải nối bảng cặp đối ứng. |
+| Dòng có số tiền bằng 0 | Không nêu | Bỏ khỏi sổ, như S03a | Dòng không có số tiền không phải phát sinh. Thêm vào mục 6. |
+| Dòng số dư khi tài khoản thu gọn (sổ tải dần) | Không nêu | Số dư đầu kỳ, cộng phát sinh, số dư cuối kỳ vẫn hiện; chỉ các phát sinh thu gọn | Readme mục 2 mô tả sổ dài như vậy. Ở sổ nhỏ, thu gọn vẫn ẩn cả các dòng này như 19.0. |
+| Số chứng từ ghép | Hàm ghép cho mọi bút toán của các dòng | Chỉ cho bút toán có dòng bị ẩn (tìm bằng một câu SQL) | Như S03a. |
 
 Đã chốt:
 
@@ -275,6 +286,7 @@ Giữ các trường; nhãn và lựa chọn tiếng Anh; `check_company=True` c
 6. Bộ lọc Loại tài khoản tính cả `liability_credit_card` và `expense_other` (quyết định 10), và có trên màn hình (quyết định 9).
 7. Drill-down của tài khoản theo công ty và các bộ lọc đang chọn (quyết định 11).
 8. Tên file xuất bắt đầu bằng `S03b-DNN`.
+9. Dòng bút toán có số tiền bằng 0 không còn trên sổ.
 
 ## 7. Các giai đoạn
 
@@ -294,3 +306,30 @@ Giai đoạn 0 đến 2 của `fg_vn_report_s03a/PLAN.md` (dữ liệu đo, quy 
 ## 8. Điểm cần xác nhận
 
 Không còn. Số đo ở giai đoạn 7 quyết định có phải tối ưu tiếp việc tính số dư đầu kỳ hay không (cuối mục 3b).
+
+## 9. Số đo
+
+Đo ngày 2026-10-11 trên máy phát triển (Windows 11, PostgreSQL 16), một công ty có 61.000 bút toán và 184.000 dòng bút toán, trong đó quý đo có 52.000 bút toán, 154.000 dòng, gồm 1.000 cặp nộp tiền qua tài khoản trung chuyển đã đối soát. Số trong bảng là lần nhanh nhất trong ba lần chạy, tính ở máy chủ (chưa gồm thời gian trình duyệt dựng bảng).
+
+| Thao tác trên sổ cái | Không ẩn | Có ẩn tài khoản trung chuyển |
+|---|---|---|
+| Đếm dòng của quý | 0,08 giây | 0,08 giây |
+| **Mở sổ (các tài khoản thu gọn, đủ số dư)** | **0,17 giây** | **0,17 giây** |
+| Mở tài khoản lớn nhất (50.000 dòng), 500 dòng đầu | 0,07 giây | 0,08 giây |
+| Xem thêm, từ dòng 40.000 | 0,55 giây | 0,55 giây |
+| Mở sổ, có tách dòng theo tài khoản đối ứng | 1,1 giây | 1,1 giây |
+| Mở tài khoản lớn nhất, có tách dòng | 0,59 giây | 0,63 giây |
+| Tải cả sổ một lần, như 19.0 | 2,6 giây, 38 MB | 3,0 giây, 37,5 MB |
+
+| Xuất file | Thời gian | Kích thước |
+|---|---|---|
+| Excel cả quý | 10 giây | 4,6 MB |
+| PDF một tuần, 11.900 dòng | 13 giây | 1,6 MB |
+| PDF một tháng, 50.800 dòng | 59 giây | 6,8 MB |
+
+Kết luận:
+
+- Mở sổ mất 0,17 giây thay cho 2,6 giây và 38 MB. Số câu SQL của một lần mở sổ là 8 đến 14, không phụ thuộc số tài khoản.
+- Câu tổng hợp số dư đầu kỳ nằm trong 0,17 giây đó, với 10.000 bút toán lịch sử trước kỳ. **Chưa cần tối ưu thêm**; dữ liệu đo chưa có lịch sử nhiều năm, nên kết luận này cần được kiểm lại trên database thật.
+- Tách dòng làm mở sổ chậm hơn (1,1 giây) vì phải đếm số dòng sau khi tách của từng tài khoản.
+- PDF tốn khoảng 1,2 mili giây mỗi dòng, như S03a; cùng giới hạn 30.000 dòng.

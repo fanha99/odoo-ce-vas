@@ -1,0 +1,384 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fg_vn_report_s03a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 09:55+0000\n"
+"PO-Revision-Date: 2026-10-11 09:55+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fg_vn_report_s03a
+#: model:ir.module.module,description:base.module_fg_vn_report_s03a
+msgid ""
+"\n"
+"Vietnam - General Journal (S03a-DNN)\n"
+"====================================\n"
+"\n"
+"Lists the posted journal items of a period in chronological order, with the\n"
+"debited account, the credited account and the amount.\n"
+"\n"
+"* filters by journal, entry type, account and partner\n"
+"* entries meeting on a hidden transfer account shown as one operation\n"
+"* long journals loaded by chunks\n"
+"* on screen, Excel and PDF with totals carried from page to page\n"
+"\n"
+"See readme.md in the module directory.\n"
+msgstr ""
+"\n"
+"Sổ nhật ký chung (S03a-DNN)\n"
+"===========================\n"
+"\n"
+"Liệt kê các phát sinh đã ghi sổ trong kỳ theo thứ tự thời gian, với tài khoản\n"
+"ghi Nợ, tài khoản ghi Có và số tiền.\n"
+"\n"
+"* bộ lọc theo sổ nhật ký, loại chứng từ, tài khoản và đối tác\n"
+"* các bút toán gặp nhau ở tài khoản trung chuyển được ẩn trình bày như một nghiệp vụ\n"
+"* sổ dài được tải dần\n"
+"* xem trên màn hình, xuất Excel và in PDF có cộng chuyển trang\n"
+"\n"
+"Xem readme.md trong thư mục module.\n"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__account_ids
+msgid "Accounts"
+msgstr "Tài khoản"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields.selection,name:fg_vn_report_s03a.selection__vn_report_s03a_wizard__move_type__all
+msgid "All"
+msgstr "Tất cả"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "All accounts"
+msgstr "Tất cả tài khoản"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "All journals"
+msgstr "Tất cả sổ nhật ký"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "All partners"
+msgstr "Tất cả đối tác"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__create_uid
+msgid "Created by"
+msgstr "Người tạo"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__create_date
+msgid "Created on"
+msgstr "Ngày tạo"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_pdf.py:0
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Credit"
+msgstr "Số tiền Có"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_pdf.py:0
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Credit Account"
+msgstr "TK Có"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_s03a.selection__vn_report_s03a_wizard__move_type__out_refund
+msgid "Customer credit notes"
+msgstr "Hoá đơn bán điều chỉnh giảm"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_s03a.selection__vn_report_s03a_wizard__move_type__out_invoice
+msgid "Customer invoices"
+msgstr "Hoá đơn bán"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_pdf.py:0
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Date"
+msgstr "Ngày"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_pdf.py:0
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Debit"
+msgstr "Số tiền Nợ"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_pdf.py:0
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Debit Account"
+msgstr "TK Nợ"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_pdf.py:0
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Description"
+msgstr "Diễn giải"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "Discard"
+msgstr "Đóng"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a__display_name
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__move_type
+msgid "Entry Type"
+msgstr "Loại chứng từ"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+msgid "Entry type"
+msgstr "Loại chứng từ"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "Excel"
+msgstr "Excel"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "Filters"
+msgstr "Bộ lọc"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Form No. S03a-DNN"
+msgstr "Mẫu số S03a-DNN"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__date_from
+msgid "From"
+msgstr "Từ ngày"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "GENERAL JOURNAL"
+msgstr "SỔ NHẬT KÝ CHUNG"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: code:addons/fg_vn_report_s03a/wizard/s03a_wizard.py:0
+#: model:ir.actions.act_window,name:fg_vn_report_s03a.action_vn_report_s03a_wizard
+#: model:ir.actions.client,name:fg_vn_report_s03a.action_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "General Journal"
+msgstr "Sổ nhật ký chung"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model,name:fg_vn_report_s03a.model_vn_report_s03a
+#: model:ir.ui.menu,name:fg_vn_report_s03a.menu_vn_report_s03a
+msgid "General Journal (S03a-DNN)"
+msgstr "Sổ nhật ký chung (S03a-DNN)"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model,name:fg_vn_report_s03a.model_vn_report_s03a_wizard
+msgid "General Journal Wizard"
+msgstr "Wizard sổ nhật ký chung"
+
+#. module: fg_vn_report_s03a
+#: model:ir.module.module,summary:base.module_fg_vn_report_s03a
+msgid "General journal of the Vietnamese accounting system, form S03a-DNN"
+msgstr "Sổ nhật ký chung theo chế độ kế toán Việt Nam, mẫu S03a-DNN"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__gutter_mm
+msgid "Gutter (mm)"
+msgstr "Lề gáy (mm)"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a__id
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Journal Entry"
+msgstr "Bút toán"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_s03a.selection__vn_report_s03a_wizard__move_type__entry
+msgid "Journal entries"
+msgstr "Bút toán khác"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__journal_ids
+msgid "Journals"
+msgstr "Sổ nhật ký"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,help:fg_vn_report_s03a.field_vn_report_s03a_wizard__report_lang
+msgid ""
+"Language the report is displayed, exported and printed in. It does not "
+"depend on the language of your interface."
+msgstr ""
+"Ngôn ngữ dùng để hiển thị, xuất và in báo cáo. Không phụ thuộc ngôn ngữ giao"
+" diện của bạn."
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Người cập nhật lần cuối"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__write_date
+msgid "Last Updated on"
+msgstr "Ngày cập nhật lần cuối"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,help:fg_vn_report_s03a.field_vn_report_s03a_wizard__journal_ids
+msgid "Leave empty for all the journals."
+msgstr "Để trống để xem tất cả sổ nhật ký."
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__mirror_margin
+msgid "Mirror Margins (two-sided printing)"
+msgstr "Lề đối xứng (in 2 mặt)"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,help:fg_vn_report_s03a.field_vn_report_s03a_wizard__partner_ids
+msgid ""
+"Only the journal items of these partners are listed. Leave empty for all the"
+" partners."
+msgstr ""
+"Chỉ liệt kê các dòng của những đối tác này. Để trống để xem tất cả đối tác."
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,help:fg_vn_report_s03a.field_vn_report_s03a_wizard__account_ids
+msgid ""
+"Only the journal items on these accounts are listed. Leave empty for all the"
+" accounts."
+msgstr ""
+"Chỉ liệt kê các dòng ghi vào những tài khoản này. Để trống để xem tất cả tài"
+" khoản."
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__orientation
+msgid "Orientation"
+msgstr "Hướng giấy"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "PDF"
+msgstr "PDF"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "PDF Printing"
+msgstr "In PDF"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__partner_ids
+msgid "Partners"
+msgstr "Đối tác"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "Period"
+msgstr "Kỳ báo cáo"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__report_lang
+msgid "Report Language"
+msgstr "Ngôn ngữ báo cáo"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__show_zero_balance
+msgid "Show Lines Without Figures"
+msgstr "Hiện dòng không có phát sinh"
+
+#. module: fg_vn_report_s03a
+#: model:ir.model.fields,field_description:fg_vn_report_s03a.field_vn_report_s03a_wizard__date_to
+msgid "To"
+msgstr "Đến ngày"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Total"
+msgstr "Cộng"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_s03a.selection__vn_report_s03a_wizard__move_type__in_invoice
+msgid "Vendor bills"
+msgstr "Hoá đơn mua"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+#: model:ir.model.fields.selection,name:fg_vn_report_s03a.selection__vn_report_s03a_wizard__move_type__in_refund
+msgid "Vendor credit notes"
+msgstr "Hoá đơn mua điều chỉnh giảm"
+
+#. module: fg_vn_report_s03a
+#: model:ir.module.module,shortdesc:base.module_fg_vn_report_s03a
+msgid "Vietnam - General Journal (S03a-DNN)"
+msgstr "Việt Nam - Sổ nhật ký chung (S03a-DNN)"
+
+#. module: fg_vn_report_s03a
+#: model_terms:ir.ui.view,arch_db:fg_vn_report_s03a.view_vn_report_s03a_wizard_form
+msgid "View"
+msgstr "Xem báo cáo"
+
+#. module: fg_vn_report_s03a
+#. odoo-javascript
+#: code:addons/fg_vn_report_s03a/static/src/js/s03a_report.js:0
+msgid "View journal entry"
+msgstr "Xem bút toán"
+
+#. module: fg_vn_report_s03a
+#. odoo-python
+#: code:addons/fg_vn_report_s03a/models/s03a_pdf.py:0
+#: code:addons/fg_vn_report_s03a/models/s03a_report.py:0
+msgid "Voucher No."
+msgstr "Số chứng từ"

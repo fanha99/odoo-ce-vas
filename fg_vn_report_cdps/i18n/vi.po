@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 07:19+0000\n"
-"PO-Revision-Date: 2026-10-11 07:19+0000\n"
+"POT-Creation-Date: 2026-10-11 09:54+0000\n"
+"PO-Revision-Date: 2026-10-11 09:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi\n"
@@ -424,8 +424,10 @@ msgid "To"
 msgstr "Đến ngày"
 
 #. module: fg_vn_report_cdps
+#. odoo-javascript
 #. odoo-python
 #: code:addons/fg_vn_report_cdps/models/cdps_report.py:0
+#: code:addons/fg_vn_report_cdps/static/src/js/cdps_report.js:0
 #: code:addons/fg_vn_report_cdps/wizard/cdps_wizard.py:0
 #: model:ir.actions.act_window,name:fg_vn_report_cdps.action_vn_report_cdps_wizard
 #: model:ir.actions.client,name:fg_vn_report_cdps.action_vn_report_cdps
