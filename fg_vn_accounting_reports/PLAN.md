@@ -339,3 +339,17 @@ Sau mỗi giai đoạn: chạy lại toàn bộ test của hai module và ghi v�
 - Wizard con tạo được bản ghi, mở được báo cáo và xuất được file với người dùng thuộc nhóm kế toán.
 
 Không còn điểm nào chờ xác nhận ở module này.
+
+## 9. Bản 20.0.1.1.0 (đã duyệt, chưa làm)
+
+Ba việc phát sinh khi chuẩn bị chuyển sổ nhật ký chung và sổ cái; đã được duyệt cùng hai kế hoạch đó ngày 2026-10-11.
+
+| Việc | Mô tả ở | Ai cần |
+|---|---|---|
+| Tải dần cho sổ dài: ba hook trên `vn.abstract.report`, hàm công khai `get_group_lines()`, dòng "Xem thêm" và tìm kiếm ở máy chủ trên component cơ sở | `fg_vn_report_s03a/PLAN.md` mục 3b | S03a, S03b, sau này sổ chi tiết vật tư |
+| Tiêu đề trang PDF là danh sách dòng mở rộng được, có nhãn nhóm | `fg_vn_report_s03b/PLAN.md` mục 3a | S03b, sau này sổ chi tiết vật tư |
+| Giới hạn số dòng khi in PDF: `get_pdf_rl()` từ chối và báo người dùng khi `_count_lines()` vượt tham số `fg_vn_accounting_reports.pdf_line_limit` | `fg_vn_report_s03a/PLAN.md` mục 3b | Mọi báo cáo có khai `_count_lines()` |
+
+Báo cáo không bật tải dần, không khai `_count_lines()` và không ngắt trang theo nhóm (CDPS) không thay đổi.
+
+Thứ tự làm chung của đợt này: đo trên dữ liệu lớn → `fg_vn_transfer_account` 20.0.1.1.0 (quy tắc ghép dùng chung) → nền tảng 20.0.1.1.0 (ba việc trên) → `fg_vn_report_s03a` → `fg_vn_report_s03b`.

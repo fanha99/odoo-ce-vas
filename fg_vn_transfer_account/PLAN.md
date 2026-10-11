@@ -98,3 +98,9 @@ Một giai đoạn duy nhất. Xong khi: cài được trên 20.0 không cảnh 
 |---|---|
 | `fg_vn_report_cdps` (đang chuyển) | Gọi `_fg_get_hidden_transfer_accounts()`; xử lý một tập tài khoản thay vì một tài khoản. |
 | `fg_vn_report_s03a`, `fg_vn_report_s03b`, `vn_payment_print` (chuyển sau) | Như trên. Việc thay tài khoản đối ứng cho phiếu thu, chi chưa khớp sao kê (1131, 1132) khác với chuyển tiền nội bộ; phân tích khi chuyển từng module. |
+
+## 6. Bản 20.0.1.1.0 (đã duyệt, chưa làm)
+
+Thêm hàm dùng chung `account.move._fg_get_transfer_links()`: với một tập bút toán, trả về số chứng từ ghép, khoá sắp xếp, các bút toán nối với nó và các dòng bị ẩn. Sổ nhật ký chung và sổ cái cùng gọi hàm này thay vì mỗi sổ viết một bản như ở 19.0.
+
+Thiết kế, quy tắc và danh sách test: `fg_vn_report_s03a/PLAN.md` mục 3a. Readme của module sẽ thêm một mục mô tả quy tắc ghép bằng lời khi hàm được viết.
