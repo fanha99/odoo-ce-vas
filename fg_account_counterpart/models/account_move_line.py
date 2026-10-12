@@ -6,6 +6,9 @@ COUNTERED_STATUS = [
     ('fully', "Fully Countered"),
 ]
 NON_ACCOUNTABLE_DISPLAY_TYPES = ('line_section', 'line_subsection', 'line_note')
+# Writing one of these on an item changes what has to be countered. The account
+# is not listed: the counterparts stay the same and the stored fields follow.
+CTP_AMOUNT_FIELDS = frozenset(('debit', 'credit', 'balance', 'amount_currency', 'display_type'))
 
 
 class AccountMoveLine(models.Model):
@@ -97,6 +100,33 @@ class AccountMoveLine(models.Model):
         for line in self:
             accounts = line.countered_account_ids.with_company(line.company_id)
             line.countered_account_codes = ', '.join(sorted(code for code in accounts.mapped('code') if code))
+
+    # -------------------------------------------------------------------------
+    # LIFECYCLE HOOKS
+    # -------------------------------------------------------------------------
+    #
+    # `account.move._post()` generates the counterparts, but the items of a
+    # posted entry can change without it being posted again: the bank
+    # reconciliation replaces the suspense item of a statement entry by the
+    # real counterpart items. The hooks below keep the counterparts in step.
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        lines.move_id._ctp_sync()
+        return lines
+
+    def write(self, vals):
+        res = super().write(vals)
+        if CTP_AMOUNT_FIELDS.intersection(vals):
+            self.move_id._ctp_sync()
+        return res
+
+    def unlink(self):
+        moves = self.move_id
+        res = super().unlink()
+        moves.exists()._ctp_sync()
+        return res
 
     # -------------------------------------------------------------------------
     # HELPERS

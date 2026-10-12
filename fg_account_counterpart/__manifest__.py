@@ -1,6 +1,6 @@
 {
     'name': 'Account Counterparts',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'category': 'Accounting/Accounting',
     'summary': 'Countered journal items and countered accounts of every journal item',
     # Without a description, Odoo renders readme.md as reStructuredText and

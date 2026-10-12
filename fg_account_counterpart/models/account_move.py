@@ -76,6 +76,18 @@ class AccountMove(models.Model):
             vals_list += move._ctp_prepare_vals_list()
         return self.env['account.move.line.ctp'].sudo().create(vals_list)
 
+    def _ctp_sync(self):
+        """ Complete the counterparts of the posted entries whose items have
+        just been created, modified or deleted.
+
+        Called on every change of journal items, hence the cheap filter first:
+        draft entries, by far the most common case, are skipped without reading
+        anything else. Entries still fully countered are left alone.
+        """
+        moves = self.filtered(lambda move: move.state == 'posted')
+        if moves:
+            moves._ctp_generate()
+
     def _ctp_remove(self):
         """ Delete all the counterparts of the entries in `self`. """
         if self.ids:
