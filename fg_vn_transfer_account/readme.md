@@ -11,10 +11,10 @@ Khi chuyển tiền giữa hai tài khoản tiền (rút tiền gửi về quỹ
 
 Ví dụ rút 50.000.000 đồng tiền gửi ngân hàng về nhập quỹ:
 
-| Bút toán | Nợ | Có | Số tiền |
-|---|---|---|---|
-| Ngân hàng chi | 113 | 112 | 50.000.000 |
-| Quỹ thu | 111 | 113 | 50.000.000 |
+| Số phiếu | Bút toán | Nợ | Có | Số tiền |
+|---|---|---|---|---|
+| BANK/001 | Ngân hàng chi | 113 | 112 | 50.000.000 |
+| CASH/001 | Quỹ thu | 111 | 113 | 50.000.000 |
 
 Sau hai bút toán, tài khoản 113 hết số dư. Với đơn vị áp dụng chế độ kế toán có tài khoản 113, cách ghi này đúng. Nhưng chế độ kế toán theo Thông tư 133 không có tài khoản 113: nghiệp vụ trên phải được trình bày là Nợ 111, Có 112. Nếu để nguyên, sổ sách sẽ có một tài khoản không tồn tại trong chế độ.
 
@@ -49,24 +49,51 @@ Mỗi module dưới đây mô tả cụ thể cách nó xử lý trong readme c
 | `fg_vn_report_cdps` (Bảng cân đối số phát sinh) | Không liệt kê và không cộng các tài khoản được chọn khi chúng hết số dư. |
 | `fg_vn_report_s03a` (Sổ nhật ký chung), `fg_vn_report_s03b` (Sổ cái), `vn_payment_print` (phiếu thu, phiếu chi) | Ẩn tài khoản trung chuyển và ghi tài khoản đối ứng thật thay cho nó. |
 
-Ở thời điểm viết tài liệu này, chỉ `fg_vn_report_cdps` đang được chuyển sang Odoo 20; ba module còn lại thuộc bản 19.0 và ở đó chỉ ẩn đúng một tài khoản trung chuyển của công ty.
+Ở thời điểm viết tài liệu này, `vn_payment_print` chưa được chuyển sang Odoo 20.
 
 ## 4. Hai bút toán trình bày như một nghiệp vụ
 
 Quy tắc dưới đây dùng chung cho mọi sổ và phiếu in đọc thiết lập này. Nó chỉ có tác dụng khi thiết lập đang bật.
 
-Lấy ví dụ ở mục 1: phiếu chi CASH/001 (Nợ 113, Có 1111) và giấy báo có BANK/001 (Nợ 1121, Có 113), hai dòng 113 đã đối soát với nhau.
+Lấy ví dụ ở mục 1, với tài khoản 113 nằm trong danh sách tài khoản được ẩn và hai dòng 113 đã đối soát với nhau.
 
-- **Dòng bị ẩn.** Một dòng bút toán bị ẩn khi nó ghi vào một tài khoản thuộc danh sách tài khoản được ẩn và đã được đối soát hết. Dòng chưa đối soát, hoặc mới đối soát một phần, vẫn hiện.
-- **Bút toán nối với nhau.** Hai bút toán nối với nhau khi mỗi bên có một dòng bị ẩn trên cùng một tài khoản, thuộc cùng một lần đối soát, một bên ghi Nợ và một bên ghi Có. Nhiều phiếu chi gộp vào một lần nộp thì cùng nối với giấy báo có đó, và tạo thành một cụm.
-- **Số chứng từ.** Mọi bút toán của một cụm mang chung một số, dạng `chính (các bút toán còn lại)`: `BANK/001 (CASH/001)`, hoặc `BANK/001 (CASH/001, CASH/002)`. Số này không phụ thuộc sổ nào đang in hay kỳ nào đang xem.
-- **Bút toán chính và thứ tự.** Trong một cụm, các bút toán cùng ngày được xếp liền nhau: bút toán của sổ nhật ký ngân hàng trước, tiền mặt sau, rồi tới các sổ khác; cùng loại thì bút toán có mã tài khoản nhỏ hơn đứng trước. Bút toán khác ngày nằm ở ngày của nó. Bút toán chính là bút toán đứng đầu cụm theo thứ tự này.
+Khi thiết lập tắt, sổ trình bày đúng như bút toán trong Odoo:
 
-## 5. Khác với bản 19.0
+| Số chứng từ | Tài khoản | Nợ | Có |
+|---|---|---|---|
+| BANK/001 | 113 | 50.000.000 | |
+| BANK/001 | 112 | | 50.000.000 |
+| CASH/001 | 111 | 50.000.000 | |
+| CASH/001 | 113 | | 50.000.000 |
 
-- Bản 19.0 chỉ có nút bật/tắt và luôn áp dụng cho đúng một tài khoản trung chuyển của công ty. Bản 20.0 cho chọn danh sách tài khoản.
-- Quy tắc ở mục 4 nằm trong module này. Ở bản 19.0 mỗi sổ tự viết một bản; hai bản cho ra số chứng từ khác nhau khi nhiều phiếu gộp vào một lần nộp, và khi bút toán chính nằm ngoài kỳ đang xem.
+Khi thiết lập bật, hai dòng 113 bị ẩn và hai bút toán mang chung một số:
 
-## 6. Cài đặt
+| Số chứng từ | Tài khoản | Nợ | Có |
+|---|---|---|---|
+| BANK/001 (CASH/001) | 112 | | 50.000.000 |
+| BANK/001 (CASH/001) | 111 | 50.000.000 | |
+
+Kết quả là nghiệp vụ Nợ 111, Có 112 như Thông tư 133 yêu cầu.
+
+Các quy tắc tạo ra kết quả trên:
+
+| Quy tắc | Nội dung |
+|---|---|
+| Dòng bị ẩn | Dòng ghi vào một tài khoản thuộc danh sách tài khoản được ẩn và đã được đối soát hết. Dòng chưa đối soát, hoặc mới đối soát một phần, vẫn hiện. |
+| Bút toán nối với nhau | Mỗi bên có một dòng bị ẩn trên cùng một tài khoản, thuộc cùng một lần đối soát, một bên ghi Nợ và một bên ghi Có. Các bút toán nối với nhau, trực tiếp hoặc qua bút toán khác, tạo thành một cụm. |
+| Số chứng từ | Mọi bút toán của một cụm mang chung một số, dạng `chính (các bút toán còn lại, xếp theo số)`. Số này không phụ thuộc sổ nào đang in hay kỳ nào đang xem. |
+| Thứ tự | Các bút toán cùng ngày của một cụm được xếp liền nhau: sổ nhật ký ngân hàng trước, tiền mặt sau, rồi tới các sổ khác; cùng loại thì bút toán có mã tài khoản nhỏ hơn đứng trước. Bút toán khác ngày nằm ở ngày của nó. |
+| Bút toán chính | Bút toán đứng đầu cụm theo thứ tự trên. |
+
+Số chứng từ trong một số tình huống:
+
+| Tình huống | Số chứng từ trên sổ |
+|---|---|
+| Một bút toán ngân hàng và một bút toán quỹ, cùng ngày | `BANK/001 (CASH/001)` cho cả hai |
+| Hai phiếu chi quỹ gộp vào một lần nộp ngân hàng, cùng ngày | `BANK/001 (CASH/001, CASH/002)` cho cả ba |
+| Bút toán quỹ ghi ngày hôm trước, bút toán ngân hàng ghi ngày hôm sau | `CASH/001 (BANK/001)` cho cả hai; mỗi bút toán nằm ở ngày của nó |
+| Dòng 113 chưa đối soát hoặc mới đối soát một phần | Mỗi bút toán giữ số của mình; dòng 113 vẫn hiện |
+
+## 5. Cài đặt
 
 Module được cài tự động khi cài một module báo cáo phụ thuộc nó. Cài riêng thì chỉ có thêm thiết lập ở trang cấu hình.
