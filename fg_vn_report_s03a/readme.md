@@ -28,16 +28,16 @@ Bộ lọc Tài khoản và Đối tác chọn **dòng**: sổ chỉ còn các d
 | Cột | Nội dung |
 |---|---|
 | Ngày | Ngày ghi sổ của bút toán. Với hoá đơn có ngày hoá đơn khác ngày ghi sổ, ngày hoá đơn hiện trong ngoặc: `2026/01/05 (2026/01/03)`. |
-| Số chứng từ | Số của bút toán. |
+| Số chứng từ | Số của bút toán, hoặc số tham chiếu của nó, tuỳ thiết lập của sổ nhật ký (xem `fg_vn_accounting_reports/readme.md`, mục 7). |
 | Diễn giải | Nhãn của dòng bút toán; nếu dòng không có nhãn thì lấy nội dung tham chiếu của bút toán. |
 | TK Nợ, TK Có | Tài khoản của dòng, đặt ở cột Nợ nếu dòng ghi Nợ, ở cột Có nếu dòng ghi Có. |
 | Số tiền Nợ, Số tiền Có | Số tiền của dòng, theo đồng tiền hạch toán. |
 
-Các bút toán xếp theo ngày ghi sổ, rồi theo số chứng từ. Dòng cuối sổ là **Cộng**: tổng số tiền Nợ và tổng số tiền Có của kỳ.
+Các bút toán xếp theo ngày ghi sổ, rồi theo số chứng từ được in; các bút toán được in cùng một số thì xếp theo số của chính chúng. Dòng cuối sổ là **Cộng**: tổng số tiền Nợ và tổng số tiền Có của kỳ.
 
 Chỉ bút toán đã ghi sổ được đưa vào sổ. Các dòng ghi chú và tiêu đề mục của hoá đơn, và các dòng có số tiền bằng 0, không được đưa vào.
 
-Ô tìm kiếm lọc các dòng theo số chứng từ, diễn giải và tài khoản.
+Ô tìm kiếm lọc các dòng theo số chứng từ được in, diễn giải và tài khoản.
 
 **Sổ dài.** Khi kỳ có trên 2.000 dòng, màn hình hiện 500 dòng đầu; cuối bảng cho biết đã hiện bao nhiêu trên tổng số và có nút **Xem thêm** để tải 500 dòng tiếp theo. Dòng Cộng luôn là tổng của cả kỳ, không phải của phần đang hiện. Lúc này ô tìm kiếm tìm trên cả kỳ. Excel và PDF luôn xuất cả sổ.
 
@@ -88,6 +88,7 @@ Excel và PDF xuất theo kỳ và các bộ lọc đang chọn. Ô tìm kiếm 
 - Ô tìm kiếm lọc theo dòng. Ở bản 19.0 gõ bất cứ gì vào ô tìm kiếm cũng làm sổ trống.
 - Dòng ghi chú, tiêu đề mục và dòng bằng 0 không còn xuất hiện trên sổ.
 - Việc ẩn áp dụng cho danh sách tài khoản do đơn vị chọn, không chỉ một tài khoản trung chuyển.
+- Số chứng từ theo thiết lập của sổ nhật ký: in số tham chiếu, hoặc cắt số thứ tự cuối.
 - Ngôn ngữ gốc của module là tiếng Anh, tiếng Việt là bản dịch. Giấy phép đổi từ LGPL-3 sang AGPL-3.
 
 ## 6. Cài đặt

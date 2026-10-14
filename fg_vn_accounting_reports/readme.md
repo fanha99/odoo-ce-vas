@@ -95,7 +95,25 @@ Lựa chọn không được nhớ: lần mở báo cáo sau lại bắt đầu 
 
 Danh sách chỉ gồm các ngôn ngữ đã cài trong database. Database chưa cài tiếng Việt thì báo cáo mặc định theo ngôn ngữ của người dùng. Ngôn ngữ gốc của module là tiếng Anh; tiếng Việt là bản dịch đi kèm.
 
-## 7. Các báo cáo dùng nền tảng này
+## 7. Số chứng từ trên sổ sách
+
+Mặc định, cột Số chứng từ của các sổ in số của bút toán trong Odoo. Hai thiết lập trên form của từng sổ nhật ký (Kế toán › Cấu hình › Sổ nhật ký, ngay dưới ô Mã ngắn) đổi số được in cho các bút toán của sổ nhật ký đó:
+
+| Thiết lập | Tác dụng | Ví dụ |
+|---|---|---|
+| **Dùng số tham chiếu làm số chứng từ** | In nội dung ô Tham chiếu của bút toán thay cho số của nó. Bút toán không có tham chiếu vẫn in số của nó. | Bút toán `BNK1/2026/00007` có tham chiếu `GBC-0042` được in là `GBC-0042`. |
+| **Cắt số thứ tự cuối khỏi số chứng từ** | Bỏ phần `/số` ở cuối. Chỉ cắt khi phần sau dấu `/` cuối cùng toàn là chữ số. | `BL/2025/12/16` được in là `BL/2025/12`; `BL/2025/DK` giữ nguyên. |
+
+Bật cả hai thì lấy số tham chiếu trước rồi mới cắt.
+
+Thiết lập có tác dụng trên sổ nhật ký chung và sổ cái, kể cả số chứng từ ghép của các bút toán nối qua tài khoản trung chuyển (`GBC-0042 (PT/2026)`). Trên hai sổ này:
+
+- các dòng xếp theo ngày, rồi theo **số được in**; các bút toán được in cùng một số thì xếp theo số của chính chúng;
+- ô tìm kiếm của sổ nhật ký chung tìm theo số được in.
+
+Các sổ và báo cáo khác không đổi. Bút toán trong Odoo không bị sửa: thiết lập chỉ quyết định số nào được in.
+
+## 8. Các báo cáo dùng nền tảng này
 
 `fg_vn_report_cdps`, `fg_vn_report_s03a` và `fg_vn_report_s03b` đã có trên 20.0; các module còn lại thuộc bản 19.0 và chuyển sau.
 
@@ -109,15 +127,16 @@ Danh sách chỉ gồm các ngôn ngữ đã cài trong database. Database chưa
 
 `fg_vn_financial_reports` (báo cáo tài chính B01, B02, lưu chuyển tiền tệ, B09) chỉ dùng chung menu **VAS Reports**, không dùng màn hình và phần in của nền tảng.
 
-## 8. Khác với bản 19.0
+## 9. Khác với bản 19.0
 
 - Không còn phụ thuộc module `stock` và `stock_account`. Cài nền tảng không kéo theo phân hệ kho.
 - Bỏ bộ máy lập báo cáo tài chính từ mẫu XML. Không còn báo cáo nào dùng nó.
 - Bỏ đường in PDF cũ qua wkhtmltopdf. Mọi báo cáo in bằng một đường duy nhất có cộng chuyển trang.
 - Ngôn ngữ gốc của module là tiếng Anh, tiếng Việt là bản dịch (mục 6). Bản 19.0 viết thẳng tiếng Việt.
 - Giấy phép đổi từ LGPL-3 sang AGPL-3.
+- Hai thiết lập số chứng từ của sổ nhật ký (mục 7) nằm trong module này. Ở bản 17.0 chúng từng là module riêng `fg_account_journal_ext`; bản 19.0 chưa có.
 
-## 9. Cài đặt
+## 10. Cài đặt
 
 1. Chép module vào thư mục addons của Odoo.
 2. Cập nhật danh sách ứng dụng. Module được cài tự động khi cài một module báo cáo phụ thuộc nó; cài riêng thì chỉ thấy menu **VAS Reports** trống.

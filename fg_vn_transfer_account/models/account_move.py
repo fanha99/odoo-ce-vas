@@ -54,10 +54,11 @@ class AccountMove(models.Model):
         return result
 
     def _fg_get_company_transfer_links(self, company):
+        numbers = self._fg_transfer_document_numbers(self.ids)
         result = {
             move.id: {
-                'display_name': move.name,
-                'sort_key': self._fg_transfer_default_sort_key(move.date, move.name),
+                'display_name': numbers[move.id],
+                'sort_key': self._fg_transfer_default_sort_key(move.date, numbers[move.id]),
                 'linked_move_ids': [],
                 'hidden_line_ids': [],
             }
@@ -178,8 +179,9 @@ class AccountMove(models.Model):
         """ Read what naming and sorting the linked entries need.
 
         :return: {move id: {name, date, journal_type, min_account_code}} with
-            `min_account_code` the smallest account code of the items that
-            are not on a hidden account
+            `name` the number printed on the books and `min_account_code` the
+            smallest account code of the items that are not on a hidden
+            account
         """
         self.flush_model(['name', 'date', 'journal_id'])
         self.env['account.move.line'].flush_model(['move_id', 'account_id'])
@@ -202,7 +204,27 @@ class AccountMove(models.Model):
             move_ids=list(move_ids),
             account_ids=list(hidden_account_ids),
         ))
+        # entries are named and ordered by the number printed on the books
+        numbers = self._fg_transfer_document_numbers([row['id'] for row in rows])
+        for row in rows:
+            row['name'] = numbers.get(row['id'], row['name'])
         return {row['id']: row for row in rows}
+
+    @api.model
+    def _fg_transfer_document_numbers(self, move_ids):
+        """ The numbers printed on the accounting books for the entries.
+
+        This is the name of the entry, unless `fg_vn_accounting_reports` is
+        installed: journals can then print the reference instead of the name,
+        or drop the trailing sequence number. That module is not a
+        dependency: its hook is used when present.
+
+        :return: {move id: number}
+        """
+        moves = self.browse(move_ids)
+        if hasattr(moves, '_fg_get_document_numbers'):
+            return moves._fg_get_document_numbers()
+        return {move.id: move.name for move in moves}
 
     @api.model
     def _fg_transfer_default_sort_key(self, date, name):

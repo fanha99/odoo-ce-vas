@@ -191,24 +191,31 @@ class S03bReport(models.AbstractModel):
         per journal item, or one row per counterpart account of each item
         when the counterparts are split.
 
-        Columns: line_id, account_id, move_id, date, move_name, name, debit,
-        credit, counterpart_ids (array of account ids), part_code (code of
-        the counterpart account of a split row, to order them).
+        Columns: line_id, account_id, move_id, date, document_number (the
+        voucher number printed, following the settings of the journal),
+        move_name, name, debit, credit, counterpart_ids (array of account
+        ids), part_code (code of the counterpart account of a split row, to
+        order them).
         """
         conditions = self._get_period_conditions(options, account_ids)
+        number, number_join = self.env['account.journal']._fg_get_document_number_query()
         if not self._is_split(options):
             return SQL(
                 """
                 SELECT line.id AS line_id, line.account_id, line.move_id, line.date,
+                       %(number)s AS document_number,
                        line.move_name, line.name, line.debit, line.credit,
                        ARRAY(SELECT rel.account_id
                                FROM account_move_line_countered_account_rel rel
                               WHERE rel.aml_id = line.id) AS counterpart_ids,
                        NULL::varchar AS part_code
                   FROM account_move_line line
-                 WHERE %s
+                       %(number_join)s
+                 WHERE %(conditions)s
                 """,
-                conditions,
+                number=number,
+                number_join=number_join,
+                conditions=conditions,
             )
         # An item is split along `account.move.line.ctp`: the pairs having the
         # same counterpart account are summed, and what is not countered (no
@@ -218,8 +225,10 @@ class S03bReport(models.AbstractModel):
             """
             WITH items AS (
                 SELECT line.id AS line_id, line.account_id, line.move_id, line.date,
+                       %(number)s AS document_number,
                        line.move_name, line.name, line.debit, line.credit
                   FROM account_move_line line
+                       %(number_join)s
                  WHERE %(conditions)s
             ),
             pairs AS (
@@ -243,7 +252,7 @@ class S03bReport(models.AbstractModel):
                  WHERE items.debit + items.credit - COALESCE(countered.amount, 0) != 0
             )
             SELECT items.line_id, items.account_id, items.move_id, items.date,
-                   items.move_name, items.name,
+                   items.document_number, items.move_name, items.name,
                    CASE WHEN items.debit != 0 THEN parts.amount ELSE 0 END AS debit,
                    CASE WHEN items.debit != 0 THEN 0 ELSE parts.amount END AS credit,
                    CASE WHEN parts.counterpart_id IS NULL THEN ARRAY[]::integer[]
@@ -253,6 +262,8 @@ class S03bReport(models.AbstractModel):
               JOIN items ON items.line_id = parts.line_id
          LEFT JOIN account_account counterpart ON counterpart.id = parts.counterpart_id
             """,
+            number=number,
+            number_join=number_join,
             conditions=conditions,
             part_code=self._get_account_code_sql(options, 'counterpart'),
         )
@@ -266,16 +277,19 @@ class S03bReport(models.AbstractModel):
         return dict(rows)
 
     def _query_rows(self, options, account_ids, offset=None, limit=None):
-        """ Read the rows of the ledger, ordered by account, date, voucher
-        number and entry order. `offset` and `limit` page through the rows of
-        a single account.
+        """ Read the rows of the ledger, ordered as the general journal: by
+        account, date, voucher number printed, then number of the entry and
+        entry order. `offset` and `limit` page through the rows of a single
+        account.
 
         :return: (rows, balance_before) with `balance_before` the sum of
             debit - credit of the rows skipped by `offset`
         """
         self._flush()
         rows_sql = self._get_rows_sql(options, account_ids)
-        order = SQL("rows.account_id, rows.date, rows.move_name, rows.line_id, rows.part_code NULLS LAST")
+        order = SQL(
+            "rows.account_id, rows.date, rows.document_number, rows.move_name, rows.line_id,"
+            " rows.part_code NULLS LAST")
         balance_before = 0.0
         if offset:
             balance_before = self.env.execute_query(SQL(
@@ -425,7 +439,7 @@ class S03bReport(models.AbstractModel):
                 'move_id': row['move_id'],
                 'date': row['date'],
                 'date_display': self._format_date_display(row['date'], row['invoice_date']),
-                'move_name': move_names.get(row['move_id']) or row['move_name'] or '',
+                'move_name': move_names.get(row['move_id']) or row['document_number'] or '',
                 'description': row['description'],
                 'counterpart_account': ', '.join(sorted(codes[account_id] for account_id in counterpart_ids)),
                 'debit': row['debit'],

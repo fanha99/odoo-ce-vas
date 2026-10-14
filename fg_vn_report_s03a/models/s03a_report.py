@@ -46,6 +46,13 @@ class S03aReport(models.AbstractModel):
     # Every query reads `account_move_line line`, which stores the date, state,
     # company, journal and name of its entry: `account_move move` is joined
     # only when one of its own columns is needed.
+    #
+    # The voucher number of an entry follows the settings of its journal:
+    # the expression and the join it needs come from `account.journal`.
+
+    def _get_document_number_sql(self):
+        """ :return: (number, join) for the table alias `line` """
+        return self.env['account.journal']._fg_get_document_number_query()
 
     def _get_company(self, options):
         return self.env['res.company'].browse(options.get('company_id') or self.env.company.id)
@@ -97,8 +104,9 @@ class S03aReport(models.AbstractModel):
         if search:
             pattern = '%' + search.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%'
             conditions.append(SQL(
-                "(line.move_name ILIKE %(pattern)s OR line.name ILIKE %(pattern)s OR %(code)s ILIKE %(pattern)s)",
+                "(%(number)s ILIKE %(pattern)s OR line.name ILIKE %(pattern)s OR %(code)s ILIKE %(pattern)s)",
                 pattern=pattern, code=self._get_account_code_sql(options),
+                number=self._get_document_number_sql()[0],
             ))
         return SQL(" AND ").join(conditions)
 
@@ -106,12 +114,16 @@ class S03aReport(models.AbstractModel):
         # the code of an account is stored per root company
         return SQL("account.code_store->>%s", str(self._get_company(options).root_id.id))
 
-    def _get_from_sql(self, options, with_account=False):
+    def _get_from_sql(self, options, with_account=False, with_number=False):
+        # the search bears on the account code and on the voucher number
+        searching = bool((options.get('search') or '').strip())
         joins = [SQL("account_move_line line")]
         if self._get_move_type(options):
             joins.append(SQL("JOIN account_move move ON move.id = line.move_id"))
-        if with_account or (options.get('search') or '').strip():
+        if with_account or searching:
             joins.append(SQL("JOIN account_account account ON account.id = line.account_id"))
+        if with_number or searching:
+            joins.append(self._get_document_number_sql()[1])
         return SQL(" ").join(joins)
 
     def _flush(self):
@@ -145,9 +157,10 @@ class S03aReport(models.AbstractModel):
         """ The entries of the journal that have items to show, in the order
         of the journal.
 
-        Entries are sorted by date then number. Those meeting on a hidden
-        transfer account are numbered and placed as one operation, by
-        `account.move._fg_get_transfer_links()`.
+        Entries are sorted by date, then by the number printed, then by
+        their own number when several are printed with the same one. Those
+        meeting on a hidden transfer account are numbered and placed as one
+        operation, by `account.move._fg_get_transfer_links()`.
 
         :return: list of (move id, number to print, count of items shown)
         """
@@ -157,6 +170,7 @@ class S03aReport(models.AbstractModel):
             """
             SELECT line.move_id,
                    MIN(line.date),
+                   MIN(%(number)s),
                    MIN(line.move_name),
                    COUNT(*) FILTER (WHERE %(line_conditions)s),
                    COALESCE(BOOL_OR(line.account_id = ANY(%(hidden_account_ids)s)
@@ -166,25 +180,27 @@ class S03aReport(models.AbstractModel):
           GROUP BY line.move_id
             HAVING COUNT(*) FILTER (WHERE %(line_conditions)s) > 0
             """,
-            from_sql=self._get_from_sql(options),
+            number=self._get_document_number_sql()[0],
+            from_sql=self._get_from_sql(options, with_number=True),
             move_conditions=self._get_move_conditions(options),
             line_conditions=self._get_line_conditions(options),
             hidden_account_ids=hidden_account_ids,
         ))
 
         Move = self.env['account.move']
-        linked_ids = [move_id for move_id, _date, _name, _count, linked in rows if linked]
+        linked_ids = [row[0] for row in rows if row[-1]]
         links = Move.browse(linked_ids)._fg_get_transfer_links()
 
         moves = []
-        for move_id, date, name, line_count, _linked in rows:
+        for move_id, date, number, name, line_count, _linked in rows:
             link = links.get(move_id)
             if link:
-                moves.append((link['sort_key'], move_id, link['display_name'], line_count))
+                moves.append((link['sort_key'], name or '', move_id, link['display_name'], line_count))
             else:
-                moves.append((Move._fg_transfer_default_sort_key(date, name), move_id, name or '', line_count))
+                sort_key = Move._fg_transfer_default_sort_key(date, number)
+                moves.append((sort_key, name or '', move_id, number or '', line_count))
         moves.sort()
-        return [(move_id, name, line_count) for _key, move_id, name, line_count in moves]
+        return [(move_id, number, line_count) for _key, _name, move_id, number, line_count in moves]
 
     def _query_lines(self, options, move_names):
         """ The items to show of the given entries, as report lines, in the
@@ -208,11 +224,14 @@ class S03aReport(models.AbstractModel):
               FROM account_move_line line
               JOIN account_move move ON move.id = line.move_id
               JOIN account_account account ON account.id = line.account_id
+                   %(number_join)s
              WHERE line.move_id = ANY(%(move_ids)s)
                AND %(line_conditions)s
           ORDER BY line.id
             """,
             account_code=self._get_account_code_sql(options),
+            # the text searched can bear on the voucher number
+            number_join=self._get_document_number_sql()[1],
             move_ids=list(move_names),
             line_conditions=self._get_line_conditions(options),
         ))

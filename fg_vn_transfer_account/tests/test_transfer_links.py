@@ -82,6 +82,24 @@ class TestTransferLinks(AccountTestInvoicingCommon):
             "the bank entry comes before the cash entry",
         )
 
+    def test_numbers_follow_the_journal_settings(self):
+        """ With `fg_vn_accounting_reports`, the entries are numbered as the
+        accounting books print them. """
+        if 'fg_use_ref_as_doc_no' not in self.env['account.journal']._fields:
+            self.skipTest("fg_vn_accounting_reports is not installed")
+        cash_move, bank_move = self._deposit()
+        other = self._entry(self.cash_journal, self.expense, self.cash)
+        bank_move.ref = "GBC-0042"
+        self.bank_journal.fg_use_ref_as_doc_no = True
+        self.cash_journal.fg_truncate_seq_as_doc_no = True
+        cash_number = cash_move.name.rsplit('/', 1)[0]
+
+        links = (cash_move + bank_move + other)._fg_get_transfer_links()
+        self.assertEqual(links[cash_move.id]['display_name'], f"GBC-0042 ({cash_number})")
+        self.assertEqual(links[bank_move.id]['display_name'], f"GBC-0042 ({cash_number})")
+        self.assertEqual(links[other.id]['display_name'], cash_number)
+        self.assertEqual(links[other.id]['sort_key'], (date(2026, 1, 10), cash_number, 2, '', cash_number))
+
     def test_item_not_reconciled_is_shown(self):
         cash_move, bank_move = self._deposit(reconcile=False)
         links = (cash_move + bank_move)._fg_get_transfer_links()

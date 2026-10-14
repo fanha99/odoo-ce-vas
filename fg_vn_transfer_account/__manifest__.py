@@ -1,6 +1,6 @@
 {
     'name': 'Vietnam - Hide Transfer Accounts',
-    'version': '20.0.1.1.0',
+    'version': '20.0.1.2.0',
     'category': 'Accounting/Accounting',
     'summary': 'Company setting to hide the transfer accounts without balance on accounting books',
     # Without a description, Odoo renders readme.md as reStructuredText and

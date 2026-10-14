@@ -455,3 +455,33 @@ msgstr "Bạn không có quyền xem báo cáo này."
 #: code:addons/fg_vn_accounting_reports/static/src/xml/abstract_report.xml:0
 msgid "to"
 msgstr "đến ngày"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_account_journal__fg_truncate_seq_as_doc_no
+msgid "Drop Trailing Sequence from Voucher Number"
+msgstr "Cắt số thứ tự cuối khỏi số chứng từ"
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,help:fg_vn_accounting_reports.field_account_journal__fg_truncate_seq_as_doc_no
+msgid ""
+"The accounting books (general journal, general ledger) drop the trailing "
+"sequence number of the voucher number. Example: BL/2025/12/16 is printed "
+"BL/2025/12."
+msgstr ""
+"Các sổ kế toán (sổ nhật ký chung, sổ cái) bỏ số thứ tự ở cuối số chứng từ. "
+"Ví dụ: BL/2025/12/16 được in là BL/2025/12."
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,help:fg_vn_accounting_reports.field_account_journal__fg_use_ref_as_doc_no
+msgid ""
+"The accounting books (general journal, general ledger) print the reference "
+"of an entry instead of its number in the Voucher No. column. An entry "
+"without reference keeps its number."
+msgstr ""
+"Các sổ kế toán (sổ nhật ký chung, sổ cái) in số tham chiếu của bút toán thay "
+"cho số của nó ở cột Số chứng từ. Bút toán không có tham chiếu vẫn in số của nó."
+
+#. module: fg_vn_accounting_reports
+#: model:ir.model.fields,field_description:fg_vn_accounting_reports.field_account_journal__fg_use_ref_as_doc_no
+msgid "Use Reference as Voucher Number"
+msgstr "Dùng số tham chiếu làm số chứng từ"

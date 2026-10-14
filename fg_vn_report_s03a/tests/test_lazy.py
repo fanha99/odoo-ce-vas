@@ -91,6 +91,20 @@ class TestS03aLazy(S03aCommon):
         positions = [lines.index(line) for line in deposit]
         self.assertEqual(positions[1], positions[0] + 1)
 
+    def test_chunks_follow_the_number_printed(self):
+        """ Journals printing the reference, or the number without its
+        trailing sequence: the chunks are in the order of the number printed. """
+        self.bank_move.ref = "GBC-0042"
+        self.bank_journal.fg_use_ref_as_doc_no = True
+        self.misc_journal.fg_truncate_seq_as_doc_no = True
+        self.cash_journal.fg_truncate_seq_as_doc_no = True
+        full = self._all_at_once()
+        names = {line['move_name'] for line in full['lines']}
+        self.assertIn(f"GBC-0042 ({self.cash_move.name.rsplit('/', 1)[0]})", names)
+        self.assertEqual(len(names), 2, "the 12 sales are printed with the same number")
+        lines, _chunks = self._load_everything(self._lazy(chunk_size=4))
+        self.assertEqual(lines, full['lines'])
+
     def test_nothing_after_the_end(self):
         self._lazy()
         result = self.Report.get_group_lines(dict(JANUARY), 'journal', self.line_count)

@@ -1,6 +1,7 @@
 from . import test_ledger
 from . import test_counterparts
 from . import test_transfer
+from . import test_document_number
 from . import test_lazy
 from . import test_exports
 from . import test_wizard

@@ -85,6 +85,32 @@ class TestS03bLazy(S03bCommon):
         self.assertEqual(
             self._load_everything(lazy['131'], split_counterparts=True), full['131']['lines'])
 
+    def test_chunks_follow_the_number_printed(self):
+        """ Journals printing the reference: the chunks are in the order of
+        the number printed, and the running balance follows. """
+        # two sales a day, whose references are not in the entry order
+        for index in range(10):
+            self._post('2026-01-%02d' % (index + 13), [
+                ('131', 50 + index, 0, {'partner_id': self.partner_a.id}),
+                ('511', 0, 50 + index),
+            ], ref="HD %02d" % (20 - index))
+        self.misc_journal.fg_use_ref_as_doc_no = True
+        full = self._all_at_once()['131']['lines']
+        by_day = {}
+        for line in full:
+            by_day.setdefault(line['date'], []).append(line['move_name'])
+        for names in by_day.values():
+            self.assertEqual(names, sorted(names))
+        self.assertIn("HD 20", by_day[min(by_day, key=str)] + sum(by_day.values(), []))
+
+        group = self._lazy(chunk_size=5)['131']
+        lines = self._load_everything(group)
+        self.assertEqual(lines, full)
+        balance = 200  # opening balance
+        for line in lines:
+            balance += line['debit'] - line['credit']
+            self.assertEqual(line['balance'], balance)
+
     def test_filters_apply_to_the_chunks(self):
         options = {'journal_ids': self.bank_journal.ids}
         self._set_param('lazy_line_threshold', 1)

@@ -85,6 +85,8 @@ Các quy tắc tạo ra kết quả trên:
 | Thứ tự | Các bút toán cùng ngày của một cụm được xếp liền nhau: sổ nhật ký ngân hàng trước, tiền mặt sau, rồi tới các sổ khác; cùng loại thì bút toán có mã tài khoản nhỏ hơn đứng trước. Bút toán khác ngày nằm ở ngày của nó. |
 | Bút toán chính | Bút toán đứng đầu cụm theo thứ tự trên. |
 
+Khi module `fg_vn_accounting_reports` được cài, "số" của một bút toán trong các quy tắc trên là số được in trên sổ sách theo thiết lập của sổ nhật ký (số tham chiếu, hoặc số đã cắt số thứ tự cuối): số ghép có dạng `GBC-0042 (PT/2026)`. Không có module đó thì là số của bút toán.
+
 Số chứng từ trong một số tình huống:
 
 | Tình huống | Số chứng từ trên sổ |

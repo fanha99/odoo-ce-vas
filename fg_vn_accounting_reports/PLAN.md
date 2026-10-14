@@ -362,3 +362,136 @@ Ghi chú khi làm:
 - Tìm kiếm ở máy chủ là lựa chọn của từng báo cáo (`static lazySearch = true` trên component): sổ nhật ký chung tìm theo dòng nên bật; sổ cái tìm theo tài khoản, vốn luôn có đủ trên màn hình, nên không bật.
 - Trang trắng chèn thêm khi in lề đối xứng trước đây vẫn mang số trang của trang trước, vì canvas của ReportLab giữ lại thông tin chân trang. Nay trang trắng không có tiêu đề và không có số trang.
 - Chiều cao vùng tiêu đề trang được tính từ các dòng tiêu đề, tối thiểu 22 mm như cũ; báo cáo không ngắt trang theo nhóm giữ nguyên bố cục.
+
+## 10. Số chứng từ theo thiết lập của sổ nhật ký (20.0 đã xong 2026-10-13; 19.0 hoãn)
+
+Gộp phần việc của module cũ `fg_account_journal_ext` (17.0) vào 19.0 và 20.0. Mục này là kế hoạch chung cho cả hai bản và cho bốn module: nền tảng, `fg_vn_transfer_account`, `fg_vn_report_s03a`, `fg_vn_report_s03b`.
+
+### 10.1. Nguồn
+
+Bản 17.0 đã gộp xong ở commit `7895b52` (2026-10-12) của `D:\openerp\v17\fanha-addons`:
+
+| Thành phần ở 17.0 | Nội dung |
+|---|---|
+| `fg_vn_accounting_reports/models/account_journal.py` | Hai trường trên `account.journal`: `fg_use_ref_as_doc_no` (in số tham chiếu thay cho tên bút toán, không có số tham chiếu thì in tên) và `fg_truncate_seq_as_doc_no` (cắt phần `/STT` cuối, `BL/2025/12/16` thành `BL/2025/12`). Hàm `_fg_format_document_number(name, ref, use_ref, truncate_seq)` là nơi duy nhất chứa quy tắc. |
+| `fg_vn_accounting_reports/models/account_move.py` | `account.move._fg_get_document_numbers()`: `{id bút toán: số chứng từ}`. |
+| `fg_vn_accounting_reports/views/account_journal_views.xml` | Hai ô trên form sổ nhật ký, sau ô `code`. |
+| `fg_vn_transfer_account/models/account_move.py` | `_fg_transfer_document_numbers()`: gọi hook trên nếu có (`hasattr`), không thì dùng tên. Số chứng từ ghép và thứ tự của cụm tính trên số này. Không thêm phụ thuộc. |
+| `fg_vn_report_s03a`, `fg_vn_report_s03b` | Câu SQL lấy thêm hai cột của sổ nhật ký, Python đổi `move_name` sau khi đọc. |
+| `fg_account_journal_ext` | Vỏ rỗng phụ thuộc nền tảng, để database đã cài nâng cấp được rồi gỡ. |
+
+19.0 (`cb39074`) và 20.0 (`290c6da`) chưa có gì trong các phần trên. Module `fg_account_journal_ext` chưa từng có trong repo 19.0 và 20.0.
+
+Phạm vi giữ như 17.0: chỉ sổ nhật ký chung, sổ cái và số chứng từ ghép. Sổ chi tiết vật tư (`s06_report.py` đọc `am.name`) và sổ công nợ không đổi.
+
+### 10.2. Quyết định cần duyệt
+
+| # | Câu hỏi | Đề xuất |
+|---|---|---|
+| 1 | 20.0 đặt quy tắc ở đâu? Sổ 20.0 sắp xếp, tìm kiếm và phân trang ngay trong SQL trên `line.move_name`; đổi số bằng Python sau khi đọc (cách của 17.0) thì ô tìm kiếm không tìm được số đang in và thứ tự trang lệch với số in ra. | Quy tắc là **một biểu thức SQL** do `account.journal` cấp; `_fg_get_document_numbers()` cũng chạy biểu thức đó. Không có bản Python thứ hai của quy tắc. |
+| 2 | Sắp xếp theo số in ra hay theo tên bút toán? | **Cả hai sổ theo kiểu của sổ nhật ký chung** (chốt 2026-10-13): theo ngày, rồi số in ra, trùng số thì theo tên bút toán. Sổ cái 17.0 trước đó xếp theo tên bút toán và được sửa trước cho thống nhất (`fg_vn_report_s03b/models/s03b_report.py` ở 17.0, test `test_lines_are_ordered_by_the_printed_number`). Ví dụ ở mục 10.2a. |
+| 3 | Có tạo vỏ rỗng `fg_account_journal_ext` ở 19.0 và 20.0 không? | **Không** (chốt 2026-10-13). 19.0 và 20.0 chưa có database thực. |
+| 4 | 19.0 làm theo cách nào? | **Hoãn** (2026-10-13): làm 20.0 trước; khi 20.0 chạy ổn thì 19.0 theo cách của 20.0 (quy tắc bằng SQL), không theo 17.0. Xem mục 10.4. |
+
+Câu hỏi 1 đã chốt 2026-10-13: quy tắc là một biểu thức SQL.
+
+### 10.2a. Ví dụ về thứ tự
+
+Sổ nhật ký ngân hàng bật "dùng số tham chiếu", sổ nhật ký lương `BL` bật "cắt số thứ tự cuối". Năm bút toán cùng ngày 31/12/2025:
+
+| Tên bút toán | Số tham chiếu | Số in ra |
+|---|---|---|
+| `BNK1/2025/00007` | `GBC-0042` | `GBC-0042` |
+| `BNK1/2025/00008` | `GBC-0015` | `GBC-0015` |
+| `BL/2025/12/15` | | `BL/2025/12` |
+| `BL/2025/12/16` | | `BL/2025/12` |
+| `MISC/2025/12/0003` | `PKT 3` | `MISC/2025/12/0003` |
+
+Sổ nhật ký chung, theo số in ra: `BL/2025/12` (bút toán `/15`), `BL/2025/12` (bút toán `/16`), `GBC-0015`, `GBC-0042`, `MISC/2025/12/0003`.
+
+Sổ cái tài khoản 112, cùng quy tắc: `GBC-0015` (`BNK1/2025/00008`) rồi `GBC-0042` (`BNK1/2025/00007`). Trước khi sửa, sổ cái 17.0 xếp theo tên bút toán nên cho thứ tự ngược lại.
+
+20.0 cho đúng hai kết quả trên, kể cả khi sổ tải dần từng đoạn.
+
+### 10.3. Bản 20.0
+
+**Nền tảng `fg_vn_accounting_reports` 20.0.1.2.0**
+
+- `models/account_journal.py` (mới): hai trường Boolean, nhãn và trợ giúp bằng tiếng Anh. `_fg_get_document_number_sql(company, line_alias='line', journal_alias='journal')` trả về `SQL`:
+
+  ```
+  base   = CASE WHEN journal.fg_use_ref_as_doc_no
+                THEN COALESCE(NULLIF(line.ref, ''), line.move_name) ELSE line.move_name END
+  number = CASE WHEN journal.fg_truncate_seq_as_doc_no
+                THEN regexp_replace(base, '/[0-9]+$', '') ELSE base END
+  ```
+
+  `account.move.line.ref` và `move_name` là cột lưu sẵn (related, `store=True`), nên biểu thức chỉ cần nối thêm `account_journal` qua `line.journal_id`.
+- `_fg_uses_document_number_settings(company)`: công ty có sổ nhật ký nào bật một trong hai thiết lập không. Khi không có, các sổ dùng thẳng `line.move_name` và không nối `account_journal`: đơn vị không dùng tính năng thì câu SQL và tốc độ y như hiện nay.
+- `models/account_move.py` (mới): `_fg_get_document_numbers()` đọc bằng một câu SQL dùng biểu thức trên.
+- `views/account_journal_views.xml` (mới): hai ô sau `code` trên `account.view_account_journal_form` (vị trí này còn nguyên ở 19.0 và 20.0). Không ghi đè `string` trong view.
+- `tests/test_document_number.py`: các trường hợp của 17.0 (có/không số tham chiếu, số tham chiếu rỗng, đuôi không phải số, `HD/7`), kiểm trên bút toán thật vì quy tắc nằm ở SQL.
+- `i18n/`: thêm chuỗi vào `.pot` và `vi.po`. `readme.md`: thêm mục "Số chứng từ trên sổ sách". `doc/DEVELOPER.md`: cách một sổ mới dùng biểu thức.
+
+**`fg_vn_transfer_account` 20.0.1.2.0**
+
+- `_fg_transfer_document_numbers(move_ids)` như 17.0 (hook qua `hasattr`, không thêm phụ thuộc). `_fg_get_company_transfer_links()` và `_fg_transfer_move_data()` dùng số này cho `display_name`, tên cụm và khoá sắp xếp.
+- Test: cụm ghép dùng số theo thiết lập (chạy khi nền tảng có mặt). `readme.md` mục 4 thêm một câu.
+
+**`fg_vn_report_s03a` 20.0.1.1.0**
+
+- `_get_from_sql()` nối `account_journal` khi công ty có dùng thiết lập; `_get_ordered_moves()` lấy `MIN(<số>)` để in và sắp xếp, giữ `MIN(line.move_name)` làm khoá phụ khi trùng số (hiện nay khoá phụ là id bút toán); điều kiện tìm kiếm trong `_get_line_conditions()` so `ILIKE` trên biểu thức số.
+- Test: số in theo thiết lập, tìm theo số tham chiếu, số ghép `GBC-0042 (PT/2026/02)`, thứ tự; `test_lazy` chạy lại với thiết lập bật.
+
+**`fg_vn_report_s03b` 20.0.1.1.0**
+
+- `_get_rows_sql()` (cả hai nhánh, gộp và tách đối ứng) trả thêm cột `document_number` bằng biểu thức số, dùng để in; `ORDER BY` trong `_query_rows()` thành ngày, `document_number`, `move_name` (tên bút toán), rồi như cũ, nên `OFFSET/LIMIT` theo đúng thứ tự in ra. `_get_linked_move_names()` không đổi (nhận số từ `fg_vn_transfer_account`).
+- Test tương tự S03a, thêm phân trang với thiết lập bật và thứ tự theo số in ra (ví dụ ở mục 10.2a).
+
+Kiểm cuối: chạy lại `tools/perf/perf_measure.py` với thiết lập tắt (phải bằng số đo cũ) và bật trên một sổ nhật ký; ghi số đo vào mục 9 của hai `PLAN.md` của sổ.
+
+### 10.4. Bản 19.0 (`D:\openerp\V19\fanha-addons`): hoãn
+
+Chưa làm trong đợt này. Khi 20.0 đã chạy ổn, 19.0 nhận lại cách của 20.0 (quy tắc là biểu thức SQL, cùng tên hàm, cùng test), không chép từ 17.0. Lúc đó lập kế hoạch riêng, vì sổ 19.0 còn đọc cả kỳ rồi xử lý bằng Python và repo 19.0 đang có thay đổi chưa commit trong `s03a_report.py`, `s03b_report.py` và nền tảng.
+
+### 10.5. Thứ tự làm
+
+1. 20.0: nền tảng → `fg_vn_transfer_account` → S03a → S03b → đo. Mỗi module chạy `tools/run_tests.sh` (báo anh tắt Odoo cổng 8009 trước).
+2. 19.0: sau khi 20.0 ổn, theo mục 10.4.
+3. Vault: lần khảo sát này không gặp khác biệt lõi 19.0 ↔ 20.0 mới (form sổ nhật ký và hai cột lưu sẵn của `account.move.line` giống nhau); nếu lúc code gặp thì ghi vào `v19-to-v20\account.md`.
+
+### 10.6. Kết quả bản 20.0 (2026-10-13)
+
+Kế hoạch được duyệt ngày 2026-10-13. Bốn module đã sửa: nền tảng 20.0.1.2.0, `fg_vn_transfer_account` 20.0.1.2.0, `fg_vn_report_s03a` 20.0.1.1.0, `fg_vn_report_s03b` 20.0.1.1.0.
+
+Test: nền tảng 75 test, ba module còn lại 146 test, không test nào hỏng; bốn tour trình duyệt của hai sổ chạy qua.
+
+Khác với kế hoạch, phát sinh khi code:
+
+| Điểm | Kế hoạch | Thực tế | Lý do |
+|---|---|---|---|
+| Hàm của `account.journal` | `_fg_get_document_number_sql(company, ...)` và `_fg_uses_document_number_settings(company)` | Một hàm `_fg_get_document_number_query(alias='line', name_column='move_name')` trả `(number, join)`; khi không sổ nhật ký nào bật thiết lập thì `number` là cột trần và `join` rỗng | Nơi gọi chỉ cần một lời gọi. Không lọc theo công ty: chi nhánh dùng được sổ nhật ký của công ty mẹ. |
+| Test quy tắc | Các trường hợp của 17.0 gọi thẳng hàm định dạng | Kiểm trên bút toán thật, đổi tên bút toán sau khi ghi sổ | Quy tắc nằm ở SQL. Tên bút toán thử phải khớp ngày (`BL/2025/12/16` cần ngày trong tháng 12/2025), nếu không Odoo từ chối. |
+| So sánh `SQL` trong test | `sql.code` | `sql == SQL(...)`, `not sql` | Odoo 20 bỏ `SQL.code` (đã ghi vào vault, `orm-python.md` §12). |
+
+Số đo, trên bộ dữ liệu của `tools/perf/` dựng lại ngày 2026-10-13 (database `test_fg_vas` cũ không còn), cùng quy mô với mục 9 của `fg_vn_report_s03a/PLAN.md`. Code cũ và code mới được đo liền nhau trên cùng database; số là lần nhanh nhất trong ba lần, không ẩn tài khoản trung chuyển / có ẩn.
+
+| Thao tác | Code cũ | Code mới, thiết lập tắt | Code mới, thiết lập bật |
+|---|---|---|---|
+| S03a: sắp xếp 52.000 bút toán | 0,26 / 0,49 giây | 0,28 / 0,51 giây | 0,33 / 0,57 giây |
+| S03a: mở sổ (500 dòng đầu) | 0,53 / 0,73 giây | 0,58 / 0,82 giây | 0,63 / 0,81 giây |
+| S03a: xem thêm, từ dòng 500 | 0,29 / 0,45 giây | 0,33 / 0,52 giây | 0,38 / 0,58 giây |
+| S03a: tìm kiếm trên cả quý | 1,03 / 1,09 giây | 1,07 / 1,13 giây | 1,13 / 1,14 giây |
+| S03b: mở tài khoản lớn nhất (500 dòng đầu) | 0,08 / 0,09 giây | 0,09 / 0,09 giây | 0,09 / 0,09 giây |
+| S03b: xem thêm, từ dòng 40.000 | 0,61 / 0,62 giây | 0,57 / 0,57 giây | 0,64 / 0,58 giây |
+| S03b: mở sổ, tách đối ứng | 1,28 / 1,23 giây | 1,27 / 1,25 giây | 1,35 / 1,24 giây |
+
+"Thiết lập bật": sổ nhật ký chứa 50.000 bút toán của quý in số tham chiếu, sổ tiền mặt cắt số thứ tự cuối. Excel và PDF không đổi (Excel cả quý 11 giây, PDF một tháng 62 đến 69 giây ở cả hai trạng thái).
+
+Nhận xét:
+
+- Thiết lập tắt: sổ cái không đổi; sổ nhật ký chung chậm hơn code cũ 0,02 đến 0,09 giây mỗi lần tải (khoảng 10%), không bằng hẳn số cũ như kế hoạch mong đợi. Phần thêm đến từ khoá sắp xếp phụ theo tên bút toán và lời gọi lấy số chứng từ cho các bút toán ghép.
+- Thiết lập bật: thêm khoảng 0,05 giây nữa trên sổ nhật ký chung. Mọi thao tác trên màn hình vẫn dưới 1,4 giây.
+- Các số tuyệt đối cao hơn mục 9 của `fg_vn_report_s03a/PLAN.md` khoảng 10% ngay cả với code cũ: database và ngày đo khác nhau, không so trực tiếp được.
+
+Chưa làm: mở form sổ nhật ký trên trình duyệt để nhìn bố cục hai ô mới (đã kiểm bằng máy rằng view nạp được và bản dịch tiếng Việt có hiệu lực).

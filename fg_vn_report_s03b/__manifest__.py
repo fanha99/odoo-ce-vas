@@ -1,6 +1,6 @@
 {
     'name': 'Vietnam - General Ledger (S03b-DNN)',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.1.0',
     'category': 'Accounting/Accounting',
     'summary': 'General ledger of the Vietnamese accounting system, form S03b-DNN',
     # Without a description, Odoo renders readme.md as reStructuredText and

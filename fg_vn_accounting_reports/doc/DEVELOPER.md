@@ -188,7 +188,25 @@ class MyController(VNReportController):
 
 `get_xml(options)` trả `bytes` và tự gọi `_check_report_access(options)`. Ở JS: `window.location.href = this.getExportUrl("xml")`.
 
-## 8. Test
+## 8. Số chứng từ theo thiết lập của sổ nhật ký
+
+Sổ nào in số chứng từ của bút toán thì không đọc thẳng `account_move.name`: người dùng có thể cho sổ nhật ký in số tham chiếu, hoặc cắt số thứ tự cuối (`readme.md`, mục 7). Quy tắc nằm ở một chỗ, dưới dạng biểu thức SQL:
+
+```python
+number, join = self.env['account.journal']._fg_get_document_number_query()   # bảng `line`
+rows = self.env.execute_query(SQL(
+    "SELECT line.id, %s FROM account_move_line line %s WHERE ... ORDER BY line.date, %s, line.move_name",
+    number, join, number,
+))
+```
+
+- Bảng mặc định là `account_move_line` với bí danh `line`. Đọc từ `account_move`: `_fg_get_document_number_query('move', 'name')`.
+- `join` phải đặt ngay sau bảng đó. Nó rỗng, và `number` là cột trần, khi không sổ nhật ký nào bật thiết lập: câu truy vấn của đơn vị không dùng tính năng không đổi.
+- Sắp xếp, tìm kiếm và phân trang làm trên chính biểu thức này, trong SQL. Không sửa lại số bằng Python sau khi đọc: thứ tự và kết quả tìm kiếm sẽ lệch với số in ra.
+- Thứ tự chung của các sổ: ngày, số được in, rồi số của bút toán.
+- Cần số của một tập bút toán đã biết: `moves._fg_get_document_numbers()` trả `{id: số}`.
+
+## 9. Test
 
 - Số liệu: kế thừa `AccountTestInvoicingCommon`, tạo tài khoản và bút toán, gọi `get_report_data()`.
 - Giao diện: một tour trong `static/tests/tours/` (bundle `web.assets_tests`), chạy bằng `start_tour`. Cần gói Python `websocket-client` và Chrome.

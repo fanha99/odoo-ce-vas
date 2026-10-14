@@ -1,6 +1,6 @@
 {
     'name': 'Vietnam Accounting Reports - Core',
-    'version': '20.0.1.1.0',
+    'version': '20.0.1.2.0',
     'category': 'Accounting/Accounting',
     'summary': 'Shared screen, Excel export and PDF printing of the Vietnamese accounting books',
     # Without a description, Odoo renders readme.md as reStructuredText and
@@ -23,6 +23,7 @@ See readme.md in the module directory.
     'depends': ['account'],
     'data': [
         'views/menu_views.xml',
+        'views/account_journal_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

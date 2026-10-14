@@ -32,7 +32,7 @@ Mỗi tài khoản là một phần riêng, bắt đầu bằng dòng tiêu đ�
 | Dòng | Nội dung |
 |---|---|
 | Số dư đầu kỳ | Luỹ kế mọi phát sinh đã ghi sổ trước ngày đầu kỳ. Nằm ở cột Nợ nếu Nợ lớn hơn Có, ngược lại ở cột Có. |
-| Các phát sinh | Mỗi dòng bút toán ghi vào tài khoản trong kỳ là một dòng, xếp theo ngày ghi sổ rồi theo số chứng từ. |
+| Các phát sinh | Mỗi dòng bút toán ghi vào tài khoản trong kỳ là một dòng, xếp như trên sổ nhật ký chung: theo ngày ghi sổ, rồi theo số chứng từ được in, rồi theo số của bút toán. |
 | Cộng phát sinh | Tổng Nợ và tổng Có của các phát sinh trong kỳ. |
 | Số dư cuối kỳ | Số dư đầu kỳ cộng phát sinh trong kỳ, trình bày như số dư đầu kỳ. |
 
@@ -41,7 +41,7 @@ Các cột của một dòng phát sinh:
 | Cột | Nội dung |
 |---|---|
 | Ngày | Ngày ghi sổ. Với hoá đơn có ngày hoá đơn khác ngày ghi sổ, ngày hoá đơn hiện trong ngoặc. |
-| Số chứng từ | Số của bút toán. |
+| Số chứng từ | Số của bút toán, hoặc số tham chiếu của nó, tuỳ thiết lập của sổ nhật ký (xem `fg_vn_accounting_reports/readme.md`, mục 7). |
 | Diễn giải | Nhãn của dòng bút toán; nếu không có thì lấy nội dung tham chiếu của bút toán. |
 | TK đối ứng | Mã các tài khoản đối ứng của dòng, cách nhau bằng dấu phẩy. |
 | Nợ, Có | Số tiền của dòng, theo đồng tiền hạch toán. |
