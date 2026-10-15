@@ -65,7 +65,7 @@ Kỳ so sánh chọn được trong cửa sổ tham số và đổi được tro
 
 ## 5. Tài khoản ngoài bảng và tài khoản trung chuyển
 
-**Tài khoản ngoài bảng** là tài khoản có loại "Off-Balance Sheet" trong Odoo, hoặc có mã bắt đầu bằng số 0.
+**Tài khoản ngoài bảng** là tài khoản có loại "Off-Balance Sheet" trong Odoo, hoặc có mã bắt đầu bằng số 0. Tài khoản tạm và tài khoản chờ của ngân hàng do Odoo tự tạo (1121, 1131, 1132 ở hệ thống tài khoản Thông tư 200) phải được người dùng đổi mã sang đầu 0 thì mới được xử lý theo quy tắc này: xem `fg_vn_accounting_reports/readme.md`, mục 8.
 
 - Chỉ hiện khi còn số dư đầu kỳ hoặc cuối kỳ. Tài khoản chỉ có phát sinh trong kỳ mà hai đầu đều bằng 0 thì không hiện.
 - Dòng có nền cam nhạt để phân biệt, trên cả màn hình, Excel và PDF.
@@ -82,7 +82,7 @@ Từ một dòng tài khoản có thể mở danh sách các phát sinh đã ghi
 ## 7. Xuất file
 
 - **Excel** và **PDF**: cùng nội dung với màn hình, gồm cả các cột so sánh nếu có, trừ bộ lọc Cấp tài khoản và ô tìm kiếm (hai thứ này chỉ ẩn dòng trên màn hình). Tài khoản con thụt vào theo cấp. PDF không có dòng cộng chuyển trang và không có phần ký tên.
-- **XML**: file phụ lục cân đối tài khoản `F01-CDTK` (thẻ gốc `PL_CDTK`), gồm ba phần số dư đầu kỳ, số phát sinh trong kỳ, số dư cuối kỳ, mỗi phần chia Nợ và Có. File luôn gồm mọi tài khoản đang dùng có mã từ 3 chữ số trở lên, kể cả tài khoản không có số liệu, và không phụ thuộc các bộ lọc đang chọn. Tài khoản ngoài bảng không được đưa vào file. Số tiền làm tròn đến đồng.
+- **XML**: file phụ lục cân đối tài khoản `F01-CDTK` (thẻ gốc `PL_CDTK`), gồm ba phần số dư đầu kỳ, số phát sinh trong kỳ, số dư cuối kỳ, mỗi phần chia Nợ và Có. File luôn gồm mọi tài khoản đang dùng có mã từ 3 chữ số trở lên, kể cả tài khoản không có số liệu, và không phụ thuộc các bộ lọc đang chọn. Tài khoản ngoài bảng không được đưa vào file, kể cả khi mã của nó dài từ 3 ký tự trở lên (vd. `031`, `021`): điều kiện bắt đầu bằng `0` được xét trước điều kiện độ dài mã. Số tiền làm tròn đến đồng.
 
 ## 8. Khác với bản 19.0
 

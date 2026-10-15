@@ -35,7 +35,7 @@ Gợi ý theo chế độ kế toán, cũng được ghi ngay dưới thiết l�
 
 | Chế độ kế toán | Nên đặt |
 |---|---|
-| Thông tư 133 (không có tài khoản 113) | Bật. Chọn tài khoản trung chuyển (113) và các tài khoản chờ thanh toán đang dùng (1131, 1132 hoặc các tài khoản tương ứng của đơn vị). |
+| Thông tư 133 (không có tài khoản 113) | Bật. Chọn tài khoản trung chuyển và các tài khoản chờ thanh toán đang dùng: `03`, `031`, `032` với hệ thống tài khoản `l10n_vn_tt133` (mã kỹ thuật theo quy ước ở `fg_vn_accounting_reports/readme.md` mục 8.3). |
 | Thông tư 200, Thông tư 99 (có tài khoản 113) | Tắt. |
 
 Một tài khoản trong danh sách còn số dư (tiền đã chi ở một đầu mà chưa ghi nhận ở đầu kia) vẫn được trình bày, để số liệu không bị thiếu.

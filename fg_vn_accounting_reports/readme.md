@@ -3,7 +3,7 @@
 Module cho Odoo 20 (Community và Enterprise), phụ thuộc module `account`.
 Tác giả: Fanha Giang. Giấy phép: AGPL-3.
 
-Module này không chứa báo cáo nào. Nó là phần dùng chung của các sổ và báo cáo kế toán theo chế độ kế toán Việt Nam (Thông tư 133 và Thông tư 99): màn hình xem báo cáo, xuất Excel và in PDF. Mỗi sổ (nhật ký chung, sổ cái, bảng cân đối phát sinh, sổ chi tiết vật tư...) là một module riêng, chỉ lo phần số liệu và mẫu biểu của mình. Nhờ vậy mọi sổ có cùng cách dùng và cùng hình thức khi in.
+Module này không chứa báo cáo nào. Nó là phần dùng chung của các sổ và báo cáo kế toán theo chế độ kế toán Việt Nam (Thông tư 133, Thông tư 200, Thông tư 99): màn hình xem báo cáo, xuất Excel và in PDF. Mỗi sổ (nhật ký chung, sổ cái, bảng cân đối phát sinh, sổ chi tiết vật tư...) là một module riêng, chỉ lo phần số liệu và mẫu biểu của mình. Nhờ vậy mọi sổ có cùng cách dùng và cùng hình thức khi in.
 
 Tài liệu này mô tả những gì người dùng nhận được ở mọi báo cáo xây trên nền tảng. Phần kỹ thuật nằm trong `PLAN.md`.
 
@@ -113,7 +113,94 @@ Thiết lập có tác dụng trên sổ nhật ký chung và sổ cái, kể c�
 
 Các sổ và báo cáo khác không đổi. Bút toán trong Odoo không bị sửa: thiết lập chỉ quyết định số nào được in.
 
-## 8. Các báo cáo dùng nền tảng này
+## 8. Tài khoản ngoài chế độ: mã bắt đầu bằng `0`
+
+**Đọc mục này trước khi dùng các sổ với hệ thống tài khoản của Odoo, nhất là theo Thông tư 200 hoặc Thông tư 99.**
+
+### 8.1. Vấn đề
+
+Để chạy nghiệp vụ ngân hàng, Odoo cần vài tài khoản kỹ thuật mà chế độ kế toán Việt Nam không có: tài khoản tạm cho dòng sao kê chưa đối soát, và tài khoản chờ cho phiếu thu, phiếu chi chưa khớp với sao kê. Khi thiết lập kế toán cho công ty, Odoo **tự tạo** các tài khoản này, đặt mã như tài khoản bình thường và gắn chúng vào cây tài khoản của chế độ. Với hệ thống tài khoản Việt Nam của Odoo 20 (`l10n_vn`, theo Thông tư 200):
+
+| Mã Odoo đặt | Tên | Vai trò | Tài khoản cha | Vấn đề |
+|---|---|---|---|---|
+| 1121 | Tài khoản tạm thời ngân hàng (Bank Suspense Account) | dòng sao kê chưa đối soát | 1120 Tiền gửi không kỳ hạn | Trùng mã 1121 "Tiền Việt Nam" của chế độ |
+| 1131 | Biên lai chưa thanh toán (Outstanding Receipts) | phiếu thu chưa khớp sao kê | 1130 Tiền đang chuyển | Trùng mã 1131 "Tiền Việt Nam" của chế độ |
+| 1132 | Khoản chi chưa thanh toán (Outstanding Payments) | phiếu chi chưa khớp sao kê | 1130 Tiền đang chuyển | Trùng mã 1132 "Ngoại tệ" của chế độ |
+
+Các sổ không có cách nào biết 1121 kia là tài khoản tạm của Odoo chứ không phải "Tiền Việt Nam": nó được in lên sổ cái, bảng cân đối số phát sinh như một tài khoản của chế độ, đưa vào file XML phụ lục cân đối tài khoản, và phát sinh của nó được cộng vào tài khoản cha 1120.
+
+### 8.2. Quy tắc của các sổ
+
+Bảng cân đối số phát sinh và sổ cái coi **tài khoản có mã bắt đầu bằng `0`** (và tài khoản loại "Off-Balance Sheet" của Odoo) là tài khoản ngoài chế độ:
+
+- Trên màn hình, Excel, PDF: chỉ trình bày khi còn số dư đầu kỳ hoặc cuối kỳ, dòng nền cam. Khi đã đối soát hết (số dư về 0, kể cả có phát sinh trong kỳ) thì không trình bày.
+- Trong file XML phụ lục cân đối tài khoản: **không bao giờ** có, và không cộng vào tài khoản cha hay dòng tổng cộng.
+
+Quy tắc này thay cho cách của bản 17.0 (tài khoản không thuộc nhóm tài khoản nào thì không in, không xuất XML); Odoo 20 đã bỏ nhóm tài khoản.
+
+**Độ dài mã không ảnh hưởng.** Chỉ xét ký tự đầu là `0`: `03`, `09`, `031`, `0123`, `01001` đều là tài khoản ngoài chế độ. Vì vậy quy ước mã ở mục 8.3 (`03`, `031`, `032`, `021`…) đặt mã dài hơn hai ký tự mà vẫn được xử lý như trên. Trong XML, điều kiện "mã từ 3 ký tự trở lên" chỉ xét sau khi đã loại tài khoản đầu `0`, nên mã đầu `0` dài bao nhiêu cũng không vào XML. (Code: `_is_off_balance()` trong `fg_vn_report_cdps/models/cdps_report.py` và `fg_vn_report_s03b/models/s03b_report.py` so `code.startswith('0')`; `get_xml()` lọc bằng hàm này trước. Test `test_xml_leaves_off_balance_accounts_out` kiểm với tài khoản `0091`, `0092`.)
+
+Lưu ý thêm:
+
+- Nếu tài khoản đầu `0` vẫn được gắn tài khoản cha (vd. nằm dưới 112): trong XML nó không được cộng lên cha; nhưng trên màn hình, Excel, PDF của bảng cân đối số phát sinh ở chế độ phân cấp, khi nó còn số dư và được trình bày thì số của nó **được cộng vào dòng tài khoản cha**. Vì vậy nên xoá tài khoản cha của các tài khoản này (mục 8.3).
+- Quy tắc áp dụng ở **bảng cân đối số phát sinh** và **sổ cái** (với sổ cái: tài khoản đầu `0` không có số dư vẫn được in nếu người dùng chọn đích danh nó trong bộ lọc tài khoản). **Sổ nhật ký chung không áp dụng**: dòng ghi vào tài khoản đầu `0` vẫn được in; sổ này chỉ ẩn dòng của các tài khoản trong danh sách ẩn của `fg_vn_transfer_account` khi dòng đã đối soát hết. Muốn sổ nhật ký chung không in các dòng đó thì thêm tài khoản vào danh sách ẩn.
+
+### 8.3. Quy ước mã và việc người dùng phải làm
+
+**Quy ước mã.** Tài khoản kỹ thuật lấy mã của tài khoản Odoo tương ứng ở hệ thống tài khoản `l10n_vn`, thay `11` ở đầu bằng `0` (113 → `03`, 1131 → `031`, 1121 → `021`); và **không có tài khoản cha** (đứng ở gốc cây), ở mọi hệ thống tài khoản. Nhờ vậy mọi công ty, dù theo thông tư nào, có cùng mã tài khoản kỹ thuật, dễ đối chiếu với tài liệu của Odoo.
+
+| Vai trò trong Odoo | Mã Odoo (`l10n_vn`) | Mã theo quy ước | Tài khoản cha |
+|---|---|---|---|
+| Tài khoản trung chuyển (Money in transit) | 113 | **03** (chỉ Thông tư 133, xem bảng dưới) | — |
+| Tài khoản chờ thu (Outstanding Receipts) | 1131 | **031** | để trống |
+| Tài khoản chờ chi (Outstanding Payments) | 1132 | **032** | để trống |
+| Tài khoản tạm ngân hàng (Bank Suspense Account) | 1121 | **021** | để trống (không nằm dưới 112) |
+
+Họ `03x` ứng với 113, họ `02x` ứng với 112, họ `01x` để dành cho 111 (tiền mặt) nếu sau này cần. Odoo tạo thêm tài khoản kỹ thuật khác thì đánh tiếp trong họ tương ứng (`033`, `022`…). Mã dài bao nhiêu cũng được xử lý như nhau (mục 8.2).
+
+**Việc người dùng phải làm.** Ngay sau khi thiết lập kế toán cho công ty, **trước khi nhập phát sinh**, vào Kế toán › Cấu hình › Hệ thống tài khoản và với từng tài khoản kỹ thuật Odoo tự tạo:
+
+1. **Đổi mã** theo bảng trên.
+2. **Xoá tài khoản cha**, để tài khoản kỹ thuật không nằm lẫn dưới 112, 113 trên cây tài khoản và không bị cộng vào dòng của tài khoản cha trên bảng cân đối số phát sinh khi còn số dư.
+
+Không đổi loại tài khoản sang "Off-Balance Sheet": Odoo bắt mọi dòng của bút toán có dòng ngoài bảng cũng phải là ngoài bảng, nên các tài khoản này sẽ không dùng được nữa.
+
+Kiểm tra lại sau mỗi lần Odoo có thể tạo thêm tài khoản kỹ thuật (thêm công ty, thiết lập lại hệ thống tài khoản).
+
+| Chế độ kế toán | Hệ thống tài khoản | Cần làm |
+|---|---|---|
+| Thông tư 200, Thông tư 99 | `l10n_vn` của Odoo | 1121 → `021`, xoá cha. 1131 → `031`, 1132 → `032`, xoá cha (cha 113 là tài khoản của chế độ). **Giữ 113 (1130) "Tiền đang chuyển"**: đây là tài khoản của chế độ, không đổi thành `03`. |
+| Thông tư 133 | `l10n_vn_tt133` | Không cần: module tạo sẵn `03`, `031`, `032`, `021`, không có tài khoản cha. |
+| Hệ thống tài khoản tự làm | — | Tìm tài khoản trung chuyển, tài khoản tạm (Kế toán › Cấu hình › Thiết lập, mục ngân hàng) và tài khoản chờ (phương thức thanh toán của từng sổ ngân hàng), xử lý theo quy ước. |
+
+Đơn vị tự thêm tài khoản nội bộ không muốn đưa lên sổ theo chế độ cũng đặt mã bắt đầu bằng `0`, ngoài các họ `01x`, `02x`, `03x` (vd. `09x`).
+
+### 8.4. Sau khi đối soát, tài khoản kỹ thuật còn phát sinh không
+
+Đọc từ code Odoo 20 (Community) và Odoo 19 (Enterprise, `account_accountant`); chưa chạy thử trên 20.0.
+
+| Tài khoản | Sau khi đối soát hết | Vì sao |
+|---|---|---|
+| Tạm ngân hàng (`021`, 1121 của Odoo) | **Không còn phát sinh.** | Dòng sao kê được ghi sổ ngay khi nhập, đối ứng là tài khoản tạm. Khi đối soát, Odoo **sửa chính bút toán của dòng sao kê**: dòng tài khoản tạm được thay bằng tài khoản đối ứng thật. Ghi chú trong lõi (`account/models/res_config_settings.py`, trường Bank Suspense): *"Reconciliation replaces the latter by the definitive account(s)."* Bản Enterprise 19 làm như vậy (`_set_move_line_to_statement_line_move`), `account_reconcile_oca` ở chế độ sửa bút toán cũng vậy. Còn phát sinh chỉ khi dòng sao kê chưa đối soát hoặc mới đối soát một phần. |
+| Chờ thu, chờ chi (`031`, `032`; 1131, 1132 của Odoo) | **Mặc định không dùng tới.** Nếu dùng thì **còn phát sinh hai bên, số dư bằng 0.** | Thanh toán chỉ sinh bút toán khi phương thức thanh toán của sổ ngân hàng có khai tài khoản chờ (`payment_account_id`; `account_payment.py`: chỉ tạo bút toán khi `outstanding_account_id` có giá trị). `l10n_vn` không gán tài khoản chờ cho phương thức thanh toán (khác `l10n_in`, `l10n_ma`), nên mặc định phiếu thu/chi ngân hàng không có bút toán và hoá đơn được đối soát thẳng với dòng sao kê. Nếu người dùng khai tài khoản chờ: phiếu thu ghi Nợ `031` / Có 131, dòng sao kê khi đối soát ghi Có `031` và hai dòng được đối soát với nhau. Hai bút toán khác nhau, nên `031` có phát sinh cả Nợ lẫn Có, như tài khoản trung chuyển. |
+| Trung chuyển (`03`, 113) | Còn phát sinh hai bên, số dư bằng 0. | Hai bút toán của hai sổ tiền gặp nhau ở tài khoản này. |
+
+Hệ quả cho các sổ:
+
+- Bảng cân đối số phát sinh, sổ cái: cả ba loại đều chỉ trình bày khi còn số dư (quy tắc đầu `0`), nên phát sinh hai bên của `03`, `031`, `032` không lên sổ khi đã khớp hết.
+- Sổ nhật ký chung không áp quy tắc đầu `0`: muốn không in các dòng của `03`, `031`, `032` thì thêm chúng vào danh sách ẩn của `fg_vn_transfer_account` (dòng đã đối soát hết thì ẩn, hai bút toán trình bày như một nghiệp vụ).
+- Tài khoản tạm `021`: vì Odoo sửa lại bút toán của dòng sao kê khi đối soát, đối soát dòng sao kê của tháng trước vào tháng sau sẽ **làm thay đổi số liệu của tháng trước** (dòng tài khoản tạm biến mất, thay bằng tài khoản thật, ngày bút toán giữ nguyên). Sổ của tháng trước in ra trước và sau khi đối soát sẽ khác nhau.
+
+### 8.5. Các thông tư khác nhau ở đâu
+
+Các sổ (nhật ký chung, sổ cái, bảng cân đối số phát sinh) tính như nhau cho Thông tư 133, 200 và 99. Khác nhau chủ yếu ở việc tài khoản nào được trình bày trên PDF và đưa vào XML:
+
+- Tài khoản kỹ thuật của Odoo: xử lý theo mục 8.3.
+- Tài khoản trung chuyển (113): Thông tư 133 không có tài khoản này nên phải ẩn đi qua module `fg_vn_transfer_account`; Thông tư 200, 99 có 113 nên để nguyên.
+- Mã tài khoản cấp 1: hệ thống tài khoản `l10n_vn` của Odoo thêm số 0 vào cuối mọi mã 3 chữ số (131 thành 1310, 911 thành 9110). Sổ in đúng mã đang có trên hệ thống tài khoản; thẻ XML và bộ lọc "Cấp tài khoản" của bảng cân đối số phát sinh hiện dựa vào mã nên chưa đúng với các mã này. Người dùng có thể tự đổi mã về 3 chữ số (đổi được cả khi đã có phát sinh, và cập nhật module `l10n_vn` không đổi lại). Việc xử lý trong module chưa làm.
+- File XML phụ lục cân đối tài khoản theo mẫu của Thông tư 133. Đơn vị theo Thông tư 200, 99 có nhiều tài khoản không có trong danh mục của mẫu này nên không đưa được vào XML. Hiện bảng cân đối số phát sinh xuất một thẻ cho mọi tài khoản có mã từ 3 ký tự (trừ tài khoản ngoài chế độ); chưa lọc theo danh mục của mẫu.
+
+## 9. Các báo cáo dùng nền tảng này
 
 `fg_vn_report_cdps`, `fg_vn_report_s03a` và `fg_vn_report_s03b` đã có trên 20.0; các module còn lại thuộc bản 19.0 và chuyển sau.
 
@@ -127,7 +214,7 @@ Các sổ và báo cáo khác không đổi. Bút toán trong Odoo không bị s
 
 `fg_vn_financial_reports` (báo cáo tài chính B01, B02, lưu chuyển tiền tệ, B09) chỉ dùng chung menu **VAS Reports**, không dùng màn hình và phần in của nền tảng.
 
-## 9. Khác với bản 19.0
+## 10. Khác với bản 19.0
 
 - Không còn phụ thuộc module `stock` và `stock_account`. Cài nền tảng không kéo theo phân hệ kho.
 - Bỏ bộ máy lập báo cáo tài chính từ mẫu XML. Không còn báo cáo nào dùng nó.
@@ -136,7 +223,7 @@ Các sổ và báo cáo khác không đổi. Bút toán trong Odoo không bị s
 - Giấy phép đổi từ LGPL-3 sang AGPL-3.
 - Hai thiết lập số chứng từ của sổ nhật ký (mục 7) nằm trong module này. Ở bản 17.0 chúng từng là module riêng `fg_account_journal_ext`; bản 19.0 chưa có.
 
-## 10. Cài đặt
+## 11. Cài đặt
 
 1. Chép module vào thư mục addons của Odoo.
 2. Cập nhật danh sách ứng dụng. Module được cài tự động khi cài một module báo cáo phụ thuộc nó; cài riêng thì chỉ thấy menu **VAS Reports** trống.
