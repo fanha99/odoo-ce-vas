@@ -14,6 +14,7 @@ Nhánh `20.0` dành cho Odoo 20.0. Mỗi module nằm trong một thư mục ri�
 | [`fg_vn_report_cdps`](fg_vn_report_cdps/readme.md) | Bảng cân đối số phát sinh: số dư và phát sinh của từng tài khoản, tách công nợ 131/331 theo đối tác, phân cấp theo tài khoản cha–con, so sánh kỳ, xuất Excel, PDF và XML F01-CDTK. | 20.0.1.0.0 | 2026-10-11 |
 | [`fg_vn_report_s03a`](fg_vn_report_s03a/readme.md) | Sổ nhật ký chung (S03a-DNN): các bút toán đã ghi sổ theo thứ tự thời gian, lọc theo sổ nhật ký, loại chứng từ, tài khoản, đối tác; sổ dài được tải dần; xuất Excel và PDF có cộng chuyển trang. | 20.0.1.0.0 | 2026-10-11 |
 | [`fg_vn_report_s03b`](fg_vn_report_s03b/readme.md) | Sổ cái tài khoản (S03b-DNN): số dư, phát sinh và tài khoản đối ứng của từng tài khoản, tuỳ chọn tách dòng theo tài khoản đối ứng; sổ dài được tải dần theo tài khoản; Excel mỗi tài khoản một sheet, PDF mỗi tài khoản một trang mới. | 20.0.1.0.0 | 2026-10-11 |
+| [`l10n_vn_tt133`](l10n_vn_tt133/readme.md) | Hệ thống tài khoản doanh nghiệp nhỏ và vừa theo Thông tư 133/2016/TT-BTC: tài khoản tổng hợp là tài khoản cha của tài khoản chi tiết, tài khoản kỹ thuật ngân hàng mã đầu `0` (03, 031, 032, 021), dùng nguyên bộ thuế GTGT của `l10n_vn`. | 20.0.1.0.0 | 2026-10-15 |
 
 Khi thêm hoặc cập nhật một module, sửa dòng tương ứng trong bảng: phiên bản lấy theo `version` trong `__manifest__.py` của module, ngày ghi theo dạng năm-tháng-ngày.
 

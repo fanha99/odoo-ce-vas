@@ -5,7 +5,7 @@ Nguồn: `D:\openerp\V19\fanha-addons\l10n_vn_tt133` (19.0.1.0.0, commit cuối 
 
 `readme.md` mô tả module làm gì cho người dùng; kế hoạch này nói làm bằng cách nào. Readme đang viết theo các phương án đề xuất ở mục 7; quyết định khác thì sửa cả hai.
 
-Trạng thái: **chờ duyệt** (2026-10-14). Chưa viết code. Đã chốt Q1–Q5 và quy ước tài khoản kỹ thuật `03`, `031`, `032`, `021`, không có cha (mục 3.4); còn Q6 (mục 7). Vấn đề `code_digits = 4` của `l10n_vn` neo lại ở mục 9.
+Trạng thái: **đã làm** (2026-10-15). Người dùng duyệt plan ngày 2026-10-15 ("port module này"); Q6 theo phương án đề xuất. Code theo mục 8, chỗ lệch so với kế hoạch ở mục 10. Vấn đề `code_digits = 4` của `l10n_vn` neo lại ở mục 9.
 
 ## 1. Phân tích code nguồn
 
@@ -166,7 +166,7 @@ Thuế nhập khẩu 5%: đề xuất **bỏ**, để bộ thuế giống hệt 
 @template('vn_tt133')
 def _get_vn_tt133_template_data(self):
     return {
-        'name': _("Vietnam - SME accounting (Circular 133/2016/TT-BTC)"),
+        'name': _("SME accounting (Circular 133/2016/TT-BTC)"),   # Odoo thêm "🇻🇳 Vietnam - " phía trước
         'code_digits': '2',                 # '03' không bị đệm thành '030' (A6)
     }
 
@@ -218,7 +218,7 @@ Tài khoản chênh lệch kho: 632 cho 152, 153, 155, 156 (mục 7.3; 19.0 ch�
 | Q3 | Cây của tài khoản kỹ thuật | `03`, `031`, `032`, `021` đều không có tài khoản cha. Mục 3.4, 7.2. | Đã chốt (2026-10-14) |
 | Q4 | Kịch bản chuyển dữ liệu 19.0 | Không làm. | Đã chốt (2026-10-14) |
 | Q5 | Thuế nhập khẩu 5% | Bỏ; bộ thuế giống hệt `l10n_vn`. Thuế này có trong `l10n_vn` 19.0 của Odoo (`tax_import`), bản TT133 chép theo; `l10n_vn` 20.0 đã bỏ. | Đã chốt (2026-10-14) |
-| Q6 | Tài khoản chênh lệch kho (`account_stock_variation_id`) | 632 cho 152, 153, 155, 156. Mục 7.3. | Chờ duyệt |
+| Q6 | Tài khoản chênh lệch kho (`account_stock_variation_id`) | 632 cho 152, 153, 155, 156. Mục 7.3. | Đã chốt (2026-10-15, theo đề xuất) |
 
 ### 7.1. Tài khoản nào không vào sổ, PDF, XML
 
@@ -276,3 +276,20 @@ Bản 19.0 chỉ khai cho 152; tài khoản kho mặc định của công ty l�
   - Đổi mã tài khoản đã có phát sinh: được. `account.account.write` chỉ kiểm mã không trùng (`_ensure_code_is_unique`) và đúng ký tự cho phép (`_check_account_code`).
   - Cập nhật module `l10n_vn` không đổi lại mã: khi nạp lại template, tài khoản đã có chỉ được cập nhật `tag_ids` (`chart_template.py:458`), và mã `131` vẫn khớp mẫu `^1310*$` dùng để nhận ra tài khoản cũ (`chart_template.py:438`).
   - Ghi đè `code_digits = 3` cho template `vn` (chỉ có tác dụng với công ty thiết lập sau) vướng A3: tài khoản đầu tiên của `l10n_vn` là `111` (3 chữ số) nên sổ ngân hàng mới sẽ nhận mã `114` (dò từ `112`, bỏ qua `113` đã có).
+
+## 10. Kết quả (2026-10-15)
+
+Đã làm đủ các bước 1–8. Test: `tools/run_tests.sh l10n_vn_tt133` trên `test_fg_vas` — 9 test, 0 hỏng. Thử thêm bằng shell (rollback): công ty mới nạp `vn_tt133` có 127 tài khoản (102 − 3 cũ + 24 tổng hợp + 4 kỹ thuật), 31 thuế; `03`, `031`, `032`, `021` ở gốc cây; sổ ngân hàng mới nhận `1123` dưới 112, tài khoản tạm `021`.
+
+Lệch so với kế hoạch:
+
+| Mục | Kế hoạch | Thực tế | Lý do |
+|---|---|---|---|
+| 5 | Tên template "Vietnam - SME accounting (…)" | "SME accounting (Circular 133/2016/TT-BTC)" | Odoo tự thêm cờ và tên nước trước tên template (`ir_module.py:13`); giao diện vẫn hiện "🇻🇳 Vietnam - SME accounting (…)" như readme. |
+| 8 bước 6 | Nạp template với context `l10n_check_fields_complete` | Kiểm trực tiếp khoá dữ liệu template và khoá `res.company` (`test_template_keys`) | Với context này, trường của module chưa cài gây `KeyError` (`deferred_*` của Enterprise, `account_production_wip_account_id` của `mrp_account`); `l10n_vn` cũng hỏng như vậy. Ghi ở vault `account.md` §6. |
+| 8 bước 6 | Sổ ngân hàng mới nhận `1123` | Trong test là `1124` | `AccountTestInvoicingCommon` tạo sẵn sổ thẻ tín dụng, sổ này lấy tiền tố ngân hàng nên chiếm `1123`. Trên công ty thật (shell) là `1123`. |
+| 4 | Báo lỗi rõ khi thuế `l10n_vn` trỏ tài khoản TT133 không có | Có, khi nạp template (`ValueError`); thêm test so mã từng tài khoản thuế của `l10n_vn` với mã TT133 cùng xmlid | |
+
+`_post_load_data` chỉ phải gỡ cha cho `031`, `032`: Odoo không ghi lại tài khoản tạm và tài khoản chuyển tiền khi `res.company` đã có (template gán `021`, `03`). Code vẫn duyệt cả bốn cho chắc.
+
+Chưa làm: cài qua giao diện trên một công ty mới và xem tên tiếng Việt (database `test_fg_vas` chưa kích hoạt `vi_VN`).

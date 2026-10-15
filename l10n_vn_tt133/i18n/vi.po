@@ -1,0 +1,74 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_vn_tt133
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-15 02:25+0000\n"
+"PO-Revision-Date: 2026-10-15 02:25+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: l10n_vn_tt133
+#: model:ir.module.module,description:base.module_l10n_vn_tt133
+msgid ""
+"\n"
+"Vietnam - SME Chart of Accounts (Circular 133/2016/TT-BTC)\n"
+"===========================================================\n"
+"\n"
+"Chart of accounts template for small, medium and micro enterprises applying\n"
+"Circular 133/2016/TT-BTC (replacing Decision 48/2006/QD-BTC since 2017-01-01).\n"
+"Not for companies with more than 50% state capital, nor for cooperatives.\n"
+"\n"
+"* summary accounts (111, 112, 333, 642...) as parents of the detail accounts\n"
+"* technical accounts for bank operations outside the chart: 03, 031, 032, 021\n"
+"* the VAT taxes of l10n_vn, booked on the accounts of the Circular\n"
+"* continental accounting: cost of goods sold booked on delivery\n"
+"\n"
+"See readme.md in the module directory.\n"
+msgstr ""
+"\n"
+"Việt Nam - Hệ thống tài khoản doanh nghiệp nhỏ và vừa (Thông tư 133/2016/TT-BTC)\n"
+"=================================================================================\n"
+"\n"
+"Hệ thống tài khoản cho doanh nghiệp nhỏ và vừa, doanh nghiệp siêu nhỏ áp dụng\n"
+"Thông tư 133/2016/TT-BTC (thay Quyết định 48/2006/QĐ-BTC từ 01/01/2017).\n"
+"Không áp dụng cho doanh nghiệp có trên 50% vốn nhà nước và hợp tác xã.\n"
+"\n"
+"* tài khoản tổng hợp (111, 112, 333, 642...) là tài khoản cha của tài khoản chi tiết\n"
+"* tài khoản kỹ thuật cho nghiệp vụ ngân hàng, ngoài danh mục: 03, 031, 032, 021\n"
+"* thuế GTGT của l10n_vn, hạch toán vào tài khoản theo Thông tư\n"
+"* kế toán kiểu lục địa: giá vốn ghi khi xuất kho\n"
+"\n"
+"Xem readme.md trong thư mục module.\n"
+
+#. module: l10n_vn_tt133
+#. odoo-python
+#: code:addons/l10n_vn_tt133/models/template_vn_tt133.py:0
+msgid "Cash"
+msgstr "Tiền mặt"
+
+#. module: l10n_vn_tt133
+#: model:ir.module.module,summary:base.module_l10n_vn_tt133
+msgid ""
+"Chart of accounts for small and medium enterprises, Circular 133/2016/TT-BTC"
+msgstr ""
+"Hệ thống tài khoản doanh nghiệp nhỏ và vừa, Thông tư 133/2016/TT-BTC"
+
+#. module: l10n_vn_tt133
+#: model:ir.module.module,shortdesc:base.module_l10n_vn_tt133
+msgid "Vietnam - SME Chart of Accounts (Circular 133/2016)"
+msgstr "Việt Nam - Hệ thống tài khoản DNNVV (Thông tư 133/2016)"
+
+#. module: l10n_vn_tt133
+#. odoo-python
+#: code:addons/l10n_vn_tt133/models/template_vn_tt133.py:0
+msgid "SME accounting (Circular 133/2016/TT-BTC)"
+msgstr "Kế toán DNNVV (Thông tư 133/2016/TT-BTC)"
