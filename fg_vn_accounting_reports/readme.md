@@ -60,7 +60,7 @@ Nút **Excel** xuất đúng những gì đang lọc trên màn hình.
 Nút **PDF** tạo file in theo khổ A4 với các đặc điểm mà sổ kế toán Việt Nam yêu cầu:
 
 - **Cộng chuyển trang.** Khi sổ dài hơn một trang, cuối mỗi trang có dòng "Cộng chuyển trang" ghi số luỹ kế đến hết trang đó, và đầu trang sau có dòng "Số dư đầu trang" mang số đó sang. Báo cáo chọn những cột nào được cộng dồn; cột số dư thì mang giá trị cuối cùng sang chứ không cộng.
-- **Đánh số trang** dạng "Trang 3/12" ở cuối mỗi trang. Báo cáo chia theo nhóm (sổ cái, sổ chi tiết vật tư) đánh số riêng cho từng nhóm: trang thứ ba trong sáu trang của một tài khoản in "Trang 3/6", khớp với dòng "Sổ này bao gồm 6 trang" của tài khoản đó.
+- **Đánh số trang** dạng "Trang 3/12" ở cuối mỗi trang. Báo cáo chia theo nhóm (sổ cái, sổ chi tiết vật tư) đánh số riêng cho từng nhóm: trang thứ ba trong sáu trang của một tài khoản in "Trang 3/6", khớp với dòng "Sổ này bao gồm 6 trang" của tài khoản đó. File PDF của các báo cáo này có mục lục (bookmark), mỗi nhóm một mục: bấm vào tên nhóm ở khung mục lục của trình xem PDF là đến trang đầu của nhóm.
 - **Tiêu đề lặp lại** trên mọi trang: tên công ty, tên báo cáo, kỳ báo cáo và dòng tiêu đề cột.
 - **Mỗi nhóm bắt đầu ở trang mới** với báo cáo cần vậy, ví dụ sổ cái mỗi tài khoản một phần riêng. Tên nhóm được in ở đầu mọi trang của nhóm. Số luỹ kế được tính lại từ đầu cho từng nhóm.
 - **Lề đối xứng** khi in hai mặt: số trang nằm ở mép ngoài, và mỗi nhóm luôn bắt đầu ở trang lẻ (thêm một trang trắng nếu cần; trang trắng không có tiêu đề và số trang).

@@ -201,6 +201,27 @@ class TestPdfRenderer(FakeReportMixin, TransactionCase):
             self.assertIn(f"Page {page}/{total}", text)
         self.assertNotIn(f"Page {len(pages)}/{len(pages)}", pages[-1])
 
+    def test_render_outline_points_at_each_group(self):
+        """ The PDF outline (bookmarks) has one entry per group, pointing at
+        the first page of the group and skipping the filler pages. """
+        self.groups = make_groups(group_count=3, line_count=2)
+        content = self._renderer(GroupPaginatedPDF, mirror_margin=True).render()
+        # read the PDF objects: get_destination_page_number() of PyPDF2 2.x
+        # fails on the /Dest arrays written by ReportLab
+        root = PdfReader(io.BytesIO(content)).trailer['/Root']
+        self.assertEqual(root['/PageMode'], '/UseOutlines')
+        page_ids = [ref.idnum for ref in root['/Pages'].raw_get('/Kids')]
+        entries, item = [], root['/Outlines']['/First']
+        while item is not None:
+            entries.append((item['/Title'], page_ids.index(item['/Dest'][0].idnum) + 1))
+            item = item['/Next'] if '/Next' in item else None
+        self.assertEqual(entries, [("Account 110", 1), ("Account 111", 3), ("Account 112", 5)])
+
+    def test_render_single_report_opens_without_outline(self):
+        content = self._renderer().render()
+        root = PdfReader(io.BytesIO(content)).trailer['/Root']
+        self.assertNotEqual(root.get('/PageMode'), '/UseOutlines')
+
     def test_paginate_reserves_the_tail(self):
         renderer = self._renderer()
         carry_h = renderer._make_carry_row({2: 0, 3: 0}, {}, RT_CARRY_FWD)['height']

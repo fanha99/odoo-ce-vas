@@ -510,3 +510,13 @@ Test `test_render_mirror_margins_start_groups_on_odd_pages` trước đây khẳ
 Kiểm: S03b 60 tài khoản 1 đến 60 dòng, lề đối xứng, A4 ngang và đứng: trước khi sửa 151/143 và 125/120 trang (thực/dự kiến), sau khi sửa số trang khớp, mọi tài khoản bắt đầu ở trang lẻ, số trang theo tài khoản. 17.0 kiểm thêm trên dữ liệu thật; 19.0 kiểm S06 trên dữ liệu thật.
 
 Chưa làm: chạy bộ test của module trên Odoo 20.0 (cần database 20.0).
+
+## 12. Mục lục PDF theo nhóm (2026-10-18; cùng làm ở 17.0 và 19.0)
+
+Khi còn in bằng QWeb, mỗi tài khoản (S03b) hay mặt hàng (S06) mở đầu bằng `<h1 class="group-title">` và wkhtmltopdf tự lập mục lục PDF từ các thẻ đó. Từ khi chuyển sang ReportLab (17.0, 2026-04-22) mục lục mất, vì ReportLab không tự lập.
+
+Nay `_render_group_paginated()` truyền cho `_NumberedCanvas` danh sách trang đầu của từng nhóm (lấy từ `_page_info`) cùng nhãn nhóm (`_page_group_labels`, tức `_format_group_label()`). Canvas tạo bookmark và mục lục trong `save()`, lúc phát lại từng trang: trước đó trang chưa được ghi thật, bookmark nào cũng sẽ trỏ về trang 1. File mở ra hiện sẵn khung mục lục (`/PageMode /UseOutlines`). Trang trắng chèn thêm không có mục. Báo cáo không ngắt theo nhóm không có mục lục.
+
+Test: `test_render_outline_points_at_each_group`, `test_render_single_report_opens_without_outline`. Test đọc thẳng đối tượng PDF vì `get_destination_page_number()` của PyPDF2 2.12 lỗi với mảng `/Dest` mà ReportLab ghi (file vẫn đúng chuẩn).
+
+Kiểm: 20.0 bằng S03b 60 tài khoản (env giả), A4 ngang và đứng, mục lục khớp trang đầu từng tài khoản. 17.0 trên dữ liệu thật: S03b 10 mục và S06 34 mục. 19.0 trên dữ liệu thật: S06 97 mục.

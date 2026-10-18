@@ -50,11 +50,17 @@ class _NumberedCanvas(rl_canvas.Canvas):
 
     page_info {PDF page: (page in the group, pages of the group)} numbers the
     pages of each group (account, product, ...) instead of the whole document.
+
+    outline {PDF page: group label} is the outline (bookmarks) of the PDF,
+    pointing at the first page of each group. It must be built in save():
+    before that the pages are not written yet, and every bookmark would
+    point at page 1.
     """
-    def __init__(self, *args, page_info=None, **kwargs):
+    def __init__(self, *args, page_info=None, outline=None, **kwargs):
         rl_canvas.Canvas.__init__(self, *args, **kwargs)
         self._saved_page_states = []
         self._page_info = page_info or {}
+        self._outline = outline or {}
 
     def showPage(self):
         self._saved_page_states.append(dict(self.__dict__))
@@ -74,7 +80,14 @@ class _NumberedCanvas(rl_canvas.Canvas):
                     self.drawString(xl, y, text)
                 else:
                     self.drawRightString(xr, y, text)
+            label = self._outline.get(page_num)
+            if label:
+                key = f'group_{page_num}'
+                self.bookmarkPage(key)
+                self.addOutlineEntry(label, key, level=0)
             rl_canvas.Canvas.showPage(self)
+        if self._outline:
+            self.showOutline()
         rl_canvas.Canvas.save(self)
 
 
@@ -762,8 +775,15 @@ class FanhaReportPDF:
                  abs_page_idx += 1
 
         # ── Build doc with per-account canvas ────────────────────────────
+        outline = {
+            page: self._page_group_labels[page]
+            for page, (group_page, _) in self._page_info.items()
+            if group_page == 1
+        }
+
         def make_canvas(*args, **kwargs):
-            return _NumberedCanvas(*args, page_info=self._page_info, **kwargs)
+            return _NumberedCanvas(*args, page_info=self._page_info,
+                                   outline=outline, **kwargs)
 
         doc = self._build_doc(buf, hdr_h, ftr_h)
         doc.build(story, canvasmaker=make_canvas)

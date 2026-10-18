@@ -80,7 +80,7 @@ Chiều cao vùng tiêu đề tự tính theo các dòng (tối thiểu 22 mm). 
 | `_get_carry_cols()` | `[]` | Chỉ số các cột được cộng dồn qua trang. Rỗng thì không có dòng cộng chuyển trang |
 | `_get_carry_last_cols()` | `[]` | Cột mang giá trị cuối cùng sang trang (số dư luỹ kế); dòng khai `last_vals: {cột: số}` |
 | `_get_carry_label_col()` | `0` | Cột ghi nhãn "Cộng chuyển trang" |
-| `_should_paginate_by_group()` | `False` | Mỗi nhóm bắt đầu trang mới, số trang đánh riêng cho từng nhóm (`_page_info`); cần `_group_to_rows(group)` |
+| `_should_paginate_by_group()` | `False` | Mỗi nhóm bắt đầu trang mới, số trang đánh riêng cho từng nhóm (`_page_info`), mục lục PDF mỗi nhóm một mục (tên theo `_format_group_label()`); cần `_group_to_rows(group)` |
 | `_should_add_signature_section()` | `True` | Phần ký tên |
 | `_should_add_journal_info_section()` | `False` | "Sổ này bao gồm … trang" và ngày mở sổ |
 | `_format_group_label(group)` | tên nhóm | Nhãn nhóm |
