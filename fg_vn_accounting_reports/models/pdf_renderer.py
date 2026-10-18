@@ -47,10 +47,14 @@ class _NumberedCanvas(rl_canvas.Canvas):
     Two-pass canvas: saves page states on showPage(), then in save() replays
     all pages and draws 'Page X/Y' now that total page count is known.
     The label is translated by the renderer, which has the environment.
+
+    page_info {PDF page: (page in the group, pages of the group)} numbers the
+    pages of each group (account, product, ...) instead of the whole document.
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, page_info=None, **kwargs):
         rl_canvas.Canvas.__init__(self, *args, **kwargs)
         self._saved_page_states = []
+        self._page_info = page_info or {}
 
     def showPage(self):
         self._saved_page_states.append(dict(self.__dict__))
@@ -64,7 +68,8 @@ class _NumberedCanvas(rl_canvas.Canvas):
             if info:
                 align, xl, xr, y, fn, fs, label = info
                 self.setFont(fn, fs)
-                text = label % {'page': page_num, 'total': total}
+                page, pages = self._page_info.get(page_num, (page_num, total))
+                text = label % {'page': page, 'total': pages}
                 if align == 'left':
                     self.drawString(xl, y, text)
                 else:
@@ -400,7 +405,14 @@ class FanhaReportPDF:
 
     # ── Pagination ────────────────────────────────────────────────────────
 
-    def _paginate(self, all_rows, avail_h):
+    def _paginate(self, all_rows, avail_h, tail_h=0):
+        """ Split the rows into pages.
+
+        :param float tail_h: height of what is printed after the table on the
+            last page (book information, signatures). It must be reserved,
+            otherwise ReportLab pushes it to a page the page numbering does
+            not know about.
+        """
         carry_last_cols = self._get_carry_last_cols()
         if self._carry_cols or carry_last_cols:
             dummy = self._make_carry_row(
@@ -427,7 +439,13 @@ class FanhaReportPDF:
             if row.get('keep_with_next') and i + 1 < len(all_rows):
                 keep_next_h = all_rows[i + 1]['height']
 
-            if cur_page and cur_h + h + keep_next_h + carry_row_h > avail_h:
+            # the last page has no carried forward row but the tail: the last
+            # row (and the row kept with it) reserves the room for the tail
+            last_on_page = i == len(all_rows) - 1 or (
+                row.get('keep_with_next') and i + 2 == len(all_rows))
+            reserve_h = max(carry_row_h, tail_h) if last_on_page else carry_row_h
+
+            if cur_page and cur_h + h + keep_next_h + reserve_h > avail_h:
                 if is_reset or not self._carry_cols:
                     # New section starts here — plain page break, no carry rows
                     pages.append(cur_page)
@@ -546,6 +564,24 @@ class FanhaReportPDF:
         
         return [sig_tbl]
 
+    def _make_tail_flowables(self, num_pages=None):
+        """ What is printed after the table on the last page: book
+        information and signatures. """
+        flowables = []
+        if self._should_add_journal_info_section():
+            flowables.append(Spacer(1, 5 * mm))
+            flowables.extend(self._make_journal_info_section(num_pages))
+            flowables.append(Spacer(1, 2 * mm))
+        if self._should_add_signature_section():
+            flowables.append(Spacer(1, 5 * mm))
+            flowables.extend(self._make_signature_section())
+        return flowables
+
+    def _tail_height(self):
+        """ Height of _make_tail_flowables(), reserved by _paginate(). """
+        frame_w = self._frame_width()
+        return sum(f.wrap(frame_w, self.PAGE_H)[1] for f in self._make_tail_flowables())
+
     # ── Render ────────────────────────────────────────────────────────────
     def _should_paginate_by_group(self):
         """Override to True if need per-group pagination (like S03b)."""
@@ -582,7 +618,7 @@ class FanhaReportPDF:
             if row.get('height') is None:
                 row['height'] = self._measure_row_height(row['cells'])
 
-        pages = self._paginate(all_rows, avail_h)
+        pages = self._paginate(all_rows, avail_h, self._tail_height())
 
         story = []
         for page_idx, page_rows in enumerate(pages):
@@ -622,14 +658,7 @@ class FanhaReportPDF:
             tbl.setStyle(self._base_table_style(extra_cmds))
             story.append(tbl)
 
-        if self._should_add_journal_info_section():
-            story.append(Spacer(1, 5 * mm))
-            info_elements = self._make_journal_info_section(len(pages))
-            story.extend(info_elements)
-            story.append(Spacer(1, 2 * mm))
-        if self._should_add_signature_section():
-            story.append(Spacer(1, 5 * mm))
-            story.extend(self._make_signature_section())
+        story.extend(self._make_tail_flowables(len(pages)))
 
         doc = self._build_doc(buf, hdr_h, ftr_h)
         doc.build(story, canvasmaker=_NumberedCanvas)
@@ -650,13 +679,14 @@ class FanhaReportPDF:
         group_paginated         = []
         blank_after             = []  # True if a blank page must follow group i
         page_num                = 1
+        tail_h                  = self._tail_height()
 
         for i, group in enumerate(self.groups):
             rows = self._group_to_rows(group)
             for row in rows:
                 if row.get('height') is None:
                     row['height'] = self._measure_row_height(row['cells'])
-            pages     = self._paginate(rows, avail_h)
+            pages     = self._paginate(rows, avail_h, tail_h)
             num_pages = len(pages)
             group_paginated.append(pages)
             label = self._format_group_label(group)
@@ -727,20 +757,16 @@ class FanhaReportPDF:
 
                  # Add journal info and signature section after the last page of each group
                  if p_idx == len(pages) - 1:
-                     if self._should_add_journal_info_section():
-                         story.append(Spacer(1, 5 * mm))
-                         info_elements = self._make_journal_info_section(len(pages))
-                         story.extend(info_elements)
-                         story.append(Spacer(1, 2 * mm))
-                     if self._should_add_signature_section():
-                         story.append(Spacer(1, 5 * mm))
-                         story.extend(self._make_signature_section())
+                     story.extend(self._make_tail_flowables(len(pages)))
 
                  abs_page_idx += 1
 
         # ── Build doc with per-account canvas ────────────────────────────
+        def make_canvas(*args, **kwargs):
+            return _NumberedCanvas(*args, page_info=self._page_info, **kwargs)
+
         doc = self._build_doc(buf, hdr_h, ftr_h)
-        doc.build(story, canvasmaker=_NumberedCanvas)
+        doc.build(story, canvasmaker=make_canvas)
         buf.seek(0)
         return buf.read()
 

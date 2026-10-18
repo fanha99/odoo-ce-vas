@@ -25,6 +25,10 @@ class BookPDF(FakeReportPDF):
         return True
 
 
+class GroupBookPDF(GroupPaginatedPDF, BookPDF):
+    """ A book per group, as S03b: information and signatures after each group. """
+
+
 def data_row(amount, **extra):
     return {
         'type': RT_DATA,
@@ -180,11 +184,48 @@ class TestPdfRenderer(FakeReportMixin, TransactionCase):
         self.assertIn("Account 110", pages[0])
         self.assertIn("Account 111", pages[2])
         self.assertIn("Account 112", pages[4])
-        # a filler page has no header and no page number, but counts as a page
+        # a filler page has no header and no page number
         self.assertEqual(pages[1].strip(), '')
         self.assertEqual(pages[3].strip(), '')
-        self.assertIn("Page 1/5", pages[0])
-        self.assertIn("Page 3/5", pages[2])
+        # pages are numbered per group
+        self.assertIn("Page 1/1", pages[0])
+        self.assertIn("Page 1/1", pages[2])
+
+    def test_render_numbers_the_pages_of_each_group(self):
+        self.groups = make_groups(group_count=2, line_count=90)
+        renderer = self._renderer(GroupPaginatedPDF)
+        pages = self._read(renderer.render())
+        self.assertGreater(len(pages), 2)
+        for number, text in enumerate(pages, 1):
+            page, total = renderer._page_info[number]
+            self.assertIn(f"Page {page}/{total}", text)
+        self.assertNotIn(f"Page {len(pages)}/{len(pages)}", pages[-1])
+
+    def test_paginate_reserves_the_tail(self):
+        renderer = self._renderer()
+        carry_h = renderer._make_carry_row({2: 0, 3: 0}, {}, RT_CARRY_FWD)['height']
+        rows = [data_row(100), data_row(200)]
+        self.assertEqual(len(renderer._paginate(rows, avail_h=20 + carry_h)), 1)
+        # both rows fit, but not with the signatures after them: the last row
+        # goes to the next page with the signatures
+        pages = renderer._paginate(rows, avail_h=20 + carry_h, tail_h=carry_h + 5)
+        self.assertEqual([row['type'] for row in pages[0]], [RT_DATA, RT_CARRY_FWD])
+        self.assertEqual([row['type'] for row in pages[1]], [RT_BROUGHT_FWD, RT_DATA])
+
+    def test_render_signatures_never_add_a_page(self):
+        """ With mirror margins, every group starts on an odd page: the
+        signatures after a nearly full last page must not spill over to a page
+        the numbering does not know about. """
+        self.groups = make_groups(group_count=40, line_count=1)
+        for count, group in enumerate(self.groups, 1):
+            group['lines'] = make_groups(group_count=1, line_count=count)[0]['lines']
+        for orientation in ('portrait', 'landscape'):
+            renderer = self._renderer(GroupBookPDF, mirror_margin=True, orientation=orientation)
+            pages = self._read(renderer.render())
+            self.assertEqual(len(pages), len(renderer._page_info), orientation)
+            for number, (page, _total) in renderer._page_info.items():
+                if page == 1:
+                    self.assertEqual(number % 2, 1, f"{orientation}: a group starts on page {number}")
 
     # ------------------------------------------------------------ page header
 

@@ -80,12 +80,14 @@ Chiều cao vùng tiêu đề tự tính theo các dòng (tối thiểu 22 mm). 
 | `_get_carry_cols()` | `[]` | Chỉ số các cột được cộng dồn qua trang. Rỗng thì không có dòng cộng chuyển trang |
 | `_get_carry_last_cols()` | `[]` | Cột mang giá trị cuối cùng sang trang (số dư luỹ kế); dòng khai `last_vals: {cột: số}` |
 | `_get_carry_label_col()` | `0` | Cột ghi nhãn "Cộng chuyển trang" |
-| `_should_paginate_by_group()` | `False` | Mỗi nhóm bắt đầu trang mới; cần `_group_to_rows(group)` |
+| `_should_paginate_by_group()` | `False` | Mỗi nhóm bắt đầu trang mới, số trang đánh riêng cho từng nhóm (`_page_info`); cần `_group_to_rows(group)` |
 | `_should_add_signature_section()` | `True` | Phần ký tên |
 | `_should_add_journal_info_section()` | `False` | "Sổ này bao gồm … trang" và ngày mở sổ |
 | `_format_group_label(group)` | tên nhóm | Nhãn nhóm |
 
 Thuộc tính của dòng: `carry_reset: True` đặt lại số cộng dồn (đầu mỗi nhóm); `keep_with_next: True` giữ dòng cùng trang với dòng sau; `span_all`, `span_first_two` gộp ô.
+
+Phân trang tính trước toàn bộ số trang (`_page_info`: trang trong nhóm, số trang của nhóm, trang trắng chèn thêm) rồi mới dựng PDF; số trang in ra, nhãn nhóm và trang lẻ khi in lề đối xứng đều dựa vào đó. Vì vậy mọi thứ in sau bảng ở trang cuối phải được tính chỗ trước: `_make_tail_flowables()` trả phần ghi sổ và phần ký tên, `_paginate(rows, avail_h, tail_h)` chừa chiều cao của nó (`_tail_height()`) ở trang cuối; không đủ chỗ thì dòng cuối (cùng dòng `keep_with_next` trước nó) sang trang mới. Báo cáo thêm nội dung in sau bảng thì ghi đè `_make_tail_flowables()`, gọi `super()`; không chèn thẳng vào story, nếu không ReportLab sẽ tự đẩy phần đó sang một trang mà việc đánh số không biết.
 
 ## 4. Wizard
 

@@ -495,3 +495,18 @@ Nhận xét:
 - Các số tuyệt đối cao hơn mục 9 của `fg_vn_report_s03a/PLAN.md` khoảng 10% ngay cả với code cũ: database và ngày đo khác nhau, không so trực tiếp được.
 
 Chưa làm: mở form sổ nhật ký trên trình duyệt để nhìn bố cục hai ô mới (đã kiểm bằng máy rằng view nạp được và bản dịch tiếng Việt có hiệu lực).
+
+## 11. Sửa hai lỗi phân trang PDF ngắt theo nhóm (2026-10-18; cùng sửa ở 17.0 và 19.0)
+
+Hai lỗi có từ 17.0, chép nguyên sang 19.0 và 20.0 (mục 5 ghi "không sửa thuật toán phân trang"). Phát hiện khi in sổ cái lề đối xứng trên dữ liệu thật.
+
+| Lỗi | Nguyên nhân | Sửa |
+|---|---|---|
+| Khi in lề đối xứng, có tài khoản bắt đầu ở trang chẵn, nhãn "Tài khoản: …" in nhầm trang, lề gáy đảo bên; tài khoản ít dòng bị đẩy sang trang sau | `_paginate()` không tính phần ghi sổ và phần ký tên (khoảng 30 mm) in sau bảng. Trang cuối của một tài khoản còn ít chỗ thì ReportLab tự đẩy phần đó sang một trang mới mà `_page_info` không biết, mọi trang sau lệch một trang | `_make_tail_flowables()` dựng phần in sau bảng; `_paginate(rows, avail_h, tail_h)` chừa chiều cao của nó ở trang cuối, không đủ chỗ thì dòng cuối sang trang mới cùng phần ký tên. Áp dụng cả cho báo cáo không ngắt theo nhóm |
+| Số trang đánh liên tục cả file thay vì theo từng tài khoản, mặt hàng | 17.0 commit `2b65a73` (2026-04-22) đưa phần dựng PDF theo nhóm lên lớp cơ sở nhưng dùng `_NumberedCanvas` đánh số cả file; canvas riêng của S03b và S06 (đánh số theo `_page_info`) bị bỏ | `_NumberedCanvas(page_info=...)`: `_render_group_paginated()` truyền `_page_info`, số trang lấy theo nhóm |
+
+Test `test_render_mirror_margins_start_groups_on_odd_pages` trước đây khẳng định "Page 3/5" ở trang đầu nhóm thứ hai, tức là khoá đúng lỗi thứ hai; nay là "Page 1/1". Test mới: `test_paginate_reserves_the_tail`, `test_render_numbers_the_pages_of_each_group`, `test_render_signatures_never_add_a_page`.
+
+Kiểm: S03b 60 tài khoản 1 đến 60 dòng, lề đối xứng, A4 ngang và đứng: trước khi sửa 151/143 và 125/120 trang (thực/dự kiến), sau khi sửa số trang khớp, mọi tài khoản bắt đầu ở trang lẻ, số trang theo tài khoản. 17.0 kiểm thêm trên dữ liệu thật; 19.0 kiểm S06 trên dữ liệu thật.
+
+Chưa làm: chạy bộ test của module trên Odoo 20.0 (cần database 20.0).
