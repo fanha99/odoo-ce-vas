@@ -1,0 +1,88 @@
+/* Stock Valuation Report PDF Custom Styles */
+
+.o_stock_valuation_report {
+    /* Giảm font size cho toàn bộ bảng */
+    .o_table {
+        font-size: 0.65rem !important;
+        
+        th, td {
+            font-size: 0.65rem !important;
+            padding: 2px 4px !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Header styling */
+        > thead {
+            th {
+                text-align: center !important;
+                background-color: #4a6785 !important;
+                color: white !important;
+                font-weight: bold !important;
+                border: 1px solid #3d5a73 !important;
+            }
+        }
+        
+        /* Body styling */
+        > tbody {
+            /* Dòng kẻ mờ giữa các sản phẩm */
+            tr {
+                border-bottom: 1px solid #d0d0d0 !important;
+            }
+            
+            /* Màu nền xen kẽ cho các hàng */
+            tr:nth-child(even) {
+                background-color: #f8f8f8 !important;
+            }
+            
+            tr:nth-child(odd) {
+                background-color: #ffffff !important;
+            }
+            
+            /* Canh lề phải cho các cột số */
+            td {
+                text-align: right !important;
+            }
+            
+            /* Cột tên sản phẩm - canh trái */
+            td:first-child {
+                text-align: left !important;
+            }
+            
+            /* Cột ĐVT - canh trái */
+            td:nth-child(2) {
+                text-align: left !important;
+            }
+            
+            /* Các cột Giá trị (GT) - màu xanh nhạt - cột 4, 6, 8, 10 */
+            tr:not(.o_line_level_0) {
+                td:nth-child(4),
+                td:nth-child(6),
+                td:nth-child(8),
+                td:nth-child(10) {
+                    background-color: rgba(74, 103, 133, 0.08) !important;
+                }
+            }
+            
+            /* Các cột Số lượng (SL) - màu vàng nhạt - cột 3, 5, 7, 9 */
+            tr:not(.o_line_level_0) {
+                td:nth-child(3),
+                td:nth-child(5),
+                td:nth-child(7),
+                td:nth-child(9) {
+                    background-color: rgba(133, 103, 74, 0.06) !important;
+                }
+            }
+            
+            /* Total row (level 0) - dòng tổng cộng */
+            .o_line_level_0 {
+                background-color: #d9edf7 !important;
+                font-weight: bold !important;
+                border-top: 2px solid #4a6785 !important;
+                
+                td {
+                    background-color: #d9edf7 !important;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu item under Accounting > Reporting -->
+    <menuitem id="menu_account_journal_items_report"
+              name="Sổ chi tiết tài khoản (S03b)"
+              action="action_account_journal_items_report_wizard"
+              parent="account.menu_finance_reports"
+              sequence="100"/>
+</odoo>

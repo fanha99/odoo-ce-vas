@@ -1,0 +1,29 @@
+/* Custom styles for Vietnamese Balance Sheet Report */
+
+.vn_balance_sheet_report {
+    /* Smaller font for better readability with many columns */
+    font-size: 12px;
+    
+    table.o_account_reports_table {
+        font-size: 12px;
+        
+        th, td {
+            font-size: 12px;
+            padding: 4px 6px;
+        }
+        
+        /* Style for custom columns (Mã số, Thuyết minh) */
+        .o_account_report_column_code,
+        .o_account_report_column_note {
+            text-align: center;
+            min-width: 60px;
+        }
+        
+        /* Bold for header rows */
+        .o_account_reports_level0 {
+            td, th {
+                font-weight: bold;
+            }
+        }
+    }
+}

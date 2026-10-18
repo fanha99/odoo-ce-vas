@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard Form View -->
+    <record id="view_stock_valuation_report_wizard_form" model="ir.ui.view">
+        <field name="name">stock.valuation.report.wizard.form</field>
+        <field name="model">stock.valuation.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Báo cáo Xuất Nhập Tồn">
+                <!-- Hidden field to make company_id always available for domain -->
+                <field name="company_id" invisible="1"/>
+                <group>
+                    <group string="Khoảng thời gian">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Tùy chọn">
+                        <field name="company_id" 
+                               groups="base.group_multi_company"
+                               readonly="0"/>
+                        <field name="hide_zero_lines"/>
+                        <field name="group_by_category"/>
+                    </group>
+                </group>
+                <group string="Bộ lọc">
+                    <group>
+                        <field name="product_categ_ids" 
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="product_ids" 
+                               widget="many2many_tags"
+                               options="{'no_create': True}"
+                               domain="[('type', '=', 'product')]"/>
+                    </group>
+                    <group>
+                        <field name="warehouse_ids" 
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="button_export_html"
+                            string="Xem trước"
+                            type="object"
+                            class="btn-primary"/>
+                    <button name="button_export_pdf"
+                            string="In PDF" 
+                            type="object" 
+                            class="btn-secondary"/>
+                    <button name="button_export_xlsx" 
+                            string="Xuất Excel" 
+                            type="object" 
+                            class="btn-secondary"/>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_stock_valuation_report_wizard" model="ir.actions.act_window">
+        <field name="name">Báo cáo Xuất Nhập Tồn</field>
+        <field name="res_model">stock.valuation.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_stock_valuation_report_wizard_form"/>
+    </record>
+</odoo>

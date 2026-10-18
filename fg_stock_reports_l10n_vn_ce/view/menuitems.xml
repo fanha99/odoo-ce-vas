@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Menu under Accounting > Reports (chỉ Stock Manager) -->
+        <menuitem id="menu_accounting_vn_stock_reports_oca"
+                  name="Vietnam Stock Reports OCA"
+                  parent="account.menu_finance_reports"
+                  groups="stock.group_stock_manager"
+                  sequence="0"/>
+
+        <menuitem id="menu_action_stock_valuation_layer_report_accounting"
+                  name="Stock Valuation Report"
+                  action="action_stock_valuation_report_wizard"
+                  parent="menu_accounting_vn_stock_reports_oca"
+                  groups="stock.group_stock_manager"
+                  sequence="100"/>
+
+        <!-- Menu under Inventory > Reporting (chỉ Stock Manager) -->
+        <menuitem id="menu_vn_stock_reports_oca"
+                  name="Vietnam Stock Reports OCA"
+                  parent="stock.menu_warehouse_report"
+                  groups="stock.group_stock_manager"
+                  sequence="0"/>
+
+        <menuitem id="menu_action_stock_valuation_layer_report_stock"
+                  name="Stock Valuation Report"
+                  action="action_stock_valuation_report_wizard"
+                  parent="menu_vn_stock_reports_oca"
+                  groups="stock.group_stock_manager"
+                  sequence="100"/>
+    </data>
+</odoo>

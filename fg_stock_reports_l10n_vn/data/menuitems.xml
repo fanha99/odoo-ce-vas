@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Action for Stock Valuation Report -->
+        <record id="action_stock_valuation_layer_report" model="ir.actions.client">
+            <field name="name">Stock Valuation Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('stock_valuation_layer_report')}"/>
+        </record>
+
+        <!-- Menu under Accounting > Reports (chỉ Stock Manager) -->
+        <menuitem id="menu_accounting_vn_stock_reports"
+                  name="Vietnam Stock Reports"
+                  parent="account.menu_finance_reports"
+                  groups="stock.group_stock_manager"
+                  sequence="0"/>
+
+        <menuitem id="menu_action_stock_valuation_layer_report_accounting"
+                  name="Stock Valuation Report"
+                  action="action_stock_valuation_layer_report"
+                  parent="menu_accounting_vn_stock_reports"
+                  groups="stock.group_stock_manager"
+                  sequence="100"/>
+
+        <!-- Menu under Inventory > Reporting (chỉ Stock Manager) -->
+        <menuitem id="menu_vn_stock_reports"
+                  name="Vietnam Stock Reports"
+                  parent="stock.menu_warehouse_report"
+                  groups="stock.group_stock_manager"
+                  sequence="0"/>
+
+        <menuitem id="menu_action_stock_valuation_layer_report_stock"
+                  name="Stock Valuation Report"
+                  action="action_stock_valuation_layer_report"
+                  parent="menu_vn_stock_reports"
+                  groups="stock.group_stock_manager"
+                  sequence="100"/>
+    </data>
+</odoo>

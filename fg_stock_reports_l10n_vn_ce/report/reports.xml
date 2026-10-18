@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PDF/HTML Report -->
+    <record id="action_report_stock_valuation" model="ir.actions.report">
+        <field name="name">Báo cáo Xuất Nhập Tồn</field>
+        <field name="model">stock.valuation.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fg_stock_reports_l10n_vn_ce.report_stock_valuation</field>
+        <field name="report_file">fg_stock_reports_l10n_vn_ce.report_stock_valuation</field>
+        <field name="print_report_name">'Bao_cao_Xuat_Nhap_Ton_%s_%s' % (object.date_from, object.date_to)</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="fg_stock_reports_l10n_vn_ce.paperformat_stock_valuation_report"/>
+    </record>
+
+    <!-- HTML Report -->
+    <record id="action_report_stock_valuation_html" model="ir.actions.report">
+        <field name="name">Báo cáo Xuất Nhập Tồn (HTML)</field>
+        <field name="model">stock.valuation.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">fg_stock_reports_l10n_vn_ce.report_stock_valuation</field>
+        <field name="report_file">fg_stock_reports_l10n_vn_ce.report_stock_valuation</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- XLSX Report -->
+    <record id="action_report_stock_valuation_xlsx" model="ir.actions.report">
+        <field name="name">Báo cáo Xuất Nhập Tồn (Excel)</field>
+        <field name="model">stock.valuation.report.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">fg_stock_reports_l10n_vn_ce.report_stock_valuation_xlsx</field>
+        <field name="report_file">fg_stock_reports_l10n_vn_ce.report_stock_valuation_xlsx</field>
+        <field name="print_report_name">'Bao_cao_Xuat_Nhap_Ton_%s_%s' % (object.date_from, object.date_to)</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

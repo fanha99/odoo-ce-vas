@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom PDF export table header với hỗ trợ colspan riêng cho từng header -->
+    <template id="stock_pdf_export_main_table_header" name="Stock Report PDF Table Header">
+        <thead id="table_header">
+            <t t-foreach="options['column_headers']" t-as="column_header">
+                <tr>
+                    <!-- First empty column -->
+                    <th/>
+
+                    <!-- Other columns - với hỗ trợ colspan riêng cho từng header -->
+                    <t t-foreach="column_header * column_headers_render_data['level_repetitions'][column_header_index]" t-as="header">
+                        <!-- Sử dụng header.get('colspan') nếu có, nếu không dùng level_colspan mặc định -->
+                        <th t-att-colspan="header.get('colspan') or column_headers_render_data['level_colspan'][column_header_index]" class="o_overflow_name">
+                            <t t-out="header.get('name')"/>
+                        </th>
+                    </t>
+
+                    <th t-if="options.get('show_growth_comparison')">%</th>
+                </tr>
+            </t>
+            <!-- Custom subheaders -->
+            <t t-if="column_headers_render_data['custom_subheaders']">
+                <tr>
+                    <!-- First empty column -->
+                    <th/>
+
+                    <!-- Other columns -->
+                    <t t-foreach="column_headers_render_data['custom_subheaders']" t-as="subheader">
+                        <th t-att-colspan="subheader.get('colspan', 1)">
+                            <t t-out="subheader.get('name')"/>
+                        </th>
+                    </t>
+                </tr>
+            </t>
+            <tr>
+                <!-- First empty column -->
+                <th/>
+
+                <t t-foreach="options['columns']" t-as="subheader">
+                    <th>
+                        <t t-out="subheader.get('name')"/>
+                    </th>
+                </t>
+            </tr>
+        </thead>
+    </template>
+</odoo>

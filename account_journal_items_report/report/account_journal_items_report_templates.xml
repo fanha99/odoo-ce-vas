@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Paperformat A4 Portrait -->
+    <record id="paperformat_journal_items_portrait" model="report.paperformat">
+        <field name="name">A4 Portrait - Journal Items</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">25</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <!-- PDF Report Action -->
+    <record id="action_report_journal_items" model="ir.actions.report">
+        <field name="name">Chi tiết bút toán (PDF)</field>
+        <field name="model">account.journal.items.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_journal_items_report.report_journal_items</field>
+        <field name="report_file">account_journal_items_report.report_journal_items</field>
+        <field name="print_report_name">'Chi_tiet_but_toan_%s_%s' % (object.date_from, object.date_to)</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_journal_items_portrait"/>
+    </record>
+
+    <!-- HTML Report Action (Preview) -->
+    <record id="action_report_journal_items_html" model="ir.actions.report">
+        <field name="name">Chi tiết bút toán (Xem trước)</field>
+        <field name="model">account.journal.items.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_journal_items_report.report_journal_items_html</field>
+        <field name="report_file">account_journal_items_report.report_journal_items_html</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- ==================== TEMPLATE NỘI DUNG DÙNG CHUNG ==================== -->
+    <template id="report_journal_items_content">
+        <!-- Bookmark/Outline cho PDF -->
+        <t t-set="bookmark_title">
+            <t t-out="account['code']"/> - <t t-out="account['name']"/>
+        </t>
+        <h1 class="pdf-bookmark" style="position: absolute; left: -9999px; font-size: 1px;">
+            <t t-out="bookmark_title"/>
+        </h1>
+        
+        <!-- Report Title -->
+        <div class="text-center">
+            <p style="font-size: 14pt; font-weight: bold; margin-bottom: 5px;">
+                <span>SỔ CÁI TÀI KHOẢN</span>
+            </p>
+        </div>
+        
+        <!-- Account Info -->
+        <div class="row mt-3 mb-3">
+            <div class="col-12">
+                <table class="table table-borderless table-sm" style="font-size: 9pt;">
+                    <tr>
+                        <td style="width: 15%;"><strong>Tài khoản:</strong></td>
+                        <td style="width: 85%;">
+                            <t t-out="account['code']"/> - <t t-out="account['name']"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Từ ngày:</strong></td>
+                        <td>
+                            <t t-out="data['date_from']"/> 
+                            <span style="margin-left: 20px;"><strong>Đến ngày:</strong></span> 
+                            <t t-out="data['date_to']"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Data Table - Cấu trúc mới: Ngày, Số CT, Ngày CT, Diễn giải, TKĐƯ, Nợ, Có, Số dư -->
+        <table class="table table-sm table-bordered o_report_table" style="font-size: 8pt; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #4472C4; color: white;">
+                    <th class="text-center" style="width: 10%; padding: 5px 3px; vertical-align: middle;">Ngày</th>
+                    <th class="text-center" style="width: 13%; padding: 5px 3px; vertical-align: middle;">Số CT</th>
+                    <th class="text-center" style="width: 10%; padding: 5px 3px; vertical-align: middle;">Ngày CT</th>
+                    <th class="text-center" style="width: 33%; padding: 5px 3px; vertical-align: middle;">Diễn giải</th>
+                    <th class="text-center" style="width: 10%; padding: 5px 3px; vertical-align: middle;">TKĐƯ</th>
+                    <th class="text-center" style="width: 12%; padding: 5px 3px; vertical-align: middle;">Nợ</th>
+                    <th class="text-center" style="width: 12%; padding: 5px 3px; vertical-align: middle;">Có</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Số dư đầu kỳ -->
+                <tr style="background-color: #f8f9fa; font-weight: bold;">
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;">Số dư đầu kỳ</td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td class="text-end" style="padding: 4px 3px;">
+		    	<t t-if="account['opening_balance'] &gt; 0">
+                        <t t-out="'{:,.0f}'.format(account['opening_balance'])"/>
+			</t>
+                    </td>
+                    <td class="text-end" style="padding: 4px 3px;">
+		    	<t t-if="account['opening_balance'] &lt; 0">
+                        <t t-out="'{:,.0f}'.format(account['opening_balance'])"/>
+			</t>
+                    </td>
+                </tr>
+                
+                <!-- Chi tiết giao dịch -->
+                <t t-foreach="account['items']" t-as="item">
+                    <tr t-attf-style="background-color: {{ '#ffffff' if item_index % 2 == 0 else '#f8f9fa' }};">
+                        <td class="text-center" style="padding: 4px 3px;">
+                            <t t-out="item.get('date', '')"/>
+                        </td>
+                        <td style="padding: 4px 3px;">
+                            <t t-out="item['move_name']"/>
+                        </td>
+                        <td class="text-center" style="padding: 4px 3px;">
+                            <t t-out="item.get('invoice_date', '')"/>
+                        </td>
+                        <td style="padding: 4px 3px;">
+                            <t t-out="item['name']"/>
+                        </td>
+                        <td style="padding: 4px 3px;">
+                            <t t-out="item.get('ctp_accounts', '')"/>
+                        </td>
+                        <td class="text-end" style="padding: 4px 3px;">
+                            <t t-if="item['debit']">
+                                <t t-out="'{:,.0f}'.format(item['debit'])"/>
+                            </t>
+                        </td>
+                        <td class="text-end" style="padding: 4px 3px;">
+                            <t t-if="item['credit']">
+                                <t t-out="'{:,.0f}'.format(item['credit'])"/>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+                
+                <!-- Tổng cộng phát sinh -->
+                <tr t-attf-style="background-color: {{ '#ffffff' if (len(account['items']) % 2 == 0) else '#f8f9fa' }}; font-weight: bold;">
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;">
+                        Tổng cộng phát sinh
+                    </td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td class="text-end" style="padding: 4px 3px;">
+                        <t t-out="'{:,.0f}'.format(account['total_debit'])"/>
+                    </td>
+                    <td class="text-end" style="padding: 4px 3px;">
+                        <t t-out="'{:,.0f}'.format(account['total_credit'])"/>
+                    </td>
+                </tr>
+                <!-- Số dư cuối kỳ -->
+                <tr t-attf-style="background-color: {{ '#f8f9fa' if (len(account['items']) % 2 == 0) else '#ffffff' }}; font-weight: bold;">
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td style="padding: 4px 3px;">
+                        Số dư cuối kỳ
+                    </td>
+                    <td style="padding: 4px 3px;"></td>
+                    <td class="text-end" style="padding: 4px 3px;">
+		    	<t t-if="account['closing_balance'] &gt; 0">
+                        <t t-out="'{:,.0f}'.format(account['closing_balance'])"/>
+			</t>
+                    </td>
+                    <td class="text-end" style="padding: 4px 3px;">
+		    	<t t-if="account['closing_balance'] &lt; 0">
+                        <t t-out="'{:,.0f}'.format(account['closing_balance'])"/>
+			</t>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <!-- ==================== PDF REPORT TEMPLATE ==================== -->
+    <template id="report_journal_items">
+        <t t-call="web.html_container">
+            <t t-foreach="data.get('accounts', [])" t-as="account">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Gọi template nội dung dùng chung -->
+                        <t t-call="account_journal_items_report.report_journal_items_content"/>
+                        
+                        <!-- Page break -->
+                        <t t-if="account_index &lt; len(data.get('accounts', [])) - 1">
+                            <div style="page-break-after: always;"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ==================== HTML PREVIEW TEMPLATE ==================== -->
+    <template id="report_journal_items_html">
+        <t t-call="web.html_container">
+            <t t-set="wizard_id" t-value="docs[0].id if docs else 0"/>
+            <t t-set="total_accounts" t-value="len(data.get('accounts', []))"/>
+            <div class="container-fluid">
+                <!-- Toolbar cố định - ẩn khi in -->
+                <div class="row bg-white border-bottom py-2 mb-3 no-print" style="position: sticky; top: 0; z-index: 1000;">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button type="button" class="btn btn-secondary" onclick="window.history.back();">
+                                    <i class="fa fa-arrow-left"/> Quay lại
+                                </button>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">
+                                    <t t-out="total_accounts"/> tài khoản
+                                </span>
+                                <a t-attf-href="/account_journal_items_report/print_pdf/{{wizard_id}}" 
+                                   class="btn btn-danger me-2" target="_blank">
+                                    <i class="fa fa-file-pdf-o"/> Xuất PDF
+                                </a>
+                                <a t-attf-href="/account_journal_items_report/export_xlsx/{{wizard_id}}" 
+                                   class="btn btn-success me-2" target="_blank">
+                                    <i class="fa fa-file-excel-o"/> Xuất Excel
+                                </a>
+                                <button type="button" class="btn btn-info" onclick="window.print();">
+                                    <i class="fa fa-print"/> In
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nội dung báo cáo -->
+                <div class="row">
+                    <div class="col-12">
+                        <t t-foreach="data.get('accounts', [])" t-as="account">
+                            <div t-attf-class="card mb-4 shadow-sm account-page {{ 'page-break-after' if account_index &lt; total_accounts - 1 else '' }}">
+                                <div class="card-body">
+                                    <!-- Gọi template nội dung dùng chung -->
+                                    <t t-call="account_journal_items_report.report_journal_items_content"/>
+                                </div>
+                            </div>
+                        </t>
+                        
+                        <t t-if="not data.get('accounts')">
+                            <div class="alert alert-warning text-center">
+                                <i class="fa fa-exclamation-triangle fa-2x mb-2"/>
+                                <p class="mb-0">Không có dữ liệu để hiển thị</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Style cho HTML preview và in ấn -->
+            <style>
+                .text-end { text-align: right !important; }
+                
+                /* Print styles */
+                @media print {
+                    /* Ẩn toolbar và các phần không cần thiết */
+                    .no-print,
+                    .sticky-top,
+                    [style*="position: sticky"],
+                    header,
+                    footer,
+                    nav,
+                    .o_main_navbar,
+                    .o_action_manager > .o_control_panel,
+                    .breadcrumb {
+                        display: none !important;
+                    }
+                    
+                    /* Reset container */
+                    .container-fluid {
+                        padding: 0 !important;
+                        margin: 0 !important;
+                    }
+                    
+                    /* Card styles khi in */
+                    .card {
+                        box-shadow: none !important;
+                        border: none !important;
+                        margin: 0 !important;
+                    }
+                    .card-body {
+                        padding: 10px 0 !important;
+                    }
+                    
+                    /* Page break sau mỗi tài khoản */
+                    .page-break-after {
+                        page-break-after: always !important;
+                        break-after: page !important;
+                    }
+                    
+                    /* Đảm bảo table không bị cắt giữa chừng */
+                    table {
+                        page-break-inside: auto !important;
+                    }
+                    tr {
+                        page-break-inside: avoid !important;
+                        page-break-after: auto !important;
+                    }
+                    thead {
+                        display: table-header-group !important;
+                    }
+                    
+                    /* Font size cho in */
+                    body {
+                        font-size: 9pt !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
+                    
+                    /* Giữ màu nền khi in */
+                    * {
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
+                }
+                
+                /* Page setup cho in portrait */
+                @page {
+                    size: A4 portrait;
+                    margin: 10mm;
+                }
+            </style>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Stock Valuation Layer Report - Báo cáo Xuất Nhập Tồn -->
+    <record id="stock_valuation_layer_report" model="account.report">
+        <field name="name">Báo cáo Xuất Nhập Tồn</field>
+        
+        <!-- Basic Configuration -->
+        <field name="availability_condition">always</field>
+        
+        <!-- Filter Configuration -->
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_date_range" eval="True"/>
+        <field name="default_opening_date_filter">this_month</field>
+        
+        <!-- BẬT tính năng so sánh kỳ (giống Trial Balance) -->
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        
+        <!-- Các filter khác -->
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_unfold_all" eval="False"/>
+        <field name="filter_hide_0_lines">never</field>
+        <field name="filter_hierarchy">never</field>
+        <field name="filter_journals" eval="False"/>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_partner" eval="False"/>
+        <field name="filter_account_type">disabled</field>
+        <field name="filter_fiscal_position" eval="False"/>
+        
+        <!-- Search and Display -->
+        <field name="search_bar" eval="True"/>
+        <field name="prefix_groups_threshold" eval="0"/>
+        
+        <!-- Custom Handler -->
+        <field name="custom_handler_model_id" ref="model_stock_report_custom_handler"/>
+        
+        <!-- 
+            Columns Definition - Chỉ định nghĩa 4 cột Tăng/Giảm
+            Opening và Closing columns sẽ được tạo động bởi Python handler
+            
+            Cấu trúc khi có comparison:
+            | Đầu kỳ (xa nhất) | Tăng kỳ 1 | Giảm kỳ 1 | ... | Tăng kỳ n | Giảm kỳ n | Cuối kỳ (gần nhất) |
+        -->
+        <field name="column_ids">
+            <!-- Nhóm Tăng trong kỳ -->
+            <record id="stock_valuation_layer_report_increase_qty" model="account.report.column">
+                <field name="name">SL Tăng</field>
+                <field name="expression_label">increase_qty</field>
+                <field name="figure_type">float</field>
+                <field name="blank_if_zero" eval="False"/>
+                <field name="sortable" eval="True"/>
+                <field name="sequence" eval="10"/>
+            </record>
+
+            <record id="stock_valuation_layer_report_increase_value" model="account.report.column">
+                <field name="name">GT Tăng</field>
+                <field name="expression_label">increase_value</field>
+                <field name="figure_type">monetary</field>
+                <field name="blank_if_zero" eval="False"/>
+                <field name="sortable" eval="True"/>
+                <field name="sequence" eval="20"/>
+            </record>
+
+            <!-- Nhóm Giảm trong kỳ -->
+            <record id="stock_valuation_layer_report_decrease_qty" model="account.report.column">
+                <field name="name">SL Giảm</field>
+                <field name="expression_label">decrease_qty</field>
+                <field name="figure_type">float</field>
+                <field name="blank_if_zero" eval="False"/>
+                <field name="sortable" eval="True"/>
+                <field name="sequence" eval="30"/>
+            </record>
+
+            <record id="stock_valuation_layer_report_decrease_value" model="account.report.column">
+                <field name="name">GT Giảm</field>
+                <field name="expression_label">decrease_value</field>
+                <field name="figure_type">monetary</field>
+                <field name="blank_if_zero" eval="False"/>
+                <field name="sortable" eval="True"/>
+                <field name="sequence" eval="40"/>
+            </record>
+        </field>
+    </record>
+</odoo>

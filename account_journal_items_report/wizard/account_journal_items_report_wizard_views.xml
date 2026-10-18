@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard Form View -->
+    <record id="view_account_journal_items_report_wizard_form" model="ir.ui.view">
+        <field name="name">account.journal.items.report.wizard.form</field>
+        <field name="model">account.journal.items.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Báo cáo chi tiết bút toán theo tài khoản">
+                <group>
+                    <group string="Thời gian">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Công ty">
+                        <field name="company_id" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                </group>
+                <group string="Bộ lọc">
+                    <group>
+                        <field name="state_filter" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="skip_no_transaction"/>
+                        <field name="max_accounts_per_pdf" invisible="not all_accounts"/>
+                    </group>
+                </group>
+                <group string="Sổ nhật ký (Journals)">
+                    <field name="journal_ids" 
+                           widget="many2many_tags" 
+                           options="{'no_create': True}"
+                           domain="[('company_id', '=', company_id)]"
+                           context="{'active_test': False}"
+                           colspan="2"
+                           nolabel="1"/>
+                </group>
+                <group string="Tài khoản">
+                    <field name="all_accounts"/>
+                    <field name="account_ids" 
+                           widget="many2many_tags" 
+                           options="{'no_create': True}"
+                           domain="[('company_id', '=', company_id)]"
+                           invisible="all_accounts"
+                           placeholder="Chọn tài khoản..."/>
+                </group>
+                <footer>
+                    <button name="action_view_report" string="Xem báo cáo" type="object" class="btn-primary"/>
+                    <button name="action_print_pdf" string="In PDF" type="object" class="btn-secondary"/>
+                    <button name="action_export_xlsx" string="Xuất Excel" type="object" class="btn-secondary"/>
+                    <button string="Đóng" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_account_journal_items_report_wizard" model="ir.actions.act_window">
+        <field name="name">Báo cáo chi tiết bút toán</field>
+        <field name="res_model">account.journal.items.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

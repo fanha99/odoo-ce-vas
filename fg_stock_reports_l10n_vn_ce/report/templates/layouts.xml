@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- HTML Container -->
+    <template id="html_container">
+        <t t-call="web.html_container">
+            <t t-raw="0"/>
+        </t>
+    </template>
+
+    <!-- Internal Layout -->
+    <template id="internal_layout">
+        <div class="o_account_financial_reports o_stock_valuation_report">
+            <t t-raw="0"/>
+        </div>
+    </template>
+
+    <!-- Custom Report Styles -->
+    <template id="report_styles">
+        <style>
+            .o_stock_valuation_report {
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+            }
+            .o_stock_valuation_report .report_title {
+                text-align: center;
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+            .o_stock_valuation_report .report_subtitle {
+                text-align: center;
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            .o_stock_valuation_report .filters {
+                margin-bottom: 20px;
+            }
+            .o_stock_valuation_report .filter_row {
+                display: flex;
+                margin-bottom: 5px;
+            }
+            .o_stock_valuation_report .filter_label {
+                font-weight: bold;
+                width: 100px;
+            }
+            .o_stock_valuation_report .data_table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+            .o_stock_valuation_report .data_table th {
+                background-color: #4472C4;
+                color: white;
+                padding: 8px;
+                text-align: center;
+                border: 1px solid #2E5A8B;
+                font-weight: bold;
+            }
+            .o_stock_valuation_report .data_table td {
+                padding: 6px 8px;
+                border: 1px solid #ddd;
+            }
+            .o_stock_valuation_report .data_table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .o_stock_valuation_report .data_table .text-right {
+                text-align: right;
+            }
+            .o_stock_valuation_report .data_table .text-center {
+                text-align: center;
+            }
+            .o_stock_valuation_report .data_table .category_row {
+                background-color: #E2EFDA !important;
+                font-weight: bold;
+            }
+            .o_stock_valuation_report .data_table .total_row {
+                background-color: #FFF2CC !important;
+                font-weight: bold;
+            }
+            .o_stock_valuation_report .amount {
+                text-align: right;
+            }
+            @media print {
+                .o_stock_valuation_report {
+                    font-size: 10px;
+                }
+                .o_stock_valuation_report .data_table th,
+                .o_stock_valuation_report .data_table td {
+                    padding: 4px 6px;
+                }
+            }
+        </style>
+    </template>
+</odoo>

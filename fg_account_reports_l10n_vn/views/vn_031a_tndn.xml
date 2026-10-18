@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="vn_031a_tndn" model="account.report">
+            <field name="name">Phụ lục kết quả hoạt động sản xuất kinh doanh (03-1A/TNDN)</field>
+            <field name="filter_date_range" eval="True"/>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="default_opening_date_filter">last_year</field>
+            <field name="filter_growth_comparison" eval="False"/>
+            <field name="filter_period_comparison" eval="True"/>
+            <field name="custom_handler_model_id" ref="model_vn_balance_sheet_report_handler"/>
+            <field name="column_ids">
+                <record id="vn_031a_tndn_column" model="account.report.column">
+                    <field name="name">Số phát sinh trong kỳ</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <!-- 04. Doanh thu bán hàng và cung cấp dịch vụ -->
+                <record id="vn_031a_tndn_line_04" model="account.report.line">
+                    <field name="name">1. Doanh thu bán hàng hoá và cung cấp dịch vụ|04|</field>
+                    <field name="code">031A_TNDN_133_ct04</field>
+                    <field name="sequence">4</field>
+                    <field name="expression_ids">
+                        <record id="vn_031a_tndn_line_04_balance" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula">[('account_id.code', '=like', '511%'), ('credit', '>', 0)]</field>
+                            <field name="subformula">-sum</field>
+                        </record>
+                    </field>
+                    <field name="children_ids">
+                        <!-- 05. Doanh thu xuất khẩu -->
+                        <record id="vn_031a_tndn_line_05" model="account.report.line">
+                            <field name="name">a. Doanh thu bán hàng hoá, dịch vụ xuất khẩu|05|</field>
+                            <field name="code">031A_TNDN_133_ct05</field>
+                            <field name="sequence">5</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_05_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.code', '=like', '511%'), ('credit', '>', 0), ('analytic_distribution', '!=', False), ('analytic_distribution_search', '=', 'XK')]</field>
+                                    <field name="subformula">-sum</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+                <!-- 06. Các khoản giảm trừ doanh thu -->
+                <record id="vn_031a_tndn_line_06" model="account.report.line">
+                    <field name="name">2. Các khoản giảm trừ doanh thu|06|</field>
+                    <field name="code">031A_TNDN_133_ct06</field>
+                    <field name="sequence">6</field>
+                    <field name="children_ids">
+                        <!-- 07. Chiết khấu thương mại -->
+                        <record id="vn_031a_tndn_line_07" model="account.report.line">
+                            <field name="name">a. Chiết khấu thương mại|07|</field>
+                            <field name="code">031A_TNDN_133_ct07</field>
+                            <field name="sequence">7</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_07_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.code', '=like', '511%'), ('debit', '>', 0), ('analytic_distribution', '!=', False), ('analytic_distribution_search', '=', 'CKTM')]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- 08. Giảm giá hàng bán -->
+                        <record id="vn_031a_tndn_line_08" model="account.report.line">
+                            <field name="name">b. Giảm giá hàng bán|08|</field>
+                            <field name="code">031A_TNDN_133_ct08</field>
+                            <field name="sequence">8</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_08_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.code', '=like', '511%'), ('debit', '>', 0), ('analytic_distribution', '!=', False), ('analytic_distribution_search', '=', 'GGHB')]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- 09. Hàng bán bị trả lại -->
+                        <record id="vn_031a_tndn_line_09" model="account.report.line">
+                            <field name="name">c. Giá trị hàng bán bị trả lại|09|</field>
+                            <field name="code">031A_TNDN_133_ct09</field>
+                            <field name="sequence">9</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_09_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.code', '=like', '511%'), ('debit', '>', 0), ('analytic_distribution', '!=', False), ('analytic_distribution_search', '=', 'HBTL')]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                    <field name="aggregation_formula">031A_TNDN_133_ct07.balance + 031A_TNDN_133_ct08.balance + 031A_TNDN_133_ct09.balance</field>
+                </record>
+
+                <!-- 10. Doanh thu hoạt động tài chính -->
+                <record id="vn_031a_tndn_line_10" model="account.report.line">
+                    <field name="name">3. Doanh thu hoạt động tài chính|10|</field>
+                    <field name="code">031A_TNDN_133_ct10</field>
+                    <field name="sequence">10</field>
+                    <field name="expression_ids">
+                        <record id="vn_031a_tndn_line_10_balance" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula">[
+                                ('account_id.code', '=like', '515%'),
+                                ('debit', '>', 0.0),
+                                ('ctp_account_ids.code', '=like', '911%')
+                            ]</field>
+                            <field name="subformula">sum</field>
+                        </record>
+                    </field>
+                    <field name="children_ids">
+	                <!-- 11. Doanh thu từ lãi tiền gửi -->
+	                <record id="vn_031a_tndn_line_11" model="account.report.line">
+	                    <field name="name">a. Doanh thu từ lãi tiền gửi|11|</field>
+	                    <field name="code">031A_TNDN_133_ct11</field>
+	                    <field name="sequence">11</field>
+	                    <field name="expression_ids">
+	                        <record id="vn_031a_tndn_line_11_balance" model="account.report.expression">
+	                            <field name="label">balance</field>
+	                            <field name="engine">domain</field>
+	                            <field name="formula">[('account_id.code', '=like', '515%'), ('credit', '>', 0), ('analytic_distribution', '!=', False), ('analytic_distribution_search', '=', 'LTG')]</field>
+	                            <field name="subformula">-sum</field>
+	                        </record>
+	                    </field>
+	                </record>
+                    </field>
+                </record>
+
+
+                <!-- 12. Chi phí sản xuất kinh doanh -->
+                <record id="vn_031a_tndn_line_12" model="account.report.line">
+                    <field name="name">4. Chi phí sản xuất, kinh doanh hàng hóa, dịch vụ|12|</field>
+                    <field name="code">031A_TNDN_133_ct12</field>
+                    <field name="sequence">12</field>
+                    <field name="children_ids">
+                        <!-- 13. Giá vốn hàng bán -->
+                        <record id="vn_031a_tndn_line_13" model="account.report.line">
+                            <field name="name">a. Giá vốn hàng bán|13|</field>
+                            <field name="code">031A_TNDN_133_ct13</field>
+                            <field name="sequence">13</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_13_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[
+                                        ('account_id.code', '=like', '632%'),
+                                        ('credit', '>', 0.0),
+                                        ('ctp_account_ids.code', '=like', '911%')
+                                    ]</field>
+                                    <field name="subformula">-sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- 14. Chi phí bán hàng -->
+                        <record id="vn_031a_tndn_line_14" model="account.report.line">
+                            <field name="name">b. Chi phí bán hàng|14|</field>
+                            <field name="code">031A_TNDN_133_ct14</field>
+                            <field name="sequence">14</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_14_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                    <field name="engine">domain</field>
+                                        <field name="formula">[
+                                            ('account_id.code', '=like', '6421%'),
+                                            ('credit', '>', 0.0),
+                                            ('ctp_account_ids.code', '=like', '911%')
+                                        ]</field>
+                                    <field name="subformula">-sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- 15. Chi phí quản lý doanh nghiệp -->
+                        <record id="vn_031a_tndn_line_15" model="account.report.line">
+                            <field name="name">c. Chi phí quản lý doanh nghiệp|15|</field>
+                            <field name="code">031A_TNDN_133_ct15</field>
+                            <field name="sequence">15</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_15_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                        <field name="formula">[
+                                            ('account_id.code', '=like', '6422%'),
+                                            ('credit', '>', 0.0),
+                                            ('ctp_account_ids.code', '=like', '911%')
+                                        ]</field>
+                                    <field name="subformula">-sum</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                    <field name="aggregation_formula">031A_TNDN_133_ct13.balance + 031A_TNDN_133_ct14.balance + 031A_TNDN_133_ct15.balance</field>
+                </record>
+
+                <!-- 16. Chi phí tài chính -->
+                <record id="vn_031a_tndn_line_16" model="account.report.line">
+                    <field name="name">5. Chi phí tài chính|16|</field>
+                    <field name="code">031A_TNDN_133_ct16</field>
+                    <field name="sequence">16</field>
+                    <field name="expression_ids">
+                        <record id="vn_031a_tndn_line_16_balance" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula">[
+                                ('account_id.code', '=like', '635%'),
+                                ('credit', '>', 0.0),
+                                ('ctp_account_ids.code', '=like', '911%')
+                            ]</field>
+                            <field name="subformula">-sum</field>
+                        </record>
+                    </field>
+                    <field name="children_ids">
+	                <!-- 17. Chi phí lãi vay -->
+                        <record id="vn_031a_tndn_line_17" model="account.report.line">
+                            <field name="name">a. Chi phí lãi vay|17|</field>
+                            <field name="code">031A_TNDN_133_ct17</field>
+                            <field name="sequence">17</field>
+                            <field name="expression_ids">
+                                <record id="vn_031a_tndn_line_17_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.code', '=like', '635%'), ('debit', '>', 0), ('analytic_distribution', '!=', False), ('analytic_distribution_search', '=', 'LV')]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+
+
+                <!-- 18. Lợi nhuận thuần từ HĐKD -->
+                <record id="vn_031a_tndn_line_18" model="account.report.line">
+                    <field name="name">6. Lợi nhuận thuần từ hoạt động kinh doanh|18|</field>
+                    <field name="code">031A_TNDN_133_ct18</field>
+                    <field name="sequence">18</field>
+                    <field name="aggregation_formula">031A_TNDN_133_ct04.balance - 031A_TNDN_133_ct06.balance + 031A_TNDN_133_ct10.balance - 031A_TNDN_133_ct12.balance - 031A_TNDN_133_ct16.balance</field>
+                </record>
+
+                <!-- 19. Thu nhập khác -->
+                <record id="vn_031a_tndn_line_19" model="account.report.line">
+                    <field name="name">7. Thu nhập khác|19|</field>
+                    <field name="code">031A_TNDN_133_ct19</field>
+                    <field name="sequence">19</field>
+                    <field name="expression_ids">
+                        <record id="vn_031a_tndn_line_19_balance" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula">[
+                                ('account_id.code', '=like', '711%'),
+                                ('debit', '>', 0.0),
+                                ('ctp_account_ids.code', '=like', '911%')
+                            ]</field>
+                            <field name="subformula">sum</field>
+                        </record>
+                    </field>
+                </record>
+
+                <!-- 20. Chi phí khác -->
+                <record id="vn_031a_tndn_line_20" model="account.report.line">
+                    <field name="name">8. Chi phí khác|20|</field>
+                    <field name="code">031A_TNDN_133_ct20</field>
+                    <field name="sequence">20</field>
+                    <field name="expression_ids">
+                        <record id="vn_031a_tndn_line_20_balance" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula">[
+                                ('account_id.code', '=like', '811%'),
+                                ('credit', '>', 0.0),
+                                ('ctp_account_ids.code', '=like', '911%')
+                            ]</field>
+                            <field name="subformula">-sum</field>
+                        </record>
+                    </field>
+                </record>
+
+                <!-- 21. Lợi nhuận khác -->
+                <record id="vn_031a_tndn_line_21" model="account.report.line">
+                    <field name="name">9. Lợi nhuận khác|21|</field>
+                    <field name="code">031A_TNDN_133_ct21</field>
+                    <field name="sequence">21</field>
+                    <field name="aggregation_formula">031A_TNDN_133_ct19.balance - 031A_TNDN_133_ct20.balance</field>
+                </record>
+
+                <!-- 22. Tổng lợi nhuận kế toán trước thuế -->
+                <record id="vn_031a_tndn_line_22" model="account.report.line">
+                    <field name="name">10. Tổng lợi nhuận kế toán trước thuế|22|</field>
+                    <field name="code">031A_TNDN_133_ct22</field>
+                    <field name="sequence">22</field>
+                    <field name="aggregation_formula">031A_TNDN_133_ct18.balance + 031A_TNDN_133_ct21.balance</field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

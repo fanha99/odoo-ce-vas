@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Create a custom tree view for stock valuation layer -->
+        <record id="view_stock_valuation_layer_tree_custom" model="ir.ui.view">
+            <field name="name">stock.valuation.layer.tree</field>
+            <field name="model">stock.valuation.layer</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Valuation Layers" create="false" edit="false" delete="false">
+                    <field name="product_id"/>
+                    <field name="unit_cost" readonly="1"/>
+                    <field name="quantity" readonly="1"/>
+                    <field name="value" readonly="1"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Create a custom form view for stock valuation layer -->
+        <record id="view_stock_valuation_layer_form_custom" model="ir.ui.view">
+            <field name="name">stock.valuation.layer.form</field>
+            <field name="model">stock.valuation.layer</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock Valuation Layer" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <field name="product_id" readonly="1"/>
+                            <field name="unit_cost" readonly="1"/>
+                            <field name="quantity" readonly="1"/>
+                            <field name="value" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
+

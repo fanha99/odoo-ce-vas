@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_vn_financial_reports"
+                  name="Vietnam Financial Reports"
+                  parent="account.menu_finance_reports"
+                  sequence="0"/>
+
+        <record id="action_vn_b01b_dnn_tt133" model="ir.actions.client">
+            <field name="name">Báo Cáo Tình Hình Tài Chính (B01b-DNN-TT133)</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('fg_account_reports_l10n_vn.vn_b01b_dnn_tt133')}"/>
+        </record>
+
+        <menuitem id="menu_vn_b01b_dnn_tt133"
+                  name="Báo Cáo Tình Hình Tài Chính (B01b-DNN-TT133)"
+                  action="action_vn_b01b_dnn_tt133"
+                  parent="menu_vn_financial_reports"
+                  sequence="10"/>
+                  
+        <record id="action_vn_b02_dnn_tt133" model="ir.actions.client">
+            <field name="name">Báo Cáo Kết Quả HĐKD (B02-DNN-TT133)</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('fg_account_reports_l10n_vn.vn_b02_dnn_tt133')}"/>
+        </record>
+
+        <menuitem id="menu_vn_b02_dnn_tt133"
+                  name="Báo Cáo Kết Quả Hoạt Động Kinh Doanh (B02-DNN-TT133)"
+                  action="action_vn_b02_dnn_tt133"
+                  parent="menu_vn_financial_reports"
+                  sequence="10"/>
+
+        <record id="action_vn_trial_balance" model="ir.actions.client">
+            <field name="name">Bảng Cân Đối Tài Khoản (F01-DNN)</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('fg_account_reports_l10n_vn.vn_trial_balance_report')}"/>
+        </record>
+
+        <menuitem id="menu_vn_trial_balance"
+                  name="Bảng Cân Đối Tài Khoản (F01-DNN)"
+                  action="action_vn_trial_balance"
+                  parent="menu_vn_financial_reports"
+                  sequence="10"/>
+
+        <record id="action_vn_031a_tndn" model="ir.actions.client">
+            <field name="name">Phụ lục kết quả hoạt động SXKD (03-1A/TNDN)</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('fg_account_reports_l10n_vn.vn_031a_tndn')}"/>
+        </record>
+
+        <menuitem id="menu_vn_031a_tndn"
+                  name="Phụ lục kết quả hoạt động SXKD (03-1A/TNDN)"
+                  action="action_vn_031a_tndn"
+                  parent="menu_vn_financial_reports"
+                  sequence="20"/>
+                  
+
+        <!-- Menu item -->
+        <!-- <record id="menu_action_vn_03tndn" model="ir.actions.client"> -->
+            <!-- <field name="name">Tờ khai quyết toán thuế TNDN (03/TNDN)</field> -->
+            <!-- <field name="tag">account_report</field> -->
+            <!-- <field name="context" eval="{'report_id': ref('fg_account_reports_l10n_vn.vn_03tndn')}"/> -->
+        <!-- </record> -->
+
+        <!-- <menuitem id="menu_vn_03tndn" -->
+                  <!-- name="Tờ khai quyết toán thuế TNDN (03/TNDN)" -->
+                  <!-- parent="menu_vn_financial_reports" -->
+                  <!-- action="menu_action_vn_03tndn" -->
+                  <!-- sequence="3"/> -->
+    </data>
+</odoo>
+
+
+

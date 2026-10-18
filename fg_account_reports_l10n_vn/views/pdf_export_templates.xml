@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom PDF export table header với hỗ trợ colspan riêng cho từng header -->
+    <template id="vn_pdf_export_main_table_header" name="VN Report PDF Table Header">
+        <!-- CSS styles cho PDF -->
+        <style type="text/css">
+            .vn_balance_sheet_report table {
+                font-size: 8pt !important;
+            }
+            .vn_balance_sheet_report th,
+            .vn_balance_sheet_report td {
+                font-size: 8pt !important;
+                padding: 1px 3px !important;
+            }
+            .vn_balance_sheet_report .o_account_reports_level0 td,
+            .vn_balance_sheet_report .o_account_reports_level0 th {
+                font-size: 8pt !important;
+                font-weight: bold;
+            }
+            .vn_balance_sheet_report .o_account_reports_level1 td {
+                font-weight: 500;
+            }
+        </style>
+        <thead id="table_header">
+            <t t-foreach="options['column_headers']" t-as="column_header">
+                <tr>
+                    <!-- First empty column (for line name) -->
+                    <th colspan="3"/>
+
+                    <!-- Other columns - với hỗ trợ colspan riêng cho từng header -->
+                    <t t-foreach="column_header * column_headers_render_data['level_repetitions'][column_header_index]" t-as="header">
+                        <!-- Sử dụng header.get('colspan') nếu có, nếu không dùng level_colspan mặc định -->
+                        <th t-att-colspan="header.get('colspan') or column_headers_render_data['level_colspan'][column_header_index]" class="o_overflow_name">
+                            <t t-out="header.get('name')"/>
+                        </th>
+                    </t>
+
+                    <th t-if="options.get('show_growth_comparison')">%</th>
+                </tr>
+            </t>
+            <!-- Custom subheaders (nếu có) -->
+            <t t-if="column_headers_render_data.get('custom_subheaders')">
+                <tr>
+                    <!-- First empty column -->
+                    <th colspan="3"/>
+
+                    <!-- Custom columns subheaders -->
+                    <t t-foreach="column_headers_render_data['custom_subheaders']" t-as="subheader">
+                        <th t-att-colspan="subheader.get('colspan', 1)">
+                            <t t-out="subheader.get('name')"/>
+                        </th>
+                    </t>
+                </tr>
+            </t>
+            <!-- Row for column labels -->
+            <tr>
+                <!-- First empty column -->
+                <th colspan="3"/>
+
+                <t t-foreach="options['columns']" t-as="subheader">
+                    <th>
+                        <t t-out="subheader.get('name')"/>
+                    </th>
+                </t>
+            </tr>
+        </thead>
+    </template>
+</odoo>

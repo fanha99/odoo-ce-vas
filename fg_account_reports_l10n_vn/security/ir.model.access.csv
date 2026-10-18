@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vn_balance_sheet_report,access.vn.balance.sheet.report,account_reports.model_account_report,account.group_account_user,1,1,1,1
+access_vn_balance_sheet_report_handler,access.vn.balance.sheet.report.handler,model_vn_balance_sheet_report_handler,account.group_account_user,1,0,0,0

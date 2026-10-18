@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="vn_b01b_dnn_tt133" model="account.report">
+            <field name="name">Báo Cáo Tình Hình Tài Chính (B01b-DNN-TT133)</field>
+            <field name="filter_date_range" eval="False"/>
+            <field name="filter_unfold_all" eval="False"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="default_opening_date_filter">last_year</field>
+            <field name="filter_growth_comparison" eval="False"/>
+            <field name="filter_period_comparison" eval="True"/>
+            <field name="custom_handler_model_id" ref="model_vn_balance_sheet_report_handler"/>
+            <field name="column_ids">
+                <record id="vn_b01b_dnn_tt133_column" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <!-- TÀI SẢN -->
+                <record id="vn_b01b_dnn_tt133_line_assets" model="account.report.line">
+                    <field name="name">Tài Sản</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="sequence">100</field>
+                    <field name="children_ids">
+                        <record id="vn_b01b_dnn_tt133_line_100" model="account.report.line">
+                            <field name="name">A. TÀI SẢN NGẮN HẠN|100|</field>
+                            <field name="code">B01B_DNN_133_ct100</field>
+                            <field name="sequence">100</field>
+                            <field name="aggregation_formula">B01B_DNN_133_ct110.balance + B01B_DNN_133_ct120.balance + B01B_DNN_133_ct130.balance + B01B_DNN_133_ct140.balance + B01B_DNN_133_ct150.balance</field>
+                            <field name="children_ids">
+                                <record id="vn_b01b_dnn_tt133_line_110" model="account.report.line">
+                                    <field name="name">I. Tiền và các khoản tương đương tiền|110|V.01</field>
+                                    <field name="code">B01B_DNN_133_ct110</field>
+                                    <field name="sequence">110</field>
+                                        <field name="expression_ids">
+                                            <record id="vn_b01b_dnn_tt133_line_110_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">111D+112D</field>
+                                            </record>
+                                        </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_120" model="account.report.line">
+                                    <field name="name">II. Đầu tư tài chính ngắn hạn|120|</field>
+                                    <field name="code">B01B_DNN_133_ct120</field>
+                                    <field name="sequence">120</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct121.balance + B01B_DNN_133_ct122.balance + B01B_DNN_133_ct123.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_121" model="account.report.line">
+                                            <field name="name">1. Chứng khoán kinh doanh|121|</field>
+                                            <field name="code">B01B_DNN_133_ct121</field>
+                                            <field name="sequence">121</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_121_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">121D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_122" model="account.report.line">
+                                            <field name="name">2. Dự phòng giảm giá chứng khoán kinh doanh (*)|122|</field>
+                                            <field name="code">B01B_DNN_133_ct122</field>
+                                            <field name="sequence">122</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_122_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">2291C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_123" model="account.report.line">
+                                            <field name="name">3. Đầu tư nắm giữ đến ngày đáo hạn ngắn hạn|123|</field>
+                                            <field name="code">B01B_DNN_133_ct123</field>
+                                            <field name="sequence">123</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_123_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">128D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_130" model="account.report.line">
+                                    <field name="name">III. Các khoản phải thu ngắn hạn|130|</field>
+                                    <field name="code">B01B_DNN_133_ct130</field>
+                                    <field name="sequence">130</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct131.balance + B01B_DNN_133_ct132.balance + B01B_DNN_133_ct133.balance + B01B_DNN_133_ct134.balance + B01B_DNN_133_ct135.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_131" model="account.report.line">
+                                            <field name="name">1. Phải thu của khách hàng|131|</field>
+                                            <field name="code">B01B_DNN_133_ct131</field>
+                                            <field name="sequence">131</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_131_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">custom</field>
+                                                    <field name="formula">_report_custom_engine_131D_date_to</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_132" model="account.report.line">
+                                            <field name="name">2. Trả trước cho người bán|132|</field>
+                                            <field name="code">B01B_DNN_133_ct132</field>
+                                            <field name="sequence">132</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_132_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">custom</field>
+                                                    <field name="formula">_report_custom_engine_331D_date_to</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_133" model="account.report.line">
+                                            <field name="name">3. Phải thu ngắn hạn khác|133|</field>
+                                            <field name="code">B01B_DNN_133_ct133</field>
+                                            <field name="sequence">133</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_133_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">1368D+1386D+1388D+334D+338D+141D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_134" model="account.report.line">
+                                            <field name="name">4. Tài sản thiếu chờ xử lý|134|</field>
+                                            <field name="code">B01B_DNN_133_ct134</field>
+                                            <field name="sequence">134</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_134_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">1381D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_135" model="account.report.line">
+                                            <field name="name">5. Dự phòng phải thu ngắn hạn khó đòi (*)|135|</field>
+                                            <field name="code">B01B_DNN_133_ct135</field>
+                                            <field name="sequence">135</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_135_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">2293C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_140" model="account.report.line">
+                                    <field name="name">IV. Hàng tồn kho|140|V.04</field>
+                                    <field name="code">B01B_DNN_133_ct140</field>
+                                    <field name="sequence">140</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct141.balance + B01B_DNN_133_ct142.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_141" model="account.report.line">
+                                            <field name="name">1. Hàng hóa|141|</field>
+                                            <field name="code">B01B_DNN_133_ct141</field>
+                                            <field name="sequence">141</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_141_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">15D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_142" model="account.report.line">
+                                            <field name="name">2. Dự phòng giảm giá hàng tồn kho (*)|142|</field>
+                                            <field name="code">B01B_DNN_133_ct142</field>
+                                            <field name="sequence">142</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_142_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">2294C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_150" model="account.report.line">
+                                    <field name="name">V. Tài sản ngắn hạn khác|150|</field>
+                                    <field name="code">B01B_DNN_133_ct150</field>
+                                    <field name="sequence">150</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct151.balance + B01B_DNN_133_ct152.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_151" model="account.report.line">
+                                            <field name="name">1. Thuế GTGT được khấu trừ|151|</field>
+                                            <field name="code">B01B_DNN_133_ct151</field>
+                                            <field name="sequence">151</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_151_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">133D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_152" model="account.report.line">
+                                            <field name="name">2. Tài sản ngắn hạn khác|152|</field>
+                                            <field name="code">B01B_DNN_133_ct152</field>
+                                            <field name="sequence">152</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_152_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">333D+242D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="vn_b01b_dnn_tt133_line_bs_200" model="account.report.line">
+                            <field name="name">B. TÀI SẢN DÀI HẠN|200|</field>
+                            <field name="code">B01B_DNN_133_ct200</field>
+                            <field name="sequence">200</field>
+                            <field name="aggregation_formula">B01B_DNN_133_ct210.balance + B01B_DNN_133_ct220.balance + B01B_DNN_133_ct230.balance + B01B_DNN_133_ct240.balance + B01B_DNN_133_ct250.balance + B01B_DNN_133_ct260.balance</field>
+                            <field name="children_ids">
+                                <record id="vn_b01b_dnn_tt133_line_210" model="account.report.line">
+                                    <field name="name">I. Các khoản phải thu dài hạn|210|</field>
+                                    <field name="code">B01B_DNN_133_ct210</field>
+                                    <field name="sequence">210</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct211.balance + B01B_DNN_133_ct212.balance + B01B_DNN_133_ct213.balance + B01B_DNN_133_ct214.balance + B01B_DNN_133_ct215.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_211" model="account.report.line">
+                                            <field name="name">1. Phải thu dài hạn của khách hàng|211|</field>
+                                            <field name="code">B01B_DNN_133_ct211</field>
+                                            <field name="sequence">211</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_211_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_212" model="account.report.line">
+                                            <field name="name">2. Trả trước cho người bán dài hạn|212|</field>
+                                            <field name="code">B01B_DNN_133_ct212</field>
+                                            <field name="sequence">212</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_212_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_213" model="account.report.line">
+                                            <field name="name">3. Vốn kinh doanh ở đơn vị trực thuộc|213|</field>
+                                            <field name="code">B01B_DNN_133_ct213</field>
+                                            <field name="sequence">213</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_213_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">1361D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_214" model="account.report.line">
+                                            <field name="name">4. Phải thu dài hạn khác|214|</field>
+                                            <field name="code">B01B_DNN_133_ct214</field>
+                                            <field name="sequence">214</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_214_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_215" model="account.report.line">
+                                            <field name="name">5. Dự phòng phải thu dài hạn khó đòi (*)|215|</field>
+                                            <field name="code">B01B_DNN_133_ct215</field>
+                                            <field name="sequence">215</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_215_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_220" model="account.report.line">
+                                    <field name="name">II. Tài sản cố định|220|V.05</field>
+                                    <field name="code">B01B_DNN_133_ct220</field>
+                                    <field name="sequence">220</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct221.balance + B01B_DNN_133_ct222.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_221" model="account.report.line">
+                                            <field name="name">1. Nguyên giá|221|</field>
+                                            <field name="code">B01B_DNN_133_ct221</field>
+                                            <field name="sequence">221</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_221_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">211D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_222" model="account.report.line">
+                                            <field name="name">2. Giá trị hao mòn lũy kế (*)|222|</field>
+                                            <field name="code">B01B_DNN_133_ct222</field>
+                                            <field name="sequence">222</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_222_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">2141C+2142C+2143C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_230" model="account.report.line">
+                                    <field name="name">III. Bất động sản đầu tư|230|V.06</field>
+                                    <field name="code">B01B_DNN_133_ct230</field>
+                                    <field name="sequence">230</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct231.balance + B01B_DNN_133_ct232.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_231" model="account.report.line">
+                                            <field name="name">1. Nguyên giá|231|</field>
+                                            <field name="code">B01B_DNN_133_ct231</field>
+                                            <field name="sequence">231</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_231_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">217D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_232" model="account.report.line">
+                                            <field name="name">2. Giá trị hao mòn lũy kế (*)|232|</field>
+                                            <field name="code">B01B_DNN_133_ct232</field>
+                                            <field name="sequence">232</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_232_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">2147C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_240" model="account.report.line">
+                                    <field name="name">IV. Xây dựng cơ bản dở dang|240|V.07</field>
+                                    <field name="code">B01B_DNN_133_ct240</field>
+                                    <field name="sequence">240</field>
+                                        <field name="expression_ids">
+                                            <record id="vn_b01b_dnn_tt133_line_240_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">241D</field>
+                                            </record>
+                                        </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_250" model="account.report.line">
+                                    <field name="name">V. Đầu tư tài chính dài hạn|250|</field>
+                                    <field name="code">B01B_DNN_133_ct250</field>
+                                    <field name="sequence">250</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct251.balance + B01B_DNN_133_ct252.balance + B01B_DNN_133_ct253.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_251" model="account.report.line">
+                                            <field name="name">1. Đầu tư góp vốn vào đơn vị khác|251|</field>
+                                            <field name="code">B01B_DNN_133_ct251</field>
+                                            <field name="sequence">251</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_251_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">228D</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_252" model="account.report.line">
+                                            <field name="name">2. Dự phòng tổn thất đầu tư vào đơn vị khác (*)|252|</field>
+                                            <field name="code">B01B_DNN_133_ct252</field>
+                                            <field name="sequence">252</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_252_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">2292C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_253" model="account.report.line">
+                                            <field name="name">3. Đầu tư nắm giữ đến ngày đáo hạn dài hạn|253|</field>
+                                            <field name="code">B01B_DNN_133_ct253</field>
+                                            <field name="sequence">253</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_253_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_260" model="account.report.line">
+                                    <field name="name">VI. Tài sản dài hạn khác|260|</field>
+                                    <field name="code">B01B_DNN_133_ct260</field>
+                                    <field name="sequence">260</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_260_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="vn_b01b_dnn_tt133_line_300" model="account.report.line">
+                            <field name="name">TỔNG CỘNG TÀI SẢN|300|</field>
+                            <field name="code">B01B_DNN_133_ct300</field>
+                            <field name="sequence">300</field>
+                            <field name="aggregation_formula">B01B_DNN_133_ct100.balance + B01B_DNN_133_ct200.balance</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="vn_b01b_dnn_tt133_line_liabilities" model="account.report.line">
+                    <field name="name">NGUỒN VỐN</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="sequence">400</field>
+                    <field name="children_ids">
+                        <record id="vn_b01b_dnn_tt133_line_400" model="account.report.line">
+                            <field name="name">C - NỢ PHẢI TRẢ|400|</field>
+                            <field name="code">B01B_DNN_133_ct400</field>
+                            <field name="sequence">400</field>
+                            <field name="aggregation_formula">B01B_DNN_133_ct410.balance + B01B_DNN_133_ct420.balance</field>
+                            <field name="children_ids">
+                                <record id="vn_b01b_dnn_tt133_line_410" model="account.report.line">
+                                    <field name="name">I. Nợ ngắn hạn|410|</field>
+                                    <field name="code">B01B_DNN_133_ct410</field>
+                                    <field name="sequence">410</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct411.balance + B01B_DNN_133_ct412.balance + B01B_DNN_133_ct413.balance + B01B_DNN_133_ct414.balance + B01B_DNN_133_ct415.balance + B01B_DNN_133_ct416.balance + B01B_DNN_133_ct417.balance + B01B_DNN_133_ct418.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_411" model="account.report.line">
+                                            <field name="name">1. Phải trả người bán ngắn hạn|411|</field>
+                                            <field name="code">B01B_DNN_133_ct411</field>
+                                            <field name="sequence">411</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_411_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">custom</field>
+                                                    <field name="formula">_report_custom_engine_331C_date_to</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_412" model="account.report.line">
+                                            <field name="name">2. Người mua trả tiền trước ngắn hạn|412|</field>
+                                            <field name="code">B01B_DNN_133_ct412</field>
+                                            <field name="sequence">412</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_412_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">custom</field>
+                                                    <field name="formula">_report_custom_engine_131C_date_to</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_413" model="account.report.line">
+                                            <field name="name">3. Thuế và các khoản phải nộp Nhà nước|413|V.10</field>
+                                            <field name="code">B01B_DNN_133_ct413</field>
+                                            <field name="sequence">413</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_413_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-333C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_414" model="account.report.line">
+                                            <field name="name">4. Phải trả người lao động|414|</field>
+                                            <field name="code">B01B_DNN_133_ct414</field>
+                                            <field name="sequence">414</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_414_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-334C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_415" model="account.report.line">
+                                            <field name="name">5. Phải trả ngắn hạn khác|415|</field>
+                                            <field name="code">B01B_DNN_133_ct415</field>
+                                            <field name="sequence">415</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_415_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-335C-3368C-338C-1388C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_416" model="account.report.line">
+                                            <field name="name">6. Vay và nợ thuê tài chính ngắn hạn|416|V.11</field>
+                                            <field name="code">B01B_DNN_133_ct416</field>
+                                            <field name="sequence">416</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_416_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-341C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_417" model="account.report.line">
+                                            <field name="name">7. Dự phòng phải trả ngắn hạn|417|</field>
+                                            <field name="code">B01B_DNN_133_ct417</field>
+                                            <field name="sequence">417</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_417_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-352C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_418" model="account.report.line">
+                                            <field name="name">8. Quỹ khen thưởng, phúc lợi|418|</field>
+                                            <field name="code">B01B_DNN_133_ct418</field>
+                                            <field name="sequence">418</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_418_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-353C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_420" model="account.report.line">
+                                    <field name="name">II. Nợ dài hạn|420|</field>
+                                    <field name="code">B01B_DNN_133_ct420</field>
+                                    <field name="sequence">420</field>
+                                    <field name="aggregation_formula">B01B_DNN_133_ct421.balance + B01B_DNN_133_ct422.balance + B01B_DNN_133_ct423.balance + B01B_DNN_133_ct424.balance + B01B_DNN_133_ct425.balance + B01B_DNN_133_ct426.balance + B01B_DNN_133_ct427.balance</field>
+                                    <field name="children_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_421" model="account.report.line">
+                                            <field name="name">1. Phải trả người bán dài hạn|421|</field>
+                                            <field name="code">B01B_DNN_133_ct421</field>
+                                            <field name="sequence">421</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_421_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_422" model="account.report.line">
+                                            <field name="name">2. Người mua trả tiền trước dài hạn|422|</field>
+                                            <field name="code">B01B_DNN_133_ct422</field>
+                                            <field name="sequence">422</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_422_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_423" model="account.report.line">
+                                            <field name="name">3. Phải trả nội bộ về vốn kinh doanh|423|</field>
+                                            <field name="code">B01B_DNN_133_ct423</field>
+                                            <field name="sequence">423</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_423_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-3361C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_424" model="account.report.line">
+                                            <field name="name">4. Phải trả dài hạn khác|424|</field>
+                                            <field name="code">B01B_DNN_133_ct424</field>
+                                            <field name="sequence">424</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_424_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_425" model="account.report.line">
+                                            <field name="name">5. Vay và nợ thuê tài chính dài hạn|425|V.12</field>
+                                            <field name="code">B01B_DNN_133_ct425</field>
+                                            <field name="sequence">425</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_425_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_426" model="account.report.line">
+                                            <field name="name">6. Dự phòng phải trả dài hạn|426|</field>
+                                            <field name="code">B01B_DNN_133_ct426</field>
+                                            <field name="sequence">426</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_426_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula">[('account_id.code','=like','0000%')]</field>
+                                                    <field name="subformula">sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="vn_b01b_dnn_tt133_line_427" model="account.report.line">
+                                            <field name="name">7. Quỹ phát triển khoa học và công nghệ|427|</field>
+                                            <field name="code">B01B_DNN_133_ct427</field>
+                                            <field name="sequence">427</field>
+                                            <field name="expression_ids">
+                                                <record id="vn_b01b_dnn_tt133_line_427_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-356C</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="vn_b01b_dnn_tt133_line_bs_500" model="account.report.line">
+                            <field name="name">D - VỐN CHỦ SỞ HỮU|500|V.13</field>
+                            <field name="code">B01B_DNN_133_ct500</field>
+                            <field name="sequence">500</field>
+                            <field name="aggregation_formula">B01B_DNN_133_ct511.balance + B01B_DNN_133_ct512.balance + B01B_DNN_133_ct513.balance + B01B_DNN_133_ct514.balance + B01B_DNN_133_ct515.balance + B01B_DNN_133_ct516.balance + B01B_DNN_133_ct517.balance</field>
+                            <field name="children_ids">
+                                <record id="vn_b01b_dnn_tt133_line_511" model="account.report.line">
+                                    <field name="name">1. Vốn góp của chủ sở hữu|511|</field>
+                                    <field name="code">B01B_DNN_133_ct511</field>
+                                    <field name="sequence">511</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_511_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-4111C</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_512" model="account.report.line">
+                                    <field name="name">2. Thặng dư vốn cổ phần|512|</field>
+                                    <field name="code">B01B_DNN_133_ct512</field>
+                                    <field name="sequence">512</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_512_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-4112</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_513" model="account.report.line">
+                                    <field name="name">3. Vốn khác của chủ sở hữu|513|</field>
+                                    <field name="code">B01B_DNN_133_ct513</field>
+                                    <field name="sequence">513</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_513_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-4118C</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_514" model="account.report.line">
+                                    <field name="name">4. Cổ phiếu quỹ (*)|514|</field>
+                                    <field name="code">B01B_DNN_133_ct514</field>
+                                    <field name="sequence">514</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_514_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-419</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_515" model="account.report.line">
+                                    <field name="name">5. Chênh lệch tỷ giá hối đoái|515|</field>
+                                    <field name="code">B01B_DNN_133_ct515</field>
+                                    <field name="sequence">515</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_515_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-413</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_516" model="account.report.line">
+                                    <field name="name">6. Các quỹ thuộc vốn chủ sở hữu|516|</field>
+                                    <field name="code">B01B_DNN_133_ct516</field>
+                                    <field name="sequence">516</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_516_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-418C</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_b01b_dnn_tt133_line_517" model="account.report.line">
+                                    <field name="name">7. Lợi nhuận sau thuế chưa phân phối|517|</field>
+                                    <field name="code">B01B_DNN_133_ct517</field>
+                                    <field name="sequence">517</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_b01b_dnn_tt133_line_517_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-421</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="vn_b01b_dnn_tt133_line_600" model="account.report.line">
+                            <field name="name">TỔNG CỘNG NGUỒN VỐN|600|</field>
+                            <field name="code">B01B_DNN_133_ct600</field>
+                            <field name="sequence">600</field>
+                            <field name="aggregation_formula">B01B_DNN_133_ct400.balance + B01B_DNN_133_ct500.balance</field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

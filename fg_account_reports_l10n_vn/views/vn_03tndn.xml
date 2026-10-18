@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="vn_03tndn" model="account.report">
+            <field name="name">Tờ khai quyết toán thuế TNDN (03/TNDN)</field>
+            <field name="filter_date_range" eval="True"/>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="default_opening_date_filter">last_year</field>
+            <field name="filter_growth_comparison" eval="False"/>
+            <field name="filter_period_comparison" eval="True"/>
+            <field name="custom_handler_model_id" ref="model_vn_balance_sheet_report_handler"/>
+            <field name="column_ids">
+                <record id="vn_03tndn_column" model="account.report.column">
+                    <field name="name">Số tiền</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+
+                <record id="vn_03tndn_line_a" model="account.report.line">
+                    <field name="name">A. Kết quả kinh doanh ghi nhận theo báo cáo tài chính (A)</field>
+                    <field name="code">TNDN_A</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="sequence">100</field>
+                    <field name="children_ids">
+                        <!-- A. Kết quả hoạt động sản xuất kinh doanh -->
+                        <record id="vn_03tndn_line_a1" model="account.report.line">
+                            <field name="name">1. Tổng lợi nhuận kế toán trước thuế thu nhập doanh nghiệp (A1)</field>
+                            <field name="code">TNDN_A1</field>
+                            <field name="sequence">101</field>
+                            <field name="expression_ids">
+                                <record id="vn_03tndn_line_a1_total_income" model="account.report.expression">
+                                    <field name="label">total_income</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.code', '=like', '5%'), ('credit', '>', 0.0)]</field>
+                                    <field name="subformula">-sum</field>
+                                </record>
+                                <record id="vn_03tndn_line_a1_total_expense" model="account.report.expression">
+                                    <field name="label">total_expense</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.code', '=like', '6%'), ('debit', '>', 0.0)]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="vn_03tndn_line_a1_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">TNDN_A1.total_income - TNDN_A1.total_expense</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+                <record id="vn_03tndn_line_b" model="account.report.line">
+                    <field name="name">B. Xác định thu nhập chịu thuế theo Luật thuế thu nhập doanh nghiệp (B)</field>
+                    <field name="code">TNDN_B</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="sequence">200</field>
+                    <field name="children_ids">
+                        <!-- B1. Các khoản điều chỉnh tăng -->
+                        <record id="vn_03tndn_line_b1" model="account.report.line">
+                            <field name="name">1. Điều chỉnh tăng tổng lợi nhuận trước thuế thu nhập doanh nghiệp (B1)</field>
+                            <field name="code">TNDN_B1</field>
+                            <field name="sequence">201</field>
+                            <field name="aggregation_formula">TNDN_B2.balance + TNDN_B3.balance + TNDN_B4.balance + TNDN_B5.balance + TNDN_B6.balance + TNDN_B7.balance</field>
+                            <field name="children_ids">
+                                <record id="vn_03tndn_line_b2" model="account.report.line">
+                                    <field name="name">1.1 Các khoản điều chỉnh tăng doanh thu (B2)</field>
+                                    <field name="code">TNDN_B2</field>
+                                    <field name="sequence">202</field>
+                                    <field name="parent_id" ref="vn_03tndn_line_b1"/>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b2_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '711%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+
+                                <record id="vn_03tndn_line_b3" model="account.report.line">
+                                    <field name="name">1.2 Chi phí liên quan đến doanh thu điều chỉnh giảm (B3)</field>
+                                    <field name="code">TNDN_B3</field>
+                                    <field name="sequence">203</field>
+                                    <field name="parent_id" ref="vn_03tndn_line_b1"/>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b3_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '632%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+
+                                <record id="vn_03tndn_line_b4" model="account.report.line">
+                                    <field name="name">1.3 Các khoản chi không được trừ khi xác định thu nhập chịu thuế (B4)</field>
+                                    <field name="code">TNDN_B4</field>
+                                    <field name="sequence">204</field>
+                                    <field name="parent_id" ref="vn_03tndn_line_b1"/>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b4_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '811%'),
+                                                ('credit', '>', 0.0),
+                                                ('ctp_account_ids.code', '=like', '911%')
+                                            ]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+
+                                <record id="vn_03tndn_line_b5" model="account.report.line">
+                                    <field name="name">1.4 Thuế thu nhập đã nộp cho phần thu nhập nhận được ở nước ngoài (B5)</field>
+                                    <field name="code">TNDN_B5</field>
+                                    <field name="sequence">205</field>
+                                    <field name="parent_id" ref="vn_03tndn_line_b1"/>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b5_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '6351%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+
+                                <record id="vn_03tndn_line_b6" model="account.report.line">
+                                    <field name="name">1.5 Điều chỉnh tăng lợi nhuận do xác định giá thị trường đối với giao dịch liên kết (B6)</field>
+                                    <field name="code">TNDN_B6</field>
+                                    <field name="sequence">206</field>
+                                    <field name="parent_id" ref="vn_03tndn_line_b1"/>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b6_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '6274%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_03tndn_line_b7" model="account.report.line">
+                                    <field name="name">1.6 Các khoản điều chỉnh làm tăng lợi nhuận trước thuế khác (B7)</field>
+                                    <field name="code">TNDN_B7</field>
+                                    <field name="sequence">207</field>
+                                    <field name="parent_id" ref="vn_03tndn_line_b1"/>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b7_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '335%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- B8. Các khoản điều chỉnh giảm -->
+                        <record id="vn_03tndn_line_b8" model="account.report.line">
+                            <field name="name">2. Điều chỉnh giảm tổng lợi nhuận trước thuế thu nhập doanh nghiệp (B8)</field>
+                            <field name="code">TNDN_B8</field>
+                            <field name="sequence">208</field>
+                            <field name="aggregation_formula">TNDN_B9.balance + TNDN_B10.balance + TNDN_B11.balance + TNDN_B12.balance</field>
+                            <field name="children_ids">
+                                <record id="vn_03tndn_line_b9" model="account.report.line">
+                                    <field name="name">2.1 Các khoản doanh thu đã tính thuế năm trước (B9)</field>
+                                    <field name="code">TNDN_B9</field>
+                                    <field name="sequence">209</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b9_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '511%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_03tndn_line_b10" model="account.report.line">
+                                    <field name="name">2.2 Chi phí của phần doanh thu điều chỉnh tăng (B10)</field>
+                                    <field name="code">TNDN_B10</field>
+                                    <field name="sequence">210</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b10_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '511%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_03tndn_line_b11" model="account.report.line">
+                                    <field name="name">2.3 Chi phí lãi vay không được trừ kỳ trước được chuyển sang kỳ này của doanh nghiệp có giao dịch liên kết (B11)</field>
+                                    <field name="code">TNDN_B11</field>
+                                    <field name="sequence">211</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b11_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '511%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_03tndn_line_b12" model="account.report.line">
+                                    <field name="name">2.4 Các khoản điều chỉnh làm giảm lợi nhuận trước thuế khác (B12)</field>
+                                    <field name="code">TNDN_B12</field>
+                                    <field name="sequence">212</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b12_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '511%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- B13. Thu nhập chịu thuế -->
+                        <record id="vn_03tndn_line_b13" model="account.report.line">
+                            <field name="name">3. Tổng thu nhập chịu thuế (B13)</field>
+                            <field name="code">TNDN_B13</field>
+                            <field name="sequence">213</field>
+                            <field name="aggregation_formula">TNDN_A1.balance + TNDN_B1.balance - TNDN_B8.balance</field>
+                            <field name="children_ids">
+                                <record id="vn_03tndn_line_b14" model="account.report.line">
+                                    <field name="name">3.1 Thu nhập chịu thuế từ hoạt động sản xuất kinh doanh (B14)</field>
+                                    <field name="code">TNDN_B14</field>
+                                    <field name="sequence">214</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b14_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '511%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="vn_03tndn_line_b15" model="account.report.line">
+                                    <field name="name">3.2 Thu nhập chịu thuế từ hoạt động chuyển nhượng BĐS (B15)</field>
+                                    <field name="code">TNDN_B15</field>
+                                    <field name="sequence">215</field>
+                                    <field name="expression_ids">
+                                        <record id="vn_03tndn_line_b15_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('account_id.code', '=like', '511%')]</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+
+
+                <!-- C. Thu nhập tính thuế -->
+                <record id="vn_03tndn_line_c4" model="account.report.line">
+                    <field name="name">C4. Thu nhập tính thuế</field>
+                    <field name="code">TNDN_C4</field>
+                    <field name="sequence">20</field>
+                    <field name="aggregation_formula">TNDN_B13.balance</field>
+                </record>
+
+                <!-- C9. Thuế TNDN phải nộp -->
+                <record id="vn_03tndn_line_c9" model="account.report.line">
+                    <field name="name">C9. Thuế TNDN phải nộp trong kỳ tính thuế</field>
+                    <field name="code">TNDN_C9</field>
+                    <field name="sequence">25</field>
+                    <field name="expression_ids">
+                        <record id="vn_03tndn_line_c9_balance" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">aggregation</field>
+                            <field name="formula">TNDN_C4.balance * 0.2</field>
+                        </record>
+                    </field>
+                </record>
+
+            </field>
+        </record>
+    </data>
+</odoo>
