@@ -1,0 +1,729 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fg_vn_stock_reports
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-22 15:42+0000\n"
+"PO-Revision-Date: 2026-10-22 15:42+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fg_vn_stock_reports
+#: model:ir.module.module,description:base.module_fg_vn_stock_reports
+msgid ""
+"\n"
+"Vietnam - Stock Reports (S06-DNN, Stock Summary)\n"
+"================================================\n"
+"\n"
+"* S06-DNN: detailed ledger of materials, tools, products and goods, one\n"
+"  ledger per product\n"
+"* Stock summary: opening, in, out and closing quantities and values per\n"
+"  product, optionally per location\n"
+"\n"
+"With selected locations, the values are those of the moves crossing the\n"
+"boundary of these locations. The 157 location (goods sent for sale, flag\n"
+"\"Kho 157 (GBQK)\") is valued with the batches of the Periodic Average Cost\n"
+"module when it is installed. See HUONG_DAN_KHO_157.md and readme.md in the\n"
+"module directory.\n"
+msgstr ""
+"\n"
+"Báo cáo kho Việt Nam (S06-DNN, Tổng hợp tồn kho)\n"
+"================================================\n"
+"\n"
+"* S06-DNN: sổ chi tiết vật liệu, dụng cụ, sản phẩm, hàng hoá, mỗi mặt hàng\n"
+"  một sổ\n"
+"* Tổng hợp tồn kho: số lượng và giá trị đầu kỳ, nhập, xuất, cuối kỳ của\n"
+"  từng mặt hàng, có thể chia theo vị trí kho\n"
+"\n"
+"Khi chọn kho, giá trị là giá trị của các phiếu đi qua ranh giới các kho đó.\n"
+"Kho 157 (hàng gửi đi bán, cờ \"Kho 157 (GBQK)\") lấy giá trị theo lô của\n"
+"module Giá bình quân kỳ khi module này được cài. Xem HUONG_DAN_KHO_157.md\n"
+"và readme.md trong thư mục module.\n"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "%(scope)s, from %(date_from)s to %(date_to)s"
+msgstr "%(scope)s, từ ngày %(date_from)s đến ngày %(date_to)s"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__account_ids
+msgid "Accounts"
+msgstr "Tài khoản"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+msgid "Accounts 152, 153, 155, 156"
+msgstr "TK 152, 153, 155, 156"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "All categories"
+msgstr "Tất cả nhóm"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "All products"
+msgstr "Tất cả sản phẩm"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Closing"
+msgstr "Cuối kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Closing Qty"
+msgstr "SL cuối kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Closing Value"
+msgstr "GT cuối kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Code"
+msgstr "Mã SP"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__company_id
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__create_uid
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__create_date
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "DETAILED LEDGER OF MATERIALS, TOOLS, PRODUCTS AND GOODS"
+msgstr "SỔ CHI TIẾT VẬT LIỆU, DỤNG CỤ, SẢN PHẨM, HÀNG HÓA"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Date"
+msgstr "Ngày tháng"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Deliveries"
+msgstr "Xuất trong kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Description"
+msgstr "Diễn giải"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/wizard/s06_wizard.py:0
+#: model:ir.actions.act_window,name:fg_vn_stock_reports.action_vn_report_s06_wizard
+#: model:ir.actions.client,name:fg_vn_stock_reports.action_vn_report_s06
+#: model:ir.model,name:fg_vn_stock_reports.model_vn_report_s06
+#: model:ir.ui.menu,name:fg_vn_stock_reports.menu_s06_accounting
+#: model:ir.ui.menu,name:fg_vn_stock_reports.menu_s06_inventory
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+msgid "Detailed Stock Ledger (S06-DNN)"
+msgstr "S06-DNN - Sổ chi tiết vật liệu, dụng cụ, SP, HH"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model,name:fg_vn_stock_reports.model_vn_report_s06_wizard
+msgid "Detailed Stock Ledger Wizard"
+msgstr "Wizard sổ chi tiết vật liệu, dụng cụ, SP, HH"
+
+#. module: fg_vn_stock_reports
+#: model:ir.module.module,summary:base.module_fg_vn_stock_reports
+msgid ""
+"Detailed stock ledger S06-DNN and stock in/out/balance summary of the "
+"Vietnamese accounting system"
+msgstr ""
+"Sổ chi tiết vật liệu, dụng cụ, SP, HH (S06-DNN) và bảng tổng hợp nhập xuất tồn kho theo chế độ kế toán Việt Nam"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Discard"
+msgstr "Huỷ"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+msgid "Display"
+msgstr "Hiển thị"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06__display_name
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__display_name
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk__display_name
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__display_name
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_stock_location_valuation__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Excel"
+msgstr "Excel"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+msgid "Filters"
+msgstr "Bộ lọc"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Form No. S06-DNN"
+msgstr "Mẫu số S06-DNN"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__date_from
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__date_from
+msgid "From"
+msgstr "Từ ngày"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "GRAND TOTAL"
+msgstr "TỔNG CỘNG"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Goods delivery, invoice %s"
+msgstr "Xuất hàng theo HĐ %s"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Goods receipt, invoice %s"
+msgstr "Nhập hàng theo HĐ %s"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__group_by_location
+msgid "Group by Location"
+msgstr "Nhóm theo kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+msgid "Group by location"
+msgstr "Nhóm theo kho"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__gutter_mm
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__gutter_mm
+msgid "Gutter (mm)"
+msgstr "Lề gáy (mm)"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06__id
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__id
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk__id
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__id
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_stock_location_valuation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Internal transfer from %s"
+msgstr "Vận chuyển nội bộ từ kho %s"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Internal transfer to %s"
+msgstr "Vận chuyển nội bộ đến kho %s"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Journal Entry"
+msgstr "Bút toán"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_s06_wizard__report_lang
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_thtk_wizard__report_lang
+msgid ""
+"Language the report is displayed, exported and printed in. It does not "
+"depend on the language of your interface."
+msgstr ""
+"Ngôn ngữ hiển thị, xuất file và in báo cáo. Không phụ thuộc ngôn ngữ giao diện của bạn."
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__write_uid
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__write_date
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Layout"
+msgstr "Trình bày"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_s06_wizard__category_ids
+msgid "Leave empty for all the categories."
+msgstr "Để trống để xem tất cả nhóm."
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_s06_wizard__product_ids
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_thtk_wizard__product_ids
+msgid "Leave empty for all the products."
+msgstr "Để trống để xem tất cả sản phẩm."
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_s06_wizard__location_ids
+msgid ""
+"Ledger of the selected locations and their sublocations, with the internal "
+"transfers crossing their boundary. Leave empty for the ledger of the "
+"company."
+msgstr ""
+"Sổ của các kho được chọn và vị trí con của chúng, gồm cả phiếu chuyển kho nội bộ ra vào các kho đó. Để trống để xem sổ của cả công ty."
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__location_ids
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__location_ids
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Locations"
+msgstr "Kho/Vị trí"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Locations: %s"
+msgstr "Kho %s"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__mirror_margin
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__mirror_margin
+msgid "Mirror Margins (two-sided printing)"
+msgstr "Lề đối xứng (in hai mặt)"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_thtk_wizard__group_by_location
+msgid "One table per internal location, sublocations apart."
+msgstr "Mỗi vị trí kho nội bộ một bảng, vị trí con tách riêng."
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_s06_wizard__account_ids
+msgid ""
+"Only the products whose stock valuation account is selected. Leave empty for"
+" the accounts 152, 153, 155 and 156."
+msgstr ""
+"Chỉ lấy mặt hàng có tài khoản kho được chọn. Để trống để xem TK 152, 153, 155, 156."
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Opening"
+msgstr "Đầu kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Opening Qty"
+msgstr "SL đầu kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Opening Value"
+msgstr "GT đầu kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Opening balance"
+msgstr "Số dư đầu kỳ"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__orientation
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__orientation
+msgid "Orientation"
+msgstr "Hướng giấy"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "PDF"
+msgstr "PDF"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Period"
+msgstr "Kỳ báo cáo"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Product"
+msgstr "Tên sản phẩm"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__category_ids
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__category_ids
+msgid "Product Categories"
+msgstr "Nhóm sản phẩm"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+msgid "Product categories"
+msgstr "Nhóm sản phẩm"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Product: %(id)s - %(name)s (%(uom)s)"
+msgstr "Sản phẩm: %(id)s - %(name)s (%(uom)s)"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__product_ids
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__product_ids
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Products"
+msgstr "Sản phẩm"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+msgid "Products without stock"
+msgstr "Hiện SP tồn = 0"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Purchase costs, invoice %s"
+msgstr "Chi phí mua hàng HĐ %s"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Qty"
+msgstr "SL"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Qty Balance"
+msgstr "SL tồn"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Qty In"
+msgstr "SL nhập"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Qty Out"
+msgstr "SL xuất"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Receipts"
+msgstr "Nhập trong kỳ"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__report_lang
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__report_lang
+msgid "Report Language"
+msgstr "Ngôn ngữ báo cáo"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "STOCK SUMMARY OF RECEIPTS, DELIVERIES AND BALANCES"
+msgstr "BẢNG TỔNG HỢP NHẬP XUẤT TỒN KHO"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__show_zero_balance
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__show_zero_balance
+msgid "Show Lines Without Figures"
+msgstr "Hiện mặt hàng không có phát sinh"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model,name:fg_vn_stock_reports.model_vn_stock_location_valuation
+msgid "Stock In/Out per Location"
+msgstr "Nhập xuất tồn theo vị trí kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Stock Move"
+msgstr "Dịch chuyển kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Stock Move Lines"
+msgstr "Chi tiết dịch chuyển"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Stock Move Lines - %s"
+msgstr "Chi tiết dịch chuyển - %s"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Stock Moves"
+msgstr "Phát sinh kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Stock Moves - %s"
+msgstr "Dịch chuyển kho - %s"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+#: code:addons/fg_vn_stock_reports/wizard/thtk_wizard.py:0
+#: model:ir.actions.act_window,name:fg_vn_stock_reports.action_vn_report_thtk_wizard
+#: model:ir.actions.client,name:fg_vn_stock_reports.action_vn_report_thtk
+#: model:ir.model,name:fg_vn_stock_reports.model_vn_report_thtk
+#: model:ir.ui.menu,name:fg_vn_stock_reports.menu_thtk_accounting
+#: model:ir.ui.menu,name:fg_vn_stock_reports.menu_thtk_inventory
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Stock Summary"
+msgstr "Tổng hợp tồn kho"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model,name:fg_vn_stock_reports.model_vn_report_thtk_wizard
+msgid "Stock Summary Wizard"
+msgstr "Wizard tổng hợp tồn kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Stock Valuation"
+msgstr "Chi tiết định giá kho"
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_thtk_wizard__location_ids
+msgid ""
+"Stock of the selected locations and their sublocations. Leave empty for the "
+"company."
+msgstr ""
+"Tồn kho của các kho được chọn và vị trí con của chúng. Để trống để xem cả công ty."
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,help:fg_vn_stock_reports.field_vn_report_thtk_wizard__category_ids
+msgid ""
+"The selected categories and their subcategories. Leave empty for all the "
+"categories."
+msgstr ""
+"Các nhóm được chọn và nhóm con của chúng. Để trống để xem tất cả nhóm."
+
+#. module: fg_vn_stock_reports
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_s06_wizard__date_to
+#: model:ir.model.fields,field_description:fg_vn_stock_reports.field_vn_report_thtk_wizard__date_to
+msgid "To"
+msgstr "Đến ngày"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Total %s"
+msgstr "Cộng %s"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Total of the period / Closing balance"
+msgstr "Cộng phát sinh / Số dư cuối kỳ"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Transfer"
+msgstr "Phiếu kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Unit Price"
+msgstr "Đơn giá"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "UoM"
+msgstr "ĐVT"
+
+#. module: fg_vn_stock_reports
+#: model:ir.ui.menu,name:fg_vn_stock_reports.menu_vn_stock_reports_accounting
+#: model:ir.ui.menu,name:fg_vn_stock_reports.menu_vn_stock_reports_inventory
+msgid "VN Stock Reports"
+msgstr "Báo cáo kho VN"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Value"
+msgstr "Giá trị"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Value Balance"
+msgstr "GT tồn"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Value In"
+msgstr "GT nhập"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/thtk_report.py:0
+msgid "Value Out"
+msgstr "GT xuất"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Value adjustment"
+msgstr "Điều chỉnh giá trị"
+
+#. module: fg_vn_stock_reports
+#: model:ir.module.module,shortdesc:base.module_fg_vn_stock_reports
+msgid "Vietnam - Stock Reports (S06-DNN, Stock Summary)"
+msgstr "Báo cáo kho Việt Nam (S06-DNN, Tổng hợp tồn kho)"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "View"
+msgstr "Xem báo cáo"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+msgid "View journal entry"
+msgstr "Xem bút toán"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+msgid "View stock move"
+msgstr "Xem dịch chuyển kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+msgid "View stock move lines"
+msgstr "Xem chi tiết dịch chuyển"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+msgid "View stock moves"
+msgstr "Xem phát sinh kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-javascript
+#: code:addons/fg_vn_stock_reports/static/src/js/s06_report.js:0
+#: code:addons/fg_vn_stock_reports/static/src/js/thtk_report.js:0
+msgid "View stock valuation"
+msgstr "Xem chi tiết định giá kho"
+
+#. module: fg_vn_stock_reports
+#. odoo-python
+#: code:addons/fg_vn_stock_reports/models/s06_pdf.py:0
+#: code:addons/fg_vn_stock_reports/models/s06_report.py:0
+msgid "Voucher"
+msgstr "Chứng từ"
+
+#. module: fg_vn_stock_reports
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_s06_wizard_form
+#: model_terms:ir.ui.view,arch_db:fg_vn_stock_reports.view_vn_report_thtk_wizard_form
+msgid "Whole company"
+msgstr "Cả công ty"

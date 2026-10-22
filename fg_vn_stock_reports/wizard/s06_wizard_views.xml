@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_vn_report_s06_wizard_form" model="ir.ui.view">
+        <field name="name">vn.report.s06.wizard.form</field>
+        <field name="model">vn.report.s06.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Detailed Stock Ledger (S06-DNN)">
+                <group>
+                    <group string="Period">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="report_lang"/>
+                    </group>
+                    <group string="Products">
+                        <field name="product_ids" widget="many2many_tags"
+                               options="{'no_create': True}" placeholder="All products"/>
+                        <field name="category_ids" widget="many2many_tags"
+                               options="{'no_create': True}" placeholder="All categories"/>
+                        <field name="account_ids" widget="many2many_tags"
+                               options="{'no_create': True}" placeholder="Accounts 152, 153, 155, 156"/>
+                        <field name="show_zero_balance"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Filters">
+                        <field name="location_ids" widget="many2many_tags"
+                               options="{'no_create': True}" placeholder="Whole company"/>
+                    </group>
+                    <group string="Layout">
+                        <field name="orientation"/>
+                        <field name="mirror_margin"/>
+                        <field name="gutter_mm" invisible="not mirror_margin"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_view_report" string="View" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="action_export_xlsx" string="Excel" type="object" class="btn-secondary" icon="table"/>
+                    <button name="action_export_pdf_rl" string="PDF" type="object" class="btn-secondary" icon="picture_as_pdf"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vn_report_s06_wizard" model="ir.actions.act_window">
+        <field name="name">Detailed Stock Ledger (S06-DNN)</field>
+        <field name="res_model">vn.report.s06.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

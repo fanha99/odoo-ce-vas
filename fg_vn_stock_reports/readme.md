@@ -16,6 +16,13 @@ Hai báo cáo xem được trên màn hình, xuất Excel và in PDF.
 Cách dùng chung của màn hình báo cáo (chọn kỳ, xuất file, ngôn ngữ, phân quyền) mô tả trong readme của `fg_vn_accounting_reports`. Tài liệu này chỉ nói phần riêng của hai báo cáo kho. Phần kỹ thuật nằm trong `PLAN.md`.
 
 > Trạng thái: tài liệu này mô tả bản 20.0 **sẽ làm**, viết trước khi code để duyệt. Các điểm còn chờ quyết định nằm ở `PLAN.md` mục 8.
+>
+> Bản đang có (20.0.1.1.0, 2026-10-22) là **port bản 19.0** để dùng trước: giữ nguyên logic và
+> số liệu của 19.0 (chọn kho theo `models/location_valuation.py`, kho 157 có / không GBQK:
+> `HUONG_DAN_KHO_157.md`), sửa phần bắt buộc của 20.0 (giá trị phiếu xuất âm, số lượng theo ĐVT
+> của mặt hàng, `ir.access`, OWL 3, biểu tượng, tiêu đề trang PDF) và theo quy ước của repo
+> (chuỗi tiếng Anh dịch qua `i18n/vi.po`, nhãn bảng do máy chủ trả, AGPL-3). Mặt hàng vẫn hiện
+> bằng id như 19.0. Đối chiếu với kế hoạch: `PLAN.md` mục 0.
 
 ## 1. Số liệu lấy từ đâu
 

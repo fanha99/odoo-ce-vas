@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_vn_report_s06" model="ir.actions.client">
+        <field name="name">Detailed Stock Ledger (S06-DNN)</field>
+        <field name="tag">vn_report_s06</field>
+    </record>
+
+    <record id="action_vn_report_thtk" model="ir.actions.client">
+        <field name="name">Stock Summary</field>
+        <field name="tag">vn_report_thtk</field>
+    </record>
+
+    <!-- The same two reports in Inventory and in Accounting; the menus open
+         the wizards, which open the client actions -->
+    <menuitem id="menu_vn_stock_reports_inventory"
+              name="VN Stock Reports"
+              parent="stock.menu_warehouse_report"
+              sequence="1"/>
+
+    <menuitem id="menu_s06_inventory"
+              name="Detailed Stock Ledger (S06-DNN)"
+              parent="menu_vn_stock_reports_inventory"
+              action="action_vn_report_s06_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_thtk_inventory"
+              name="Stock Summary"
+              parent="menu_vn_stock_reports_inventory"
+              action="action_vn_report_thtk_wizard"
+              sequence="20"/>
+
+    <menuitem id="menu_vn_stock_reports_accounting"
+              name="VN Stock Reports"
+              parent="fg_vn_accounting_reports.menu_vn_vas_reports"
+              sequence="50"/>
+
+    <menuitem id="menu_s06_accounting"
+              name="Detailed Stock Ledger (S06-DNN)"
+              parent="menu_vn_stock_reports_accounting"
+              action="action_vn_report_s06_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_thtk_accounting"
+              name="Stock Summary"
+              parent="menu_vn_stock_reports_accounting"
+              action="action_vn_report_thtk_wizard"
+              sequence="20"/>
+
+</odoo>
